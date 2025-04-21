@@ -1,6 +1,7 @@
 package com.example.meta_habit.ui.Screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
@@ -18,10 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.ui.components.CardNoteBasic
+import com.example.meta_habit.ui.components.DialogFullScreen
+import com.example.meta_habit.ui.components.LayoutCreateDetailNote
 import com.example.meta_habit.ui.components.LayoutOptions
 import kotlinx.coroutines.launch
 
@@ -31,6 +35,7 @@ fun HomeScreen(){
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     val showButtomSheet = remember { mutableStateOf(false) }
+    val showDialogCreateNote = remember { mutableStateOf(false) }
     Scaffold (
         topBar = {
             TopAppBar(
@@ -39,18 +44,22 @@ fun HomeScreen(){
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {  }
+                onClick = {
+                    showDialogCreateNote.value = true
+                }
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "")
             }
         }
     ) { innerPadding ->
+
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             contentPadding = innerPadding,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+
             items(6){
                 CardNoteBasic(
                     onClick = {
@@ -68,8 +77,23 @@ fun HomeScreen(){
                                    },
                 sheetState = sheetState
             ) {
-                LayoutOptions()
+                LayoutCreateDetailNote()
             }
+        }
+
+
+        if(showDialogCreateNote.value){
+            DialogFullScreen(
+                onDismiss = {
+                    showDialogCreateNote.value = false
+                },
+                onCreate = {
+                    showDialogCreateNote.value = false
+                },
+                layout = {
+                    LayoutCreateDetailNote()
+                }
+            )
         }
     }
 }

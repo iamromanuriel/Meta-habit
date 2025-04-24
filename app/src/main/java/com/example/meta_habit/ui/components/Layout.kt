@@ -24,6 +24,7 @@ import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -43,7 +44,9 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun LayoutCreateDetailNote(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onShowDialogRepeat: () -> Unit,
+    onShowDialogPicker: () -> Unit
 ){
     var text = remember { mutableStateOf("") }
     val brush = remember {
@@ -81,7 +84,7 @@ fun LayoutCreateDetailNote(
             Column {
 
                 TextButton(
-                    onClick = {},
+                    onClick = { onShowDialogPicker() },
                     modifier = modifier.fillMaxWidth(),
                     colors = ButtonColors(
                         containerColor = Color.Transparent,
@@ -112,7 +115,7 @@ fun LayoutCreateDetailNote(
                 }
 
                 TextButton(
-                    onClick = {},
+                    onClick = { onShowDialogRepeat() },
                     modifier = modifier.fillMaxWidth(),
                     colors = ButtonColors(
                         containerColor = Color.Transparent,
@@ -236,14 +239,52 @@ fun LayoutCreateDetailNote(
         }
 
     }
+}
 
+val optionRepeat = listOf<String>("Diario", "Semanal", "Mensual", "3 dias")
+
+@Composable
+fun LayoutOptionRepeat(
+    modifier: Modifier = Modifier,
+    onSelected: (Int) -> Unit
+){
+
+    Card {
+        Column (
+            modifier = modifier.fillMaxWidth()
+        ){
+            Text("Configuracion de repeticion", style = MaterialTheme.typography.titleMedium, modifier = modifier.padding(10.dp))
+            LazyColumn {
+                items(optionRepeat){ item ->
+                    Row(
+                        modifier = modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        Text(text = item, fontWeight = FontWeight.Medium)
+                        RadioButton(
+                            selected = true,
+                            onClick = { onSelected(optionRepeat.indexOf(item)) }
+                        )
+                    }
+                }
+            }
+
+        }
+    }
 
 }
+
+
+
 
 @Preview
 @Composable
 fun LayoutCreateDetailNotePreview(){
     Scaffold  { innerPadding ->
-        LayoutCreateDetailNote(modifier = Modifier.padding(innerPadding))
+        LayoutOptionRepeat(
+            modifier = Modifier.padding(innerPadding),
+            onSelected = {}
+        )
     }
 }

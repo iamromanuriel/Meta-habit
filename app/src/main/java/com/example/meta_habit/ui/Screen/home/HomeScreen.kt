@@ -1,12 +1,13 @@
-package com.example.meta_habit.ui.Screen
+package com.example.meta_habit.ui.Screen.home
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Button
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -14,28 +15,37 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.ui.components.CardNoteBasic
+import com.example.meta_habit.ui.components.DialogBasic
 import com.example.meta_habit.ui.components.DialogFullScreen
 import com.example.meta_habit.ui.components.LayoutCreateDetailNote
+import com.example.meta_habit.ui.components.LayoutOptionRepeat
 import com.example.meta_habit.ui.components.LayoutOptions
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(){
+fun HomeScreen(
+    viewModel: HomeViewModel = koinViewModel()
+){
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
-    val showButtomSheet = remember { mutableStateOf(false) }
+    val showButtonSheet = remember { mutableStateOf(false) }
     val showDialogCreateNote = remember { mutableStateOf(false) }
+    val showDialogOptionRepeat = remember { mutableStateOf(false) }
+    val showDialogPicker = remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState(initialDisplayMode = DisplayMode.Picker)
+
     Scaffold (
         topBar = {
             TopAppBar(
@@ -63,24 +73,22 @@ fun HomeScreen(){
             items(6){
                 CardNoteBasic(
                     onClick = {
-                        showButtomSheet.value = true
+                        showButtonSheet.value = true
                     }
                 )
             }
         }
 
-        if(showButtomSheet.value){
+        if(showButtonSheet.value){
             ModalBottomSheet(
                 onDismissRequest = {
                     println("onDismissRequest bottomSheet")
-                    showButtomSheet.value = false
-                                   },
+                    showButtonSheet.value = false },
                 sheetState = sheetState
             ) {
-                LayoutCreateDetailNote()
+                LayoutOptions()
             }
         }
-
 
         if(showDialogCreateNote.value){
             DialogFullScreen(
@@ -91,10 +99,43 @@ fun HomeScreen(){
                     showDialogCreateNote.value = false
                 },
                 layout = {
-                    LayoutCreateDetailNote()
+                    LayoutCreateDetailNote(
+                        onShowDialogRepeat = {
+                            showDialogOptionRepeat.value = true
+                        },
+                        onShowDialogPicker = {
+                            showDialogPicker.value = true
+                        }
+
+                    )
                 }
             )
         }
+
+
+        if(showDialogOptionRepeat.value){
+            DialogBasic(
+                onSelected = {},
+                content= {
+                    LayoutOptionRepeat(
+                        onSelected = { index ->
+                            scope.launch { println("index $index") }
+                            showDialogOptionRepeat.value = false
+                        }
+                    )
+                }
+            )
+        }
+
+        if(showDialogPicker.value){
+            DatePickerDialog(
+                onDismissRequest = { showDialogPicker.value = false },
+                confirmButton = {  }
+            ) {
+                DatePicker(state = datePickerState)
+            }
+        }
+
     }
 }
 

@@ -112,16 +112,35 @@ fun DialogFullScreen(
     }
 }
 
+@Composable
+fun DialogBasic(
+    modifier: Modifier = Modifier,
+    onSelected: (Int) -> Unit,
+    content: @Composable () -> Unit,
+
+    ){
+    Dialog(
+        onDismissRequest = {  },
+    ){
+        content()
+    }
+}
+
 @Preview
 @Composable
 fun LayoutOptionsPreview(){
     MaterialTheme {
         Scaffold { innerPadding ->
-            DialogFullScreen(
-                onDismiss = {},
-                onCreate = {},
-                layout = { LayoutCreateDetailNote() },
-                modifier = Modifier.padding(innerPadding)
+            DialogBasic(
+                modifier = Modifier.padding(innerPadding),
+                onSelected = {},
+                content = {
+                    LayoutOptionRepeat(
+                        onSelected = {
+
+                        }
+                    )
+                }
             )
         }
     }

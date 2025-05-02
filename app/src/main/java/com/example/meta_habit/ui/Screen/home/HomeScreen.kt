@@ -24,6 +24,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.meta_habit.ui.Screen.create.CreateScreen
 import com.example.meta_habit.ui.components.CardNoteBasic
 import com.example.meta_habit.ui.components.DialogBasic
 import com.example.meta_habit.ui.components.DialogFullScreen
@@ -91,25 +92,11 @@ fun HomeScreen(
         }
 
         if(showDialogCreateNote.value){
-            DialogFullScreen(
-                onDismiss = {
-                    showDialogCreateNote.value = false
-                },
-                onCreate = {
-                    showDialogCreateNote.value = false
-                },
-                layout = {
-                    LayoutCreateDetailNote(
-                        onShowDialogRepeat = {
-                            showDialogOptionRepeat.value = true
-                        },
-                        onShowDialogPicker = {
-                            showDialogPicker.value = true
-                        }
 
-                    )
-                }
+            CreateScreen(
+                sheetState = sheetState,
             )
+
         }
 
 

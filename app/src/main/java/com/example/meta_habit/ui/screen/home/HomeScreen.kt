@@ -1,4 +1,4 @@
-package com.example.meta_habit.ui.Screen.home
+package com.example.meta_habit.ui.screen.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -24,11 +24,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.meta_habit.ui.Screen.create.CreateScreen
+import com.example.meta_habit.ui.screen.create.CreateScreen
 import com.example.meta_habit.ui.components.CardNoteBasic
 import com.example.meta_habit.ui.components.DialogBasic
-import com.example.meta_habit.ui.components.DialogFullScreen
-import com.example.meta_habit.ui.components.LayoutCreateDetailNote
 import com.example.meta_habit.ui.components.LayoutOptionRepeat
 import com.example.meta_habit.ui.components.LayoutOptions
 import kotlinx.coroutines.launch
@@ -37,7 +35,7 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = koinViewModel()
+    viewModel: HomeViewModel = koinViewModel<HomeViewModel>()
 ){
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -95,6 +93,7 @@ fun HomeScreen(
 
             CreateScreen(
                 sheetState = sheetState,
+                onDismiss = { showDialogCreateNote.value = false }
             )
 
         }

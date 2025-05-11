@@ -21,6 +21,9 @@ import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +33,10 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -45,6 +51,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun LayoutCreateDetailNote(
     modifier: Modifier = Modifier,
+    stateIsRepeat: MutableState<Boolean>,
     onShowDialogRepeat: () -> Unit,
     onShowDialogPicker: () -> Unit
 ){
@@ -171,8 +178,10 @@ fun LayoutCreateDetailNote(
                         }
                         Row {
                             Switch(
-                                checked = false,
-                                onCheckedChange = {}
+                                checked = stateIsRepeat.value,
+                                onCheckedChange = {
+                                    stateIsRepeat.value = it
+                                }
                             )
                         }
                     }
@@ -276,15 +285,26 @@ fun LayoutOptionRepeat(
 }
 
 
-
+@Preview
+@Composable
+fun LayoutOptionRepeatPreview(){
+    Scaffold  { innerPadding ->
+        LayoutOptionRepeat(
+            modifier = Modifier.padding(innerPadding),
+            onSelected = {}
+        )
+    }
+}
 
 @Preview
 @Composable
 fun LayoutCreateDetailNotePreview(){
     Scaffold  { innerPadding ->
-        LayoutOptionRepeat(
+        LayoutCreateDetailNote(
             modifier = Modifier.padding(innerPadding),
-            onSelected = {}
+            stateIsRepeat = remember { mutableStateOf(false) },
+            onShowDialogRepeat = {},
+            onShowDialogPicker = {}
         )
     }
 }

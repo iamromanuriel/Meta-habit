@@ -5,7 +5,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.meta_habit.ui.Screen.home.HomeScreen
+import com.example.meta_habit.ui.screen.home.HomeScreen
 import kotlinx.serialization.Serializable
 
 @Serializable

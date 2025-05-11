@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -16,6 +18,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -99,7 +102,7 @@ fun DialogFullScreen(
                     Text(text="Crea tu nota")
 
                     TextButton(
-                        onClick = {  },
+                        onClick = { onCreate() },
                         modifier = modifier.padding()
                     ) {
                         Text("Crear")
@@ -126,6 +129,7 @@ fun DialogBasic(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun LayoutOptionsPreview(){
@@ -135,11 +139,7 @@ fun LayoutOptionsPreview(){
                 modifier = Modifier.padding(innerPadding),
                 onSelected = {},
                 content = {
-                    LayoutOptionRepeat(
-                        onSelected = {
 
-                        }
-                    )
                 }
             )
         }

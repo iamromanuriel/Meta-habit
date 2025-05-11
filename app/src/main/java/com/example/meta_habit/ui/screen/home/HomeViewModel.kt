@@ -1,4 +1,4 @@
-package com.example.meta_habit.ui.Screen.home
+package com.example.meta_habit.ui.screen.home
 
 import androidx.lifecycle.ViewModel
 

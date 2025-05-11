@@ -1,4 +1,4 @@
-package com.example.meta_habit.ui.Screen.create
+package com.example.meta_habit.ui.screen.create
 
 import androidx.lifecycle.ViewModel
 

@@ -47,13 +47,16 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.meta_habit.ui.utils.LabelTypes
+import com.example.meta_habit.ui.utils.RepeatType
 
 @Composable
 fun LayoutCreateDetailNote(
     modifier: Modifier = Modifier,
     stateIsRepeat: MutableState<Boolean>,
     onShowDialogRepeat: () -> Unit,
-    onShowDialogPicker: () -> Unit
+    onShowDialogPicker: () -> Unit,
+    onShowDialogLabel: () -> Unit
 ){
     var text = remember { mutableStateOf("") }
     val brush = remember {
@@ -188,7 +191,9 @@ fun LayoutCreateDetailNote(
                 }
 
                 TextButton(
-                    onClick = {},
+                    onClick = {
+                        onShowDialogLabel()
+                    },
                     modifier = modifier.fillMaxWidth(),
                     colors = ButtonColors(
                         containerColor = Color.Transparent,
@@ -253,27 +258,32 @@ fun LayoutCreateDetailNote(
 val optionRepeat = listOf<String>("Diario", "Semanal", "Mensual", "3 dias")
 
 @Composable
-fun LayoutOptionRepeat(
+fun <T> LayoutOptionRepeat(
     modifier: Modifier = Modifier,
-    onSelected: (Int) -> Unit
+    title: String,
+    options: Array<T>,
+    selected: T,
+    onSelected: (T) -> Unit,
+    itemToString: (T) -> String
 ){
+    val selectedState = remember { mutableStateOf(selected) }
 
     Card {
         Column (
             modifier = modifier.fillMaxWidth()
         ){
-            Text("Configuracion de repeticion", style = MaterialTheme.typography.titleMedium, modifier = modifier.padding(10.dp))
+            Text(text= title, style = MaterialTheme.typography.titleMedium, modifier = modifier.padding(10.dp))
             LazyColumn {
-                items(optionRepeat){ item ->
+                items(options){ item ->
                     Row(
                         modifier = modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceAround,
                         verticalAlignment = Alignment.CenterVertically
                     ){
-                        Text(text = item, fontWeight = FontWeight.Medium)
+                        Text(text = itemToString(item), fontWeight = FontWeight.Medium)
                         RadioButton(
-                            selected = true,
-                            onClick = { onSelected(optionRepeat.indexOf(item)) }
+                            selected = selectedState.value == item,
+                            onClick = { onSelected(item) }
                         )
                     }
                 }
@@ -281,8 +291,9 @@ fun LayoutOptionRepeat(
 
         }
     }
-
 }
+
+
 
 
 @Preview
@@ -291,7 +302,11 @@ fun LayoutOptionRepeatPreview(){
     Scaffold  { innerPadding ->
         LayoutOptionRepeat(
             modifier = Modifier.padding(innerPadding),
-            onSelected = {}
+            title = "Etiquetas",
+            options = LabelTypes.entries.toTypedArray(),
+            selected = LabelTypes.WORK,
+            onSelected = {},
+            itemToString = { it.value }
         )
     }
 }
@@ -304,7 +319,8 @@ fun LayoutCreateDetailNotePreview(){
             modifier = Modifier.padding(innerPadding),
             stateIsRepeat = remember { mutableStateOf(false) },
             onShowDialogRepeat = {},
-            onShowDialogPicker = {}
+            onShowDialogPicker = {},
+            onShowDialogLabel = {}
         )
     }
 }

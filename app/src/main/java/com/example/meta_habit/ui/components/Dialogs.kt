@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.meta_habit.ui.utils.RepeatType
 
 @Composable
 fun LayoutOptions(
@@ -139,7 +140,13 @@ fun LayoutOptionsPreview(){
                 modifier = Modifier.padding(innerPadding),
                 onSelected = {},
                 content = {
-
+                    LayoutOptionRepeat(
+                        title = "Opciones",
+                        options = RepeatType.entries.toTypedArray(),
+                        onSelected = {},
+                        itemToString = { it.value },
+                        selected = RepeatType.MONTHLY
+                    )
                 }
             )
         }

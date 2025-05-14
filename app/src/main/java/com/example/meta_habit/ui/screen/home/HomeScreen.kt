@@ -90,7 +90,6 @@ fun HomeScreen(
         }
 
         if(showDialogCreateNote.value){
-
             CreateScreen(
                 sheetState = sheetState,
                 onDismiss = { showDialogCreateNote.value = false }
@@ -99,28 +98,7 @@ fun HomeScreen(
         }
 
 
-        if(showDialogOptionRepeat.value){
-            DialogBasic(
-                onSelected = {},
-                content= {
-                    LayoutOptionRepeat(
-                        onSelected = { index ->
-                            scope.launch { println("index $index") }
-                            showDialogOptionRepeat.value = false
-                        }
-                    )
-                }
-            )
-        }
 
-        if(showDialogPicker.value){
-            DatePickerDialog(
-                onDismissRequest = { showDialogPicker.value = false },
-                confirmButton = {  }
-            ) {
-                DatePicker(state = datePickerState)
-            }
-        }
 
     }
 }

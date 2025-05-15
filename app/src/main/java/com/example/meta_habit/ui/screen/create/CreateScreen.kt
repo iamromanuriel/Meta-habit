@@ -42,6 +42,7 @@ fun CreateScreen(
     val datePickerState = rememberDatePickerState(initialDisplayMode = DisplayMode.Picker)
     val selectedRepeat = viewModel.selectedStateRepeat.collectAsStateWithLifecycle()
     val selectedLabel = viewModel.selectedLabel.collectAsStateWithLifecycle()
+    val selectedColor = viewModel.selectedColor.collectAsStateWithLifecycle()
 
     DialogFullScreen(
         onDismiss = {
@@ -54,6 +55,7 @@ fun CreateScreen(
     layout = {
         LayoutCreateDetailNote(
             stateIsRepeat = enableRemember,
+            stateColorSelected = selectedColor,
             onShowDialogRepeat = {
                 showDialogOptionRepeat.value = true
             },
@@ -62,6 +64,9 @@ fun CreateScreen(
             },
             onShowDialogLabel = {
                 showDialogOptionLabel.value = true
+            },
+            onSelectedColor = { color ->
+                viewModel.onSelectedColor(color)
             }
         )
 

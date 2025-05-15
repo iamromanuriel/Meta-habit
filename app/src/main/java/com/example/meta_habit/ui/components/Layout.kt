@@ -54,11 +54,15 @@ import com.example.meta_habit.ui.utils.RepeatType
 fun LayoutCreateDetailNote(
     modifier: Modifier = Modifier,
     stateIsRepeat: MutableState<Boolean>,
+    stateColorSelected: State<ColorSelection>,
     onShowDialogRepeat: () -> Unit,
     onShowDialogPicker: () -> Unit,
-    onShowDialogLabel: () -> Unit
+    onShowDialogLabel: () -> Unit,
+    onSelectedColor: (ColorSelection) -> Unit
+
 ){
     var text = remember { mutableStateOf("") }
+
     val brush = remember {
         Brush.linearGradient(
             colors = listOf(Color.Red, Color.Blue)
@@ -231,7 +235,12 @@ fun LayoutCreateDetailNote(
                     textStyle = TextStyle(brush = brush),
                 )
 
-                SelectionColor()
+                SelectionColor(
+                    onSelected = { color ->
+                        onSelectedColor(color)
+                    },
+                    stateColorSelected = stateColorSelected
+                )
             }
         }
 
@@ -318,9 +327,11 @@ fun LayoutCreateDetailNotePreview(){
         LayoutCreateDetailNote(
             modifier = Modifier.padding(innerPadding),
             stateIsRepeat = remember { mutableStateOf(false) },
+            stateColorSelected = remember { mutableStateOf(ColorSelection(Color.Blue, false)) },
             onShowDialogRepeat = {},
             onShowDialogPicker = {},
-            onShowDialogLabel = {}
+            onShowDialogLabel = {},
+            onSelectedColor = {}
         )
     }
 }

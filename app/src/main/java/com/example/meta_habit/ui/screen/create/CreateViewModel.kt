@@ -21,6 +21,12 @@ class CreateViewModel: ViewModel() {
     private val _selectedColor = MutableStateFlow(ColorSelection(Color.Blue, false))
     val selectedColor = _selectedColor.asStateFlow()
 
+    private val _selectedDateMillis = MutableStateFlow(null as Long?)
+    val selectedDateMillis = _selectedDateMillis.asStateFlow()
+
+    private val _listTask = MutableStateFlow(listOf<String>())
+    val listTask = _listTask.asStateFlow()
+
     fun onSelectedRepeat(repeatType: RepeatType){
         _selectedStateRepeat.value = repeatType
     }
@@ -31,6 +37,17 @@ class CreateViewModel: ViewModel() {
 
     fun onSelectedColor(color: ColorSelection){
         _selectedColor.value = color
-        Log.d("onSelectedColorBeforeEvent", color.toString())
+    }
+
+    fun selectDateMillis(dateMillis: Long?){
+        _selectedDateMillis.value = dateMillis
+    }
+
+    fun onAddNewTaskToList(newTask: String){
+        _listTask.value += newTask
+    }
+
+    fun onSaveNote(title: String, description: String){
+
     }
 }

@@ -12,7 +12,8 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ItemLazyCheck(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    description: String = ""
 ){
     Row (
         modifier = modifier
@@ -25,7 +26,7 @@ fun ItemLazyCheck(
 
         TextField(
             modifier = modifier.fillMaxWidth(),
-            value = "",
+            value = description,
             label = { Text("Description") },
             onValueChange = {  },
         )

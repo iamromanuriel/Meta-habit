@@ -11,8 +11,10 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
@@ -37,25 +39,31 @@ fun CreateScreen(
     val showDialogOptionLabel = remember { mutableStateOf(false) }
     val showDialogPicker = remember { mutableStateOf(false) }
 
-    val titleRemember = remember { mutableStateOf("") }
+    var stateTitle by remember { mutableStateOf("") }
+    var stateDescription by remember { mutableStateOf("") }
     val enableRemember = remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState(initialDisplayMode = DisplayMode.Picker)
     val selectedRepeat = viewModel.selectedStateRepeat.collectAsStateWithLifecycle()
     val selectedLabel = viewModel.selectedLabel.collectAsStateWithLifecycle()
     val selectedColor = viewModel.selectedColor.collectAsStateWithLifecycle()
+    val stateListTask = viewModel.listTask.collectAsStateWithLifecycle()
 
     DialogFullScreen(
         onDismiss = {
             onDismiss()
         },
         onCreate = {
+            viewModel.onSaveNote(title = stateTitle, description = stateDescription)
 
-            onDismiss()
         },
     layout = {
         LayoutCreateDetailNote(
             stateIsRepeat = enableRemember,
             stateColorSelected = selectedColor,
+            listTask = stateListTask.value,
+            stateTitle = stateTitle,
+            stateDescription = stateDescription,
+            onChangeTitle = { title -> stateTitle = title },
             onShowDialogRepeat = {
                 showDialogOptionRepeat.value = true
             },
@@ -67,7 +75,11 @@ fun CreateScreen(
             },
             onSelectedColor = { color ->
                 viewModel.onSelectedColor(color)
-            }
+            },
+            onCreatedNewTask = { task ->
+                viewModel.onAddNewTaskToList(task)
+            },
+            onChangeDescription = { text -> stateDescription = text }
         )
 
         if(showDialogOptionRepeat.value){
@@ -111,20 +123,15 @@ fun CreateScreen(
         if(showDialogPicker.value){
             DatePickerDialog(
                 onDismissRequest = { showDialogPicker.value = false },
-                confirmButton = {
-                    Log.d("DATEDialogPicker", datePickerState.selectedDateMillis.toString())
-                                }
+                confirmButton = { viewModel.selectDateMillis(datePickerState.selectedDateMillis) }
             ){
                 DatePicker(
                     state = datePickerState
                 )
             }
-
         }
     }
     )
-
-
 
 }
 

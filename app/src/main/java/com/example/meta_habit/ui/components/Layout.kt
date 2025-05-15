@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Close
@@ -37,14 +39,19 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.ui.utils.LabelTypes
@@ -55,13 +62,17 @@ fun LayoutCreateDetailNote(
     modifier: Modifier = Modifier,
     stateIsRepeat: MutableState<Boolean>,
     stateColorSelected: State<ColorSelection>,
+    stateTitle: String,
+    stateDescription: String,
+    listTask: List<String>,
     onShowDialogRepeat: () -> Unit,
     onShowDialogPicker: () -> Unit,
     onShowDialogLabel: () -> Unit,
-    onSelectedColor: (ColorSelection) -> Unit
-
+    onSelectedColor: (ColorSelection) -> Unit,
+    onCreatedNewTask: (String) -> Unit,
+    onChangeTitle: (String) -> Unit,
+    onChangeDescription: (String) -> Unit
 ){
-    var text = remember { mutableStateOf("") }
 
     val brush = remember {
         Brush.linearGradient(
@@ -78,9 +89,9 @@ fun LayoutCreateDetailNote(
             Icon(imageVector = Icons.Rounded.CheckCircle, contentDescription = "", modifier = modifier.size(60.dp), tint = Color.Green.copy(alpha = 0.3F))
             TextField(
                 modifier = modifier.fillMaxWidth(),
-                value = text.value,
-                label = { Text("Description") },
-                onValueChange = { newValue -> text.value = newValue },
+                value = stateTitle,
+                label = { Text("Title") },
+                onValueChange = onChangeTitle,
                 textStyle = TextStyle(brush = brush),
             )
         }
@@ -229,9 +240,9 @@ fun LayoutCreateDetailNote(
 
                 TextField(
                     modifier = modifier.fillMaxWidth(),
-                    value = text.value,
+                    value = stateDescription,
                     label = { Text("Description") },
-                    onValueChange = { newValue -> text.value = newValue },
+                    onValueChange = onChangeDescription,
                     textStyle = TextStyle(brush = brush),
                 )
 
@@ -244,25 +255,54 @@ fun LayoutCreateDetailNote(
             }
         }
 
-        Card(
-            colors = CardColors(
-                containerColor = Color.White,
-                contentColor = Color.Black,
-                disabledContentColor = MaterialTheme.colorScheme.onSecondary,
-                disabledContainerColor = MaterialTheme.colorScheme.secondary
-            ),
-            border = BorderStroke(width = 1.dp, color = Color.Gray),
-            modifier = modifier.padding(10.dp)
-        ){
-            LazyColumn {
-                 items(5){
-                    ItemLazyCheck()
-                 }
-            }
-        }
+        LayoutCreateCheckList(
+            onCreateNewTask = onCreatedNewTask,
+            listTask = listTask
+        )
 
     }
 }
+
+@Composable
+fun LayoutCreateCheckList(
+    modifier: Modifier = Modifier,
+    listTask: List<String> = emptyList(),
+    onCreateNewTask: (String) -> Unit
+){
+    val focusManager = LocalFocusManager.current
+    var taskDescription by remember { mutableStateOf("") }
+    Card(
+        colors = CardColors(
+            containerColor = Color.White,
+            contentColor = Color.Black,
+            disabledContentColor = MaterialTheme.colorScheme.onSecondary,
+            disabledContainerColor = MaterialTheme.colorScheme.secondary
+        ),
+        border = BorderStroke(width = 1.dp, color = Color.Gray),
+        modifier = modifier.padding(10.dp)
+    ){
+
+        LazyColumn {
+            item {
+                TextField(
+                    modifier = modifier.fillMaxWidth(),
+                    value = taskDescription,
+                    label = { Text("Description") },
+                    onValueChange = { text -> taskDescription = text },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = {
+                        onCreateNewTask(taskDescription)
+                        taskDescription = ""
+                    })
+                )
+            }
+            items(listTask){
+               ItemLazyCheck()
+            }
+        }
+    }
+}
+
 
 val optionRepeat = listOf<String>("Diario", "Semanal", "Mensual", "3 dias")
 
@@ -328,10 +368,16 @@ fun LayoutCreateDetailNotePreview(){
             modifier = Modifier.padding(innerPadding),
             stateIsRepeat = remember { mutableStateOf(false) },
             stateColorSelected = remember { mutableStateOf(ColorSelection(Color.Blue, false)) },
+            listTask = emptyList(),
+            stateTitle = "",
+            stateDescription = "",
             onShowDialogRepeat = {},
             onShowDialogPicker = {},
             onShowDialogLabel = {},
-            onSelectedColor = {}
+            onSelectedColor = {},
+            onCreatedNewTask = {},
+            onChangeTitle = {},
+            onChangeDescription = {}
         )
     }
 }

@@ -6,6 +6,10 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -13,22 +17,31 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun ItemLazyCheck(
     modifier: Modifier = Modifier,
-    description: String = ""
+    description: String = "",
+    onChangeTask: (String) -> Unit = {},
+    enabled: Boolean = false
 ){
+    var isChecked by remember { mutableStateOf(false) }
+    var stateDescription by remember { mutableStateOf(description) }
+
     Row (
         modifier = modifier
     ){
-        Checkbox(
-            checked = true,
-            onCheckedChange = {}
-        )
-
+        if(enabled){
+            Checkbox(
+                checked = isChecked,
+                onCheckedChange = {
+                    isChecked = !isChecked
+                }
+            )
+        }
 
         TextField(
             modifier = modifier.fillMaxWidth(),
-            value = description,
-            label = { Text("Description") },
-            onValueChange = {  },
+            value = stateDescription,
+            onValueChange = {
+                stateDescription = it
+            },
         )
     }
 }

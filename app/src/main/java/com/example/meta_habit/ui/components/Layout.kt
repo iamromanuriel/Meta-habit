@@ -82,182 +82,185 @@ fun LayoutCreateDetailNote(
 
     Column {
 
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier.padding(top = 20.dp)
-        ) {
-            Icon(imageVector = Icons.Rounded.CheckCircle, contentDescription = "", modifier = modifier.size(60.dp), tint = Color.Green.copy(alpha = 0.3F))
-            TextField(
-                modifier = modifier.fillMaxWidth(),
-                value = stateTitle,
-                label = { Text("Title") },
-                onValueChange = onChangeTitle,
-                textStyle = TextStyle(brush = brush),
-            )
-        }
-        Card(
-            modifier = modifier.padding(10.dp),
-            colors = CardColors(
-                containerColor = Color.White,
-                contentColor = Color.Black,
-                disabledContentColor = MaterialTheme.colorScheme.onSecondary,
-                disabledContainerColor = MaterialTheme.colorScheme.secondary
-            ),
-            border = BorderStroke(width = 1.dp, color = Color.Gray)
 
-        ) {
-            Column {
-
-                TextButton(
-                    onClick = { onShowDialogPicker() },
-                    modifier = modifier.fillMaxWidth(),
-                    colors = ButtonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = Color.Black,
-                        disabledContentColor = Color.Blue,
-                        disabledContainerColor = Color.Transparent
-                    )
-                ) {
-                    Row(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 6.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Row {
-                            Icon(
-                                imageVector = Icons.Default.DateRange,
-                                contentDescription = "")
-
-                            Text("Fecha", modifier = modifier.padding(horizontal = 6.dp), fontWeight = FontWeight.Bold)
-                        }
-                        Row {
-                            Text("09/02", modifier = modifier.padding(horizontal = 6.dp))
-                            Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "")
-                        }
-                    }
-                }
-
-                TextButton(
-                    onClick = { onShowDialogRepeat() },
-                    modifier = modifier.fillMaxWidth(),
-                    colors = ButtonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = Color.Black,
-                        disabledContentColor = Color.Blue,
-                        disabledContainerColor = Color.Transparent
-                    )
-                ) {
-                    Row(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 6.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Row {
-                            Icon(
-                                imageVector = Icons.Default.Refresh,
-                                contentDescription = "")
-
-                            Text("Repetir", modifier = modifier.padding(horizontal = 6.dp), fontWeight = FontWeight.Bold)
-                        }
-                        Row {
-                            Text("Diario", modifier = modifier.padding(horizontal = 6.dp))
-                            Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "")
-                        }
-                    }
-                }
-
-                TextButton(
-                    onClick = {},
-                    modifier = modifier.fillMaxWidth(),
-                    colors = ButtonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = Color.Black,
-                        disabledContentColor = Color.Blue,
-                        disabledContainerColor = Color.Transparent
-                    )
-                ) {
-                    Row(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 6.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Row {
-                            Icon(
-                                imageVector = Icons.Default.AddCircle,
-                                contentDescription = "")
-
-                            Text("Recordatorio", modifier = modifier.padding(horizontal = 6.dp), fontWeight = FontWeight.Bold)
-                        }
-                        Row {
-                            Switch(
-                                checked = stateIsRepeat.value,
-                                onCheckedChange = {
-                                    stateIsRepeat.value = it
-                                }
-                            )
-                        }
-                    }
-                }
-
-                TextButton(
-                    onClick = {
-                        onShowDialogLabel()
-                    },
-                    modifier = modifier.fillMaxWidth(),
-                    colors = ButtonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = Color.Black,
-                        disabledContentColor = Color.Blue,
-                        disabledContainerColor = Color.Transparent
-                    )
-                ) {
-                    Row(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 6.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Row {
-                            Icon(
-                                imageVector = Icons.Default.Notifications,
-                                contentDescription = "")
-
-                            Text("Etiqueta", modifier = modifier.padding(horizontal = 6.dp), fontWeight = FontWeight.Bold)
-                        }
-                        Row {
-                            Text("Elementos", modifier = modifier.padding(horizontal = 6.dp))
-                            Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "")
-                        }
-                    }
-                }
-
-                TextField(
-                    modifier = modifier.fillMaxWidth(),
-                    value = stateDescription,
-                    label = { Text("Description") },
-                    onValueChange = onChangeDescription,
-                    textStyle = TextStyle(brush = brush),
-                )
-
-                SelectionColor(
-                    onSelected = { color ->
-                        onSelectedColor(color)
-                    },
-                    stateColorSelected = stateColorSelected
-                )
-            }
-        }
 
         LayoutCreateCheckList(
             onCreateNewTask = onCreatedNewTask,
-            listTask = listTask
+            listTask = listTask,
+            content = {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = modifier.padding(top = 20.dp)
+                ) {
+                    Icon(imageVector = Icons.Rounded.CheckCircle, contentDescription = "", modifier = modifier.size(60.dp), tint = Color.Green.copy(alpha = 0.3F))
+                    TextField(
+                        modifier = modifier.fillMaxWidth(),
+                        value = stateTitle,
+                        label = { Text("Title") },
+                        onValueChange = onChangeTitle,
+                        textStyle = TextStyle(brush = brush),
+                    )
+                }
+                Card(
+                    modifier = modifier.padding(10.dp),
+                    colors = CardColors(
+                        containerColor = Color.White,
+                        contentColor = Color.Black,
+                        disabledContentColor = MaterialTheme.colorScheme.onSecondary,
+                        disabledContainerColor = MaterialTheme.colorScheme.secondary
+                    ),
+                    border = BorderStroke(width = 1.dp, color = Color.Gray)
+
+                ) {
+                    Column {
+
+                        TextButton(
+                            onClick = { onShowDialogPicker() },
+                            modifier = modifier.fillMaxWidth(),
+                            colors = ButtonColors(
+                                containerColor = Color.Transparent,
+                                contentColor = Color.Black,
+                                disabledContentColor = Color.Blue,
+                                disabledContainerColor = Color.Transparent
+                            )
+                        ) {
+                            Row(
+                                modifier = modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 6.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Row {
+                                    Icon(
+                                        imageVector = Icons.Default.DateRange,
+                                        contentDescription = "")
+
+                                    Text("Fecha", modifier = modifier.padding(horizontal = 6.dp), fontWeight = FontWeight.Bold)
+                                }
+                                Row {
+                                    Text("09/02", modifier = modifier.padding(horizontal = 6.dp))
+                                    Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "")
+                                }
+                            }
+                        }
+
+                        TextButton(
+                            onClick = { onShowDialogRepeat() },
+                            modifier = modifier.fillMaxWidth(),
+                            colors = ButtonColors(
+                                containerColor = Color.Transparent,
+                                contentColor = Color.Black,
+                                disabledContentColor = Color.Blue,
+                                disabledContainerColor = Color.Transparent
+                            )
+                        ) {
+                            Row(
+                                modifier = modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 6.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Row {
+                                    Icon(
+                                        imageVector = Icons.Default.Refresh,
+                                        contentDescription = "")
+
+                                    Text("Repetir", modifier = modifier.padding(horizontal = 6.dp), fontWeight = FontWeight.Bold)
+                                }
+                                Row {
+                                    Text("Diario", modifier = modifier.padding(horizontal = 6.dp))
+                                    Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "")
+                                }
+                            }
+                        }
+
+                        TextButton(
+                            onClick = {},
+                            modifier = modifier.fillMaxWidth(),
+                            colors = ButtonColors(
+                                containerColor = Color.Transparent,
+                                contentColor = Color.Black,
+                                disabledContentColor = Color.Blue,
+                                disabledContainerColor = Color.Transparent
+                            )
+                        ) {
+                            Row(
+                                modifier = modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 6.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Row {
+                                    Icon(
+                                        imageVector = Icons.Default.AddCircle,
+                                        contentDescription = "")
+
+                                    Text("Recordatorio", modifier = modifier.padding(horizontal = 6.dp), fontWeight = FontWeight.Bold)
+                                }
+                                Row {
+                                    Switch(
+                                        checked = stateIsRepeat.value,
+                                        onCheckedChange = {
+                                            stateIsRepeat.value = it
+                                        }
+                                    )
+                                }
+                            }
+                        }
+
+                        TextButton(
+                            onClick = {
+                                onShowDialogLabel()
+                            },
+                            modifier = modifier.fillMaxWidth(),
+                            colors = ButtonColors(
+                                containerColor = Color.Transparent,
+                                contentColor = Color.Black,
+                                disabledContentColor = Color.Blue,
+                                disabledContainerColor = Color.Transparent
+                            )
+                        ) {
+                            Row(
+                                modifier = modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 6.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Row {
+                                    Icon(
+                                        imageVector = Icons.Default.Notifications,
+                                        contentDescription = "")
+
+                                    Text("Etiqueta", modifier = modifier.padding(horizontal = 6.dp), fontWeight = FontWeight.Bold)
+                                }
+                                Row {
+                                    Text("Elementos", modifier = modifier.padding(horizontal = 6.dp))
+                                    Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "")
+                                }
+                            }
+                        }
+
+                        TextField(
+                            modifier = modifier.fillMaxWidth(),
+                            value = stateDescription,
+                            label = { Text("Description") },
+                            onValueChange = onChangeDescription,
+                            textStyle = TextStyle(brush = brush),
+                        )
+
+                        SelectionColor(
+                            onSelected = { color ->
+                                onSelectedColor(color)
+                            },
+                            stateColorSelected = stateColorSelected
+                        )
+                    }
+                }
+            }
         )
 
     }
@@ -267,38 +270,29 @@ fun LayoutCreateDetailNote(
 fun LayoutCreateCheckList(
     modifier: Modifier = Modifier,
     listTask: List<String> = emptyList(),
-    onCreateNewTask: (String) -> Unit
+    onCreateNewTask: (String) -> Unit,
+    content: @Composable () -> Unit = {}
 ){
     val focusManager = LocalFocusManager.current
     var taskDescription by remember { mutableStateOf("") }
-    Card(
-        colors = CardColors(
-            containerColor = Color.White,
-            contentColor = Color.Black,
-            disabledContentColor = MaterialTheme.colorScheme.onSecondary,
-            disabledContainerColor = MaterialTheme.colorScheme.secondary
-        ),
-        border = BorderStroke(width = 1.dp, color = Color.Gray),
-        modifier = modifier.padding(10.dp)
-    ){
+    LazyColumn {
+        item {
 
-        LazyColumn {
-            item {
-                TextField(
-                    modifier = modifier.fillMaxWidth(),
-                    value = taskDescription,
-                    label = { Text("Description") },
-                    onValueChange = { text -> taskDescription = text },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = {
-                        onCreateNewTask(taskDescription)
-                        taskDescription = ""
-                    })
-                )
-            }
-            items(listTask){
-               ItemLazyCheck()
-            }
+            content()
+            TextField(
+                modifier = modifier.fillMaxWidth(),
+                value = taskDescription,
+                label = { Text("Description") },
+                onValueChange = { text -> taskDescription = text },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
+                    onCreateNewTask(taskDescription)
+                    taskDescription = ""
+                })
+            )
+        }
+        items(listTask){
+            ItemLazyCheck(description = it)
         }
     }
 }
@@ -368,7 +362,7 @@ fun LayoutCreateDetailNotePreview(){
             modifier = Modifier.padding(innerPadding),
             stateIsRepeat = remember { mutableStateOf(false) },
             stateColorSelected = remember { mutableStateOf(ColorSelection(Color.Blue, false)) },
-            listTask = emptyList(),
+            listTask = optionRepeat,
             stateTitle = "",
             stateDescription = "",
             onShowDialogRepeat = {},

@@ -2,12 +2,14 @@ package com.example.meta_habit.ui.screen.create
 
 import android.util.Log
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -25,6 +27,7 @@ import com.example.meta_habit.ui.components.LayoutCreateDetailNote
 import com.example.meta_habit.ui.components.LayoutOptionRepeat
 import com.example.meta_habit.ui.utils.LabelTypes
 import com.example.meta_habit.ui.utils.RepeatType
+import com.example.meta_habit.ui.utils.rememberRestrictedDatePickerState
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,10 +42,12 @@ fun CreateScreen(
     val showDialogOptionLabel = remember { mutableStateOf(false) }
     val showDialogPicker = remember { mutableStateOf(false) }
 
+
+
     var stateTitle by remember { mutableStateOf("") }
     var stateDescription by remember { mutableStateOf("") }
     val enableRemember = remember { mutableStateOf(false) }
-    val datePickerState = rememberDatePickerState(initialDisplayMode = DisplayMode.Picker)
+    val datePickerState = rememberRestrictedDatePickerState()
     val selectedRepeat = viewModel.selectedStateRepeat.collectAsStateWithLifecycle()
     val selectedLabel = viewModel.selectedLabel.collectAsStateWithLifecycle()
     val selectedColor = viewModel.selectedColor.collectAsStateWithLifecycle()
@@ -123,7 +128,19 @@ fun CreateScreen(
         if(showDialogPicker.value){
             DatePickerDialog(
                 onDismissRequest = { showDialogPicker.value = false },
-                confirmButton = { viewModel.selectDateMillis(datePickerState.selectedDateMillis) }
+                confirmButton = {
+
+                    Button(
+                        onClick = {
+                            viewModel.selectDateMillis(datePickerState.selectedDateMillis)
+                            showDialogPicker.value = false
+                        }
+                    ) {
+                        Text("Aceptar")
+                    }
+
+
+                }
             ){
                 DatePicker(
                     state = datePickerState

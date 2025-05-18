@@ -31,7 +31,8 @@ import com.example.meta_habit.ui.utils.RepeatType
 
 @Composable
 fun LayoutOptions(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSelected: () -> Unit = {}
 ){
     Column {
         Row(
@@ -52,7 +53,7 @@ fun LayoutOptions(
         }
 
         TextButton(onClick = {
-
+            onSelected()
         }) {
             Text(text = "Detalle", modifier = modifier.fillMaxWidth().padding(vertical = 10.dp))
         }

@@ -35,7 +35,8 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = koinViewModel<HomeViewModel>()
+    viewModel: HomeViewModel = koinViewModel<HomeViewModel>(),
+    onNavigateToDetail: () -> Unit = {}
 ){
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -85,7 +86,9 @@ fun HomeScreen(
                     showButtonSheet.value = false },
                 sheetState = sheetState
             ) {
-                LayoutOptions()
+                LayoutOptions(
+                    onSelected = onNavigateToDetail
+                )
             }
         }
 

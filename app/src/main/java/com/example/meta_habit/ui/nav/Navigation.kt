@@ -9,12 +9,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.meta_habit.ui.screen.detail.DetailScreen
 import com.example.meta_habit.ui.screen.home.HomeScreen
+import com.example.meta_habit.ui.screen.notification.NotificationScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
 object Home
 @Serializable
 object Detail
+@Serializable
+object Notification
 
 
 @Composable
@@ -27,6 +30,11 @@ fun Navigation(){
                     navigateToDetail(backStackEntry){
                         navController.navigate(Detail)
                     }
+                },
+                onNavigateToNotification = {
+                    navigateToDetail(backStackEntry){
+                        navController.navigate(Notification)
+                    }
                 }
             )
         }
@@ -34,6 +42,19 @@ fun Navigation(){
             DetailScreen(
                 onBack = {
                     navController.popBackStack()
+                }
+            )
+        }
+
+        composable<Notification>{ backStackEntry ->
+            NotificationScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+                onOpenNotification = {
+                    navigateToDetail(backStackEntry){
+                        navController.navigate(Detail)
+                    }
                 }
             )
         }
@@ -46,7 +67,7 @@ fun navigateToDetail(from: NavBackStackEntry, onNav: () -> Unit){
     }
 }
 
-@Preview(showBackground = true)
+@Preview()
 @Composable
 fun NavigationPreview(){
     Navigation()

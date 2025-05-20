@@ -1,7 +1,7 @@
 package com.example.meta_habit.ui.screen.detail
 
 import androidx.lifecycle.ViewModel
-import com.example.meta_habit.ui.components.ColorSelection
+import com.example.meta_habit.ui.components.ColorType
 import com.example.meta_habit.ui.utils.LabelTypes
 import com.example.meta_habit.ui.utils.RepeatType
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +22,7 @@ class DetailViewModel: ViewModel() {
     fun onSelectedLabel(labelType: LabelTypes){
     }
 
-    fun onSelectedColor(color: ColorSelection){
+    fun onSelectedColor(color: ColorType){
     }
 
     fun selectDateMillis(dateMillis: Long?){

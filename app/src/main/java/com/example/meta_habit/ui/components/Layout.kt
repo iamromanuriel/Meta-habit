@@ -61,14 +61,14 @@ import com.example.meta_habit.ui.utils.RepeatType
 fun LayoutCreateDetailNote(
     modifier: Modifier = Modifier,
     stateIsRepeat: MutableState<Boolean>,
-    stateColorSelected: State<ColorSelection>,
+    stateColorSelected: State<ColorType>,
     stateTitle: String,
     stateDescription: String,
     listTask: List<String>,
     onShowDialogRepeat: () -> Unit,
     onShowDialogPicker: () -> Unit,
     onShowDialogLabel: () -> Unit,
-    onSelectedColor: (ColorSelection) -> Unit,
+    onSelectedColor: (ColorType) -> Unit,
     onCreatedNewTask: (String) -> Unit,
     onChangeTitle: (String) -> Unit,
     onChangeDescription: (String) -> Unit
@@ -358,7 +358,7 @@ fun LayoutCreateDetailNotePreview(){
         LayoutCreateDetailNote(
             modifier = Modifier.padding(innerPadding),
             stateIsRepeat = remember { mutableStateOf(false) },
-            stateColorSelected = remember { mutableStateOf(ColorSelection(Color.Blue, false)) },
+            stateColorSelected = remember { mutableStateOf(ColorType.GRAY) },
             listTask = optionRepeat,
             stateTitle = "",
             stateDescription = "",

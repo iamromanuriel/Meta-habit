@@ -14,7 +14,6 @@ class HomeViewModel(
         println("onInitViewModelHome ::")
         viewModelScope.launch {
             launch(Dispatchers.IO){
-                habitRepository.onSaveHabit()
             }
         }
     }

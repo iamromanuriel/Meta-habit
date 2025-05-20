@@ -24,24 +24,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 
-data class ColorSelection(
-    val color: Color,
-    var isSelected: Boolean
-)
 
-val optionColors = listOf(
-    ColorSelection(Color.Red, false),
-    ColorSelection(Color.Blue, false),
-    ColorSelection(Color.Yellow, true),
-    ColorSelection(Color.Green, false),
-    ColorSelection(Color.Gray, false),
-)
+
+enum class ColorType(val value: Color){
+    RED(Color.Red),
+    Blue(Color.Blue),
+    YELLOW(Color.Yellow),
+    GREEN(Color.Green),
+    GRAY(Color.Gray)
+}
+
 
 @Composable
+
 fun SelectionColor(
     modifier: Modifier = Modifier,
-    stateColorSelected: State<ColorSelection>,
-    onSelected: (ColorSelection) -> Unit = {},
+    stateColorSelected: State<ColorType>,
+    onSelected: (ColorType) -> Unit = {},
 ){
     Row (
         modifier = modifier.fillMaxWidth()
@@ -50,9 +49,9 @@ fun SelectionColor(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = modifier.fillMaxWidth().padding(10.dp)
         ) {
-            items(optionColors.size){
+            items(ColorType.entries.size){
                 ItemColorSelection(
-                    color = optionColors[it],
+                    color = ColorType.entries[it],
                     stateColorSelected = stateColorSelected,
                     onSelected = onSelected)
             }
@@ -63,17 +62,17 @@ fun SelectionColor(
 @Composable
 fun ItemColorSelection(
     modifier: Modifier = Modifier,
-    stateColorSelected: State<ColorSelection>,
-    color: ColorSelection,
-    onSelected: (ColorSelection) -> Unit = {}
+    stateColorSelected: State<ColorType>,
+    color: ColorType,
+    onSelected: (ColorType) -> Unit = {}
 ){
 
     Box(
         modifier = modifier
             .clip(CircleShape)
             .size(50.dp)
-            .background(if(stateColorSelected.value == color) color.color else color.color.copy(alpha = 0.3F))
-            .border(width = if(stateColorSelected.value == color) 2.dp else 1.dp, color = if(stateColorSelected.value == color) Color.Black else color.color, shape = CircleShape)
+            .background(if(stateColorSelected.value.value == color.value) color.value else color.value.copy(alpha = 0.3F))
+            .border(width = if(stateColorSelected.value == color) 2.dp else 1.dp, color = if(stateColorSelected.value == color) Color.Black else color.value, shape = CircleShape)
             .clickable {
                 onSelected(color)
             }
@@ -85,7 +84,7 @@ fun ItemColorSelection(
 @Composable
 fun SelectionColorPreview(){
     SelectionColor(
-        stateColorSelected = remember { mutableStateOf(ColorSelection(Color.Blue, false)) }
+        stateColorSelected = remember { mutableStateOf(ColorType.GRAY) }
     )
 
 }

@@ -30,7 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.meta_habit.ui.components.ColorSelection
+import com.example.meta_habit.ui.components.ColorType
 import com.example.meta_habit.ui.components.DialogBasic
 import com.example.meta_habit.ui.components.ItemLazyCheck
 import com.example.meta_habit.ui.components.LayoutCreateDetailNote
@@ -111,7 +111,7 @@ fun DetailScreen(
                     )
                     LayoutCreateDetailNote(
                         stateIsRepeat = remember { mutableStateOf(false) },
-                        stateColorSelected = remember { mutableStateOf(ColorSelection(Color.Blue, false)) },
+                        stateColorSelected = remember { mutableStateOf(ColorType.Blue) },
                         listTask = emptyList(),
                         stateTitle = "",
                         stateDescription = "",

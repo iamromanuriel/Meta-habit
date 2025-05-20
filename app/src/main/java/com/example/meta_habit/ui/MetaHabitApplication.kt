@@ -7,6 +7,6 @@ class MetaHabitApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
-        initKoin()
+        initKoin(context = this)
     }
 }

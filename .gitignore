@@ -13,4 +13,5 @@
 .idea
 .externalNativeBuild
 .cxx
+.kotlin
 local.properties

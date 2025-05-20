@@ -1,8 +1,14 @@
 package com.example.meta_habit.di
 
+import android.content.Context
+import androidx.room.Room
+import com.example.meta_habit.data.db.AppDatabase
+import com.example.meta_habit.data.db.databaseName
+import com.example.meta_habit.data.repository.HabitRepository
 import com.example.meta_habit.ui.screen.home.HomeViewModel
 import com.example.meta_habit.ui.screen.create.CreateViewModel
 import com.example.meta_habit.ui.screen.detail.DetailViewModel
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
@@ -14,9 +20,30 @@ val viewModelModule = module {
     viewModelOf(::DetailViewModel)
 }
 
-fun initKoin(config: KoinAppDeclaration ? = null){
+val databaseModule = module {
+    single{
+        Room.databaseBuilder(
+            androidContext(),
+            AppDatabase::class.java,
+            databaseName)
+            .build()
+    }
+
+    single{
+        get<AppDatabase>().habitDao()
+    }
+}
+
+val repositoryModule = module {
+    single{
+        HabitRepository(get())
+    }
+}
+
+fun initKoin(config: KoinAppDeclaration ? = null, context: Context){
     startKoin{
+        androidContext(context)
         config?.invoke(this)
-        modules(viewModelModule)
+        modules(viewModelModule, databaseModule, repositoryModule)
     }
 }

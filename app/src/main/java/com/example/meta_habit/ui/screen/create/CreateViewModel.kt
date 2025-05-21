@@ -1,8 +1,6 @@
 package com.example.meta_habit.ui.screen.create
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.Color
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.meta_habit.data.repository.HabitRepository
@@ -34,6 +32,9 @@ class CreateViewModel(
     private val _listTask = MutableStateFlow(listOf<String>())
     val listTask = _listTask.asStateFlow()
 
+    private val _result = MutableStateFlow(null as Result<Unit>?)
+    val result = _result.asStateFlow()
+
     fun onSelectedRepeat(repeatType: RepeatType){
         _selectedStateRepeat.value = repeatType
     }
@@ -54,13 +55,13 @@ class CreateViewModel(
         _listTask.value += newTask
     }
 
-    fun onSaveNote(title: String, description: String){
+    fun onSaveNote(title: String, enableReminder: Boolean, description: String){
         viewModelScope.launch {
             val savedResultHabit = async(Dispatchers.IO){
                 habitRepository.onSaveHabit(
                     title = title,
                     repetition = _selectedStateRepeat.value.ordinal,
-                    hasReminder = true,
+                    hasReminder = enableReminder,
                     dateReminder = _selectedDateMillis.value?:0,
                     tag = _selectedLabel.value.ordinal,
                     color = _selectedColor.value.ordinal
@@ -75,8 +76,7 @@ class CreateViewModel(
                     listTask = _listTask.value
                 )
             }
-
-            println("savedResultTask :: ${savedResultTask.await()}")
+            _result.value = savedResultTask.await()
         }
     }
 

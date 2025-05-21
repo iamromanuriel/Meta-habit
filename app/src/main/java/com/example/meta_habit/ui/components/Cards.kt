@@ -20,10 +20,13 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.meta_habit.data.db.entity.HabitEntity
+import com.example.meta_habit.ui.utils.getReminderDay
 
 @Composable
 fun CardNoteBasic(
     modifier: Modifier = Modifier,
+    habit: HabitEntity,
     onClick: () -> Unit = {}
 ){
     Card(
@@ -33,7 +36,7 @@ fun CardNoteBasic(
     ) {
         Column(modifier = modifier.padding(8.dp)) {
             Text(
-                text = "Ir al Supper",
+                text = habit.title?:"",
                 modifier = modifier.padding(vertical = 6.dp),
                 fontWeight = FontWeight.Bold,
             )
@@ -43,7 +46,7 @@ fun CardNoteBasic(
                 modifier = modifier.fillMaxWidth()
             ) {
                 Icon(imageVector = Icons.Default.DateRange, contentDescription = "")
-                Text("12/01/2023")
+                habit.dateReminder?.getReminderDay()?.let { Text(it) }
             }
         }
     }
@@ -54,8 +57,9 @@ fun CardNoteBasic(
 fun CardNoteBasicPreview(){
     Scaffold { innerPadding ->
         Row (modifier = Modifier.padding(innerPadding)){
-            CardNoteBasic()
-            CardNoteBasic()
+            CardNoteBasic(
+                habit = HabitEntity(dateUpdate = 0, dateCreate = 0)
+            )
         }
     }
 }

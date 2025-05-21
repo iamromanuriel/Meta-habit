@@ -3,6 +3,7 @@ package com.example.meta_habit.ui.screen.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Notifications
@@ -26,6 +27,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.meta_habit.ui.screen.create.CreateScreen
 import com.example.meta_habit.ui.components.CardNoteBasic
 import com.example.meta_habit.ui.components.DialogBasic
@@ -41,13 +43,12 @@ fun HomeScreen(
     onNavigateToDetail: () -> Unit = {},
     onNavigateToNotification: () -> Unit = {}
 ){
-    val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
+    val sheetState = rememberModalBottomSheetState()
+
     val showButtonSheet = remember { mutableStateOf(false) }
     val showDialogCreateNote = remember { mutableStateOf(false) }
-    val showDialogOptionRepeat = remember { mutableStateOf(false) }
-    val showDialogPicker = remember { mutableStateOf(false) }
-    val datePickerState = rememberDatePickerState(initialDisplayMode = DisplayMode.Picker)
+    val listHabit = viewModel.listOfHabit.collectAsStateWithLifecycle()
 
     Scaffold (
         topBar = {
@@ -81,10 +82,12 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
 
-            items(6){
+            items(listHabit.value){ habit ->
                 CardNoteBasic(
+                    habit = habit,
                     onClick = {
                         showButtonSheet.value = true
+                        viewModel.onSelectNote(habit)
                     }
                 )
             }
@@ -98,7 +101,9 @@ fun HomeScreen(
                 sheetState = sheetState
             ) {
                 LayoutOptions(
-                    onSelected = onNavigateToDetail
+                    onNavDetail = onNavigateToDetail,
+                    onDelete = viewModel::onDeleteNote,
+                    onPin = viewModel::onPin
                 )
             }
         }

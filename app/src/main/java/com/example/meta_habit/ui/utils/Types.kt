@@ -1,6 +1,7 @@
 package com.example.meta_habit.ui.utils
 
 import androidx.compose.ui.graphics.Color
+import java.util.Date
 
 enum class NoteType{
     DAILY, WEEKLY, CUSTOM, SIMPLE
@@ -15,5 +16,7 @@ enum class LabelTypes(var value: String){
 }
 
 fun main(){
-
+    val dateMil = 1747699200000
+    val date = Date(dateMil)
+    println(date)
 }

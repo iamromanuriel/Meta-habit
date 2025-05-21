@@ -32,7 +32,9 @@ import com.example.meta_habit.ui.utils.RepeatType
 @Composable
 fun LayoutOptions(
     modifier: Modifier = Modifier,
-    onSelected: () -> Unit = {}
+    onDelete: () -> Unit = {},
+    onPin: () -> Unit = {},
+    onNavDetail: () -> Unit = {}
 ){
     Column {
         Row(
@@ -47,19 +49,19 @@ fun LayoutOptions(
         }
 
         TextButton(onClick = {
-
+            onDelete()
         }) {
             Text(text = "Eliminar", modifier = modifier.fillMaxWidth().padding(vertical = 10.dp))
         }
 
         TextButton(onClick = {
-            onSelected()
+            onNavDetail()
         }) {
             Text(text = "Detalle", modifier = modifier.fillMaxWidth().padding(vertical = 10.dp))
         }
 
         TextButton(onClick = {
-
+            onPin()
         }) {
             Text(text = "Anclar", modifier = modifier.fillMaxWidth().padding(vertical = 10.dp))
         }

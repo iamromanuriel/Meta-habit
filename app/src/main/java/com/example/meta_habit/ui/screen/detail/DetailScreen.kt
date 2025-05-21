@@ -36,6 +36,7 @@ import com.example.meta_habit.ui.components.ItemLazyCheck
 import com.example.meta_habit.ui.components.LayoutCreateDetailNote
 import com.example.meta_habit.ui.components.ListWeekDays
 import com.example.meta_habit.ui.components.TopBarDialogBasic
+import com.example.meta_habit.ui.utils.rememberRestrictedDatePickerState
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -122,6 +123,7 @@ fun DetailScreen(
                         onCreatedNewTask = {},
                         onChangeTitle = {},
                         onChangeDescription = {},
+                        dateReminder = rememberRestrictedDatePickerState(),
                     )
                 }
             }

@@ -4,6 +4,7 @@ import androidx.room.util.appendPlaceholders
 import com.example.meta_habit.data.db.AppDatabase
 import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
+import kotlinx.coroutines.flow.Flow
 
 class HabitRepository(
     private val appDatabase: AppDatabase
@@ -46,6 +47,29 @@ class HabitRepository(
                 )
                 appDatabase.habitTaskDao().insertGetId(habitTaskEntity)
             }
+            Result.success(Unit)
+        }catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
+    fun getLIsListOfHabit(): Flow<List<HabitEntity>>{
+        return appDatabase.habitDao().getListOfHabit()
+    }
+
+    suspend fun deleteHabit(habit: HabitEntity): Result<Unit>{
+        return try {
+            appDatabase.habitDao().deleteHabit(habit)
+            Result.success(Unit)
+        }catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateHabitToPint(habit: HabitEntity): Result<Unit>{
+        return try {
+            habit.isPinned = habit.isPinned?.not()
+            appDatabase.habitDao().updateHabit(habit)
             Result.success(Unit)
         }catch (e: Exception){
             Result.failure(e)

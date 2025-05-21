@@ -56,12 +56,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.ui.utils.LabelTypes
 import com.example.meta_habit.ui.utils.RepeatType
+import com.example.meta_habit.ui.utils.getReminderDay
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LayoutCreateDetailNote(
     modifier: Modifier = Modifier,
     stateIsRepeat: MutableState<Boolean>,
     stateColorSelected: State<ColorType>,
+    dateReminder: DatePickerState,
     stateTitle: String,
     stateDescription: String,
     listTask: List<String>,
@@ -139,7 +142,8 @@ fun LayoutCreateDetailNote(
                                     Text("Fecha", modifier = modifier.padding(horizontal = 6.dp), fontWeight = FontWeight.Bold)
                                 }
                                 Row {
-                                    Text("09/02", modifier = modifier.padding(horizontal = 6.dp))
+                                    dateReminder.selectedDateMillis?.getReminderDay()
+                                        ?.let { Text(it, modifier = modifier.padding(horizontal = 6.dp)) }
                                     Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "")
                                 }
                             }
@@ -351,6 +355,7 @@ fun LayoutOptionRepeatPreview(){
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun LayoutCreateDetailNotePreview(){
@@ -359,6 +364,7 @@ fun LayoutCreateDetailNotePreview(){
             modifier = Modifier.padding(innerPadding),
             stateIsRepeat = remember { mutableStateOf(false) },
             stateColorSelected = remember { mutableStateOf(ColorType.GRAY) },
+            dateReminder = rememberDatePickerState(),
             listTask = optionRepeat,
             stateTitle = "",
             stateDescription = "",

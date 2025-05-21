@@ -5,9 +5,11 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
+import com.example.meta_habit.data.db.entity.HabitWithTasks
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -17,6 +19,14 @@ interface DaoHabit{
 
     @Query("SELECT * FROM habit")
     fun getListOfHabit(): Flow<List<HabitEntity>>
+
+    @Transaction
+    @Query("SELECT * FROM habit")
+    fun getListOfHabitWithTasks(): Flow<List<HabitWithTasks>>
+
+    @Transaction
+    @Query("SELECT * FROM habit WHERE id = :idHabit")
+    fun getHabitWithTask(idHabit: Long): Flow<HabitWithTasks>
 
     @Delete
     suspend fun deleteHabit(habitEntity: HabitEntity): Int
@@ -29,4 +39,7 @@ interface DaoHabit{
 interface DaoHabitTask{
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGetId(habitTaskEntity: HabitTaskEntity): Long
+
+    @Update
+    suspend fun updateHabitTask(habitTaskEntity: HabitTaskEntity): Int
 }

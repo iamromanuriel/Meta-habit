@@ -36,7 +36,10 @@ import com.example.meta_habit.ui.components.ItemLazyCheck
 import com.example.meta_habit.ui.components.LayoutCreateDetailNote
 import com.example.meta_habit.ui.components.ListWeekDays
 import com.example.meta_habit.ui.components.TopBarDialogBasic
+import com.example.meta_habit.ui.utils.getDayNameFromDate
+import com.example.meta_habit.ui.utils.getReminderDay
 import com.example.meta_habit.ui.utils.rememberRestrictedDatePickerState
+import com.example.meta_habit.ui.utils.toDate
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,7 +50,7 @@ fun DetailScreen(
 ){
 
     var isShowDialogEdit by remember { mutableStateOf(false) }
-    val listTask by viewModel.listTask.collectAsStateWithLifecycle()
+    val habitTask by viewModel.habitWithTask.collectAsStateWithLifecycle()
 
     Scaffold (
         topBar = {
@@ -62,7 +65,7 @@ fun DetailScreen(
                         Icon(imageVector = Icons.Default.Edit, contentDescription = "")
                     }
                 },
-                title = { Text(text = "Detalle") }
+                title = { Text(text = habitTask?.habit?.title ?: "Detalle") }
             )
         }
     ){ innerPadding ->
@@ -74,15 +77,26 @@ fun DetailScreen(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 5.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "Creacion: 20 Julio")
-                    Text(text = "Ultima modificacion: 3 dias")
+                    habitTask?.habit?.dateCreate?.getReminderDay().let {
+                        Text(text = "Creacion: ${it}")
+                    }
+
+                    habitTask?.habit?.dateUpdate?.getReminderDay().let {
+                        Text(text = "Ultima modificacion: ${it}")
+                    }
+
                 }
                 ListWeekDays()
                 Spacer(modifier = Modifier.fillMaxWidth().height(10.dp))
             }
 
-            items(listTask){ task ->
-                ItemLazyCheck(description = task, enabled = true)
+            items(habitTask?.task?: emptyList()){ task ->
+                ItemLazyCheck(
+                    habitTask = task,
+                    enabled = true,
+                    onChangeTask = {
+                        viewModel.onCheckTask(task, it)
+                    })
             }
 
             item {

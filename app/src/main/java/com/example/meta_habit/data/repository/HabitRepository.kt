@@ -4,11 +4,25 @@ import androidx.room.util.appendPlaceholders
 import com.example.meta_habit.data.db.AppDatabase
 import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
+import com.example.meta_habit.data.db.entity.HabitWithTasks
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import java.util.Date
 
 class HabitRepository(
     private val appDatabase: AppDatabase
 ) {
+
+    private val selectedHabit = MutableStateFlow<HabitEntity?>(null)
+
+    fun setSelectedHabit(habit: HabitEntity){
+        selectedHabit.value = habit
+    }
+
+    fun getSelectedHabit(): Flow<HabitEntity?>{
+        return selectedHabit.asStateFlow()
+    }
 
     suspend fun onSaveHabit(
         title: String,
@@ -27,8 +41,8 @@ class HabitRepository(
                 dateReminder = dateReminder,
                 tag = tag,
                 color = color,
-                dateCreate = 1,
-                dateUpdate = 1
+                dateCreate = Date().time,
+                dateUpdate = Date().time
             )
             val idHabit = appDatabase.habitDao().insertGetId(habitEntity)
             Result.success(idHabit)
@@ -57,6 +71,10 @@ class HabitRepository(
         return appDatabase.habitDao().getListOfHabit()
     }
 
+    fun getListOfHabitWithTasks(): Flow<List<HabitWithTasks>>{
+        return appDatabase.habitDao().getListOfHabitWithTasks()
+    }
+
     suspend fun deleteHabit(habit: HabitEntity): Result<Unit>{
         return try {
             appDatabase.habitDao().deleteHabit(habit)
@@ -75,5 +93,30 @@ class HabitRepository(
             Result.failure(e)
         }
     }
+
+    fun getHabitWithTask(): Flow<HabitWithTasks>{
+        return appDatabase.habitDao().getHabitWithTask(selectedHabit.value?.id ?: 0)
+    }
+
+    suspend fun updateHabitTaskCheck(taskEntity: HabitTaskEntity, isChecked: Boolean): Result<Unit>{
+        return try {
+            taskEntity.isCheck = isChecked
+            appDatabase.habitTaskDao().updateHabitTask(taskEntity)
+            Result.success(Unit)
+        }catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateHabitTaskDescription(taskEntity: HabitTaskEntity, description: String): Result<Unit>{
+        return try {
+            taskEntity.description = description
+            appDatabase.habitTaskDao().updateHabitTask(taskEntity)
+            Result.success(Unit)
+        }catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
 
 }

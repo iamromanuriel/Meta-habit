@@ -30,34 +30,40 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.meta_habit.data.db.entity.HabitEntity
+import com.example.meta_habit.data.db.entity.HabitTaskEntity
 
 @Composable
 fun ItemLazyCheck(
     modifier: Modifier = Modifier,
+    habitTask: HabitTaskEntity? = null,
     description: String = "",
-    onChangeTask: (String) -> Unit = {},
+    onChangeTask: (Boolean) -> Unit = {},
     enabled: Boolean = false
 ){
-    var isChecked by remember { mutableStateOf(false) }
-    var stateDescription by remember { mutableStateOf(description) }
+
 
     Row (
         modifier = modifier
     ){
-        if(enabled){
-            Checkbox(
-                checked = isChecked,
-                onCheckedChange = {
-                    isChecked = !isChecked
-                }
-            )
+
+        habitTask?.let {
+            if(enabled){
+                Checkbox(
+                    checked = habitTask.isCheck,
+                    onCheckedChange = {
+                        onChangeTask(habitTask.isCheck.not())
+                    }
+                )
+            }
         }
+
 
         TextField(
             modifier = modifier.fillMaxWidth(),
-            value = stateDescription,
+            value = habitTask?.description?: description,
             onValueChange = {
-                stateDescription = it
+                habitTask?.description = it
             },
         )
     }
@@ -109,3 +115,4 @@ fun ItemNotification(
 private fun ItemLazyCheckPreview(){
     ItemNotification()
 }
+

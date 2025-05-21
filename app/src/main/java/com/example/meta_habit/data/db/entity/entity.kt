@@ -1,9 +1,11 @@
 package com.example.meta_habit.data.db.entity
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 
 @Entity(tableName = "habit")
 data class HabitEntity (
@@ -62,7 +64,11 @@ data class NotificationEntity(
 )
 
 data class HabitWithTasks(
-    val habit: HabitEntity,
+    @Embedded val habit: HabitEntity,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "habitId"
+    )
     val task: List<HabitTaskEntity>
 )
 

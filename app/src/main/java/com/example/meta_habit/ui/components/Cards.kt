@@ -13,6 +13,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -43,18 +45,25 @@ fun CardNoteBasic(
         onClick = onClick
     ) {
         Column(modifier = modifier.padding(8.dp)) {
-            Text(
-                text = habit.habit.title ?: "",
-                modifier = modifier.padding(vertical = 6.dp),
-                fontWeight = FontWeight.Bold,
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = habit.habit.title ?: "Title",
+                    modifier = modifier.padding(vertical = 6.dp),
+                    fontWeight = FontWeight.Bold,
+                )
+
+                Icon(if(habit.habit.isPinned == true) Icons.Default.Favorite else Icons.Default.FavoriteBorder, contentDescription = "")
+            }
             habit.task.take(3).forEach { task ->
                 Row(
                     modifier = modifier.padding(vertical = 4.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(imageVector = Icons.Default.Check, contentDescription = "", modifier.scale(0.8F))
+                    if(task.isCheck){ Icon(imageVector = Icons.Default.Check, contentDescription = "", modifier.scale(0.8F)) }
                     Text(text= task.description)
                 }
             }

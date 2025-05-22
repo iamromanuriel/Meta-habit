@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Checkbox
@@ -26,8 +28,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.data.db.entity.HabitEntity
@@ -41,7 +45,6 @@ fun ItemLazyCheck(
     onChangeTask: (Boolean) -> Unit = {},
     enabled: Boolean = false
 ){
-
 
     Row (
         modifier = modifier
@@ -66,6 +69,41 @@ fun ItemLazyCheck(
                 habitTask?.description = it
             },
         )
+    }
+}
+
+@Composable
+fun ItemListCheckEditable(
+    modifier: Modifier = Modifier,
+    habitTask: HabitTaskEntity? = null,
+    onChangeTaskCheck: (Boolean) -> Unit = {},
+    onChangeTaskDescription: (String) -> Unit = {},
+){
+    val focusManager = LocalFocusManager.current
+    var description by remember { mutableStateOf(habitTask?.description?:"") }
+    var isCheck by remember { mutableStateOf(habitTask?.isCheck?:false) }
+
+    Row {
+        habitTask?.let {
+            Checkbox(
+                checked = isCheck,
+                onCheckedChange = {
+                    isCheck = isCheck.not()
+                    onChangeTaskCheck(habitTask.isCheck.not())
+                }
+            )
+
+            TextField(
+                modifier = modifier.fillMaxWidth(),
+                value = description,
+                onValueChange = { text -> description = text },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions (onDone = {
+                    onChangeTaskDescription(description)
+                    focusManager.clearFocus()
+                })
+            )
+        }
     }
 }
 
@@ -113,6 +151,6 @@ fun ItemNotification(
 @Preview(showBackground = true)
 @Composable
 private fun ItemLazyCheckPreview(){
-    ItemNotification()
+    ItemListCheckEditable()
 }
 

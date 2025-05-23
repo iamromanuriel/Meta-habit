@@ -3,6 +3,7 @@ package com.example.meta_habit.ui.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,7 +17,9 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +35,7 @@ import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
 import com.example.meta_habit.data.db.entity.HabitWithTasks
 import com.example.meta_habit.ui.utils.getReminderDay
+
 
 @Composable
 fun CardNoteBasic(
@@ -55,16 +59,19 @@ fun CardNoteBasic(
                     fontWeight = FontWeight.Bold,
                 )
 
-                Icon(if(habit.habit.isPinned == true) Icons.Default.Favorite else Icons.Default.FavoriteBorder, contentDescription = "")
+                if(habit.habit.isPinned == true) { Icon(Icons.Default.Favorite , contentDescription = "") }
             }
-            habit.task.take(3).forEach { task ->
-                Row(
-                    modifier = modifier.padding(vertical = 4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    if(task.isCheck){ Icon(imageVector = Icons.Default.Check, contentDescription = "", modifier.scale(0.8F)) }
-                    Text(text= task.description)
+
+            Column(modifier = Modifier.height(80.dp)){
+                habit.task.take(3).forEach { task ->
+                    Row(
+                        modifier = modifier.padding(vertical = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if(task.isCheck){ Icon(imageVector = Icons.Default.Check, contentDescription = "", modifier.scale(0.8F)) }
+                        Text(text= task.description, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                    }
                 }
             }
             Row(

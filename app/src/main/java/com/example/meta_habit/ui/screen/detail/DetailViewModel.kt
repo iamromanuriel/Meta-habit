@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
 import com.example.meta_habit.data.db.entity.HabitWithTasks
 import com.example.meta_habit.data.repository.HabitRepository
-import com.example.meta_habit.ui.components.ColorType
+import com.example.meta_habit.ui.utils.ColorType
 import com.example.meta_habit.ui.utils.LabelTypes
 import com.example.meta_habit.ui.utils.RepeatType
 import kotlinx.coroutines.Dispatchers

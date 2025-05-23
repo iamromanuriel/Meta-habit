@@ -30,13 +30,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.meta_habit.ui.components.ColorType
 import com.example.meta_habit.ui.components.DialogBasic
 import com.example.meta_habit.ui.components.ItemLazyCheck
 import com.example.meta_habit.ui.components.ItemListCheckEditable
 import com.example.meta_habit.ui.components.LayoutCreateDetailNote
 import com.example.meta_habit.ui.components.ListWeekDays
 import com.example.meta_habit.ui.components.TopBarDialogBasic
+import com.example.meta_habit.ui.utils.ColorType
 import com.example.meta_habit.ui.utils.getDayNameFromDate
 import com.example.meta_habit.ui.utils.getReminderDay
 import com.example.meta_habit.ui.utils.rememberRestrictedDatePickerState

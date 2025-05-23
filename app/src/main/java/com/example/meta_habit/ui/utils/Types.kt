@@ -1,5 +1,6 @@
 package com.example.meta_habit.ui.utils
 
+import androidx.compose.material3.CardColors
 import androidx.compose.ui.graphics.Color
 import java.util.Date
 
@@ -14,6 +15,33 @@ enum class RepeatType (var value: String){
 enum class LabelTypes(var value: String){
     LECTURE("Clase"), WORK("Trabajo"), STUDY("Estudio")
 }
+
+
+enum class ColorType(val value: Color){
+    RED(Color.Red),
+    Blue(Color.Blue),
+    YELLOW(Color.Yellow),
+    GREEN(Color.Green),
+    GRAY(Color.Gray)
+}
+
+
+
+fun Int.getColorToOrdinalEnum(): ColorType?{
+    return ColorType.entries.find {
+        it.ordinal == this
+    }
+}
+
+fun ColorType.buildColorCard(): CardColors{
+    return CardColors(
+        containerColor = this.value,
+        contentColor = Color.White,
+        disabledContainerColor = Color.Gray,
+        disabledContentColor = Color.Black
+    )
+}
+
 
 fun main(){
     val dateMil = 1747699200000

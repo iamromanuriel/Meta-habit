@@ -62,17 +62,18 @@ fun Calendar.clearTime(){
     this.set(Calendar.MINUTE, 0)
     this.set(Calendar.SECOND, 0)
 }
-@RequiresApi(Build.VERSION_CODES.O)
-enum class DayOfWeekSpanish(val day: String? = null, val value: DayOfWeek) {
-    LUNES("Lunes", DayOfWeek.MONDAY),
-    MARTES("Martes", DayOfWeek.THURSDAY),
-    MIERCOLES("Miercoles", DayOfWeek.WEDNESDAY),
-    JUEVES("Jueves", DayOfWeek.THURSDAY),
-    VIERNES("Viernes", DayOfWeek.FRIDAY),
-    SABADO("Sabado", DayOfWeek.SATURDAY),
-    DOMINGO("Domingo", DayOfWeek.SUNDAY);
-}
 
+@RequiresApi(Build.VERSION_CODES.O)
+fun Date.getNameMouthSpanish(): String{
+
+    val months = listOf<String>("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
+
+    val localDate = this.toInstant()
+        .atZone(ZoneId.systemDefault())
+        .toLocalDate()
+
+    return "${localDate.dayOfWeek} ${localDate.dayOfMonth} de ${months[localDate.month.ordinal]}"
+}
 
 
 fun currentDate(): Date{
@@ -84,7 +85,11 @@ fun currentDate(): Date{
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun main() {
-    val day = LocalDate.now()
+    val months = listOf<String>("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
+    val day = Date()
+
+    print(day.getNameMouthSpanish())
+
 }
 
 

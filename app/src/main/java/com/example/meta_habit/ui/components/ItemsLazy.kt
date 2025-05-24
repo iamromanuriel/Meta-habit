@@ -1,5 +1,10 @@
 package com.example.meta_habit.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -137,7 +142,6 @@ fun ItemNotification(
         ) {
             Text("Clase de ingles", fontWeight = FontWeight.Bold)
             Text("Tu clase de ingles comienza en 4 horas", style = TextStyle(fontWeight = FontWeight.Light))
-
         }
 
         Box(

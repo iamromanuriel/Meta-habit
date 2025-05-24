@@ -1,5 +1,8 @@
 package com.example.meta_habit.ui.screen.home
 
+import android.graphics.drawable.AnimatedImageDrawable
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -32,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,6 +50,7 @@ import com.example.meta_habit.ui.components.LayoutOptions
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -53,11 +58,11 @@ fun HomeScreen(
     onNavigateToDetail: () -> Unit = {},
     onNavigateToNotification: () -> Unit = {}
 ){
-    val scope = rememberCoroutineScope()
-    val sheetState = rememberModalBottomSheetState()
+    var scope = rememberCoroutineScope()
+    var sheetState = rememberModalBottomSheetState()
 
-    val showButtonSheet = remember { mutableStateOf(false) }
-    val showDialogCreateNote = remember { mutableStateOf(false) }
+    var showButtonSheet by remember { mutableStateOf(false) }
+    var showDialogCreateNote by remember { mutableStateOf(false) }
     val listHabit = viewModel.listOfHabit.collectAsStateWithLifecycle()
 
 
@@ -78,7 +83,7 @@ fun HomeScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    showDialogCreateNote.value = true
+                    showDialogCreateNote = true
                 }
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "")
@@ -97,18 +102,18 @@ fun HomeScreen(
                 CardNoteBasic(
                     habit = habit,
                     onClick = {
-                        showButtonSheet.value = true
+                        showButtonSheet = true
                         viewModel.onSelectNote(habit)
                     }
                 )
             }
         }
 
-        if(showButtonSheet.value){
+        if(showButtonSheet){
             ModalBottomSheet(
                 onDismissRequest = {
                     println("onDismissRequest bottomSheet")
-                    showButtonSheet.value = false },
+                    showButtonSheet = false },
                 sheetState = sheetState
             ) {
                 LayoutOptions(
@@ -119,20 +124,20 @@ fun HomeScreen(
             }
         }
 
-        if(showDialogCreateNote.value){
+        if(showDialogCreateNote){
             CreateScreen(
                 sheetState = sheetState,
-                onDismiss = { showDialogCreateNote.value = false }
+                onDismiss = { showDialogCreateNote = false }
             )
-
         }
-
-
-
-
     }
 }
+@Composable
+fun AnimateVectorDrawable(){
+}
 
+
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun HomeScreenPreview(){

@@ -1,11 +1,17 @@
 package com.example.meta_habit.ui.components
 
 import android.content.ClipData.Item
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
@@ -32,6 +38,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -39,6 +46,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.ui.utils.ColorType
+import com.example.meta_habit.ui.utils.getNameMouthSpanish
+import java.util.Date
 
 
 @Composable
@@ -64,6 +73,7 @@ fun SelectionColor(
         }
     }
 }
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DropdownSelectDate(
     modifier: Modifier = Modifier
@@ -73,13 +83,20 @@ fun DropdownSelectDate(
     Column {
         TextButton(
             onClick = { isExpanded = !isExpanded },
-            modifier = modifier
         ) {
-            Text(text= "Jueves 22 de May", color = Color.Black, style = MaterialTheme.typography.headlineSmall)
+            Text(text= Date().getNameMouthSpanish(), color = Color.Black, style = MaterialTheme.typography.headlineSmall)
 
         }
 
-        AnimatedVisibility(isExpanded) {
+        AnimatedVisibility(isExpanded,
+                enter = slideInVertically(
+                    initialOffsetY = { -40 }
+                ) + expandVertically(expandFrom = Alignment.Bottom)+
+                        scaleIn(
+                            transformOrigin = _root_ide_package_.androidx.compose.ui.graphics.TransformOrigin(0.8f, 0f)
+                        ) +
+                        fadeIn(initialAlpha = 0.3f)
+            ) {
             DropdownMenu(
                 expanded = isExpanded,
                 onDismissRequest = { isExpanded = !isExpanded },
@@ -113,7 +130,6 @@ fun ItemColorSelection(
     color: ColorType,
     onSelected: (ColorType) -> Unit = {}
 ){
-
     Box(
         modifier = modifier
             .clip(CircleShape)
@@ -123,7 +139,6 @@ fun ItemColorSelection(
             .clickable {
                 onSelected(color)
             }
-
     )
 }
 

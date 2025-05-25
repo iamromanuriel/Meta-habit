@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.example.meta_habit.data.db.AppDatabase
 import com.example.meta_habit.data.db.databaseName
 import com.example.meta_habit.data.repository.HabitRepository
+import com.example.meta_habit.data.repository.NotificationRepository
 import com.example.meta_habit.ui.screen.home.HomeViewModel
 import com.example.meta_habit.ui.screen.create.CreateViewModel
 import com.example.meta_habit.ui.screen.detail.DetailViewModel
@@ -31,12 +32,15 @@ val databaseModule = module {
 
     single{
         get<AppDatabase>().habitDao()
+        get<AppDatabase>().habitTaskDao()
+        get<AppDatabase>().habitNotification()
     }
 }
 
 val repositoryModule = module {
     single{
         HabitRepository(get())
+        //NotificationRepository(get())
     }
 }
 

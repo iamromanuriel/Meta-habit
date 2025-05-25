@@ -86,7 +86,6 @@ class HabitRepository(
 
     suspend fun updateHabitToPint(habit: HabitEntity): Result<Unit>{
         return try {
-            habit.isPinned = habit.isPinned?.not()
             appDatabase.habitDao().updateHabit(habit)
             Result.success(Unit)
         }catch (e: Exception){

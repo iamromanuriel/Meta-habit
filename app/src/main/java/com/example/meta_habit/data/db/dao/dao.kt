@@ -10,6 +10,7 @@ import androidx.room.Update
 import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
 import com.example.meta_habit.data.db.entity.HabitWithTasks
+import com.example.meta_habit.data.db.entity.NotificationEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -42,4 +43,10 @@ interface DaoHabitTask{
 
     @Update
     suspend fun updateHabitTask(habitTaskEntity: HabitTaskEntity): Int
+}
+
+@Dao
+interface DaoNotification{
+    @Query("SELECT * FROM notifications")
+    fun getListNotification(): Flow<List<NotificationEntity>>
 }

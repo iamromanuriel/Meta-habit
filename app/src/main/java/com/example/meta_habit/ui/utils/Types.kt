@@ -16,6 +16,12 @@ enum class LabelTypes(var value: String){
     LECTURE("Clase"), WORK("Trabajo"), STUDY("Estudio")
 }
 
+enum class NotificationTypes(var value: String){
+    Remember("Recordatorio"),
+    NewFeature("Nueva funcionalidad"),
+    TASK_DELAYED("Tarea atrasada")
+}
+
 
 enum class ColorType(val value: Color){
     RED(Color.Red),

@@ -26,6 +26,12 @@ class HomeViewModel(
             launch {
                 habitRepository.getListOfHabitWithTasks().collect{ habitTask ->
                     _listOfHabit.value = habitTask
+                    _selectedHabit.value?.let { currentSelected ->
+                        _listOfHabit.value.find { it.habit.id == currentSelected.habit.id }?.let { updatedHabit ->
+                            _selectedHabit.value = updatedHabit
+                        }
+
+                    }
                 }
             }
         }
@@ -57,10 +63,23 @@ class HomeViewModel(
 
     fun onPin(){
         viewModelScope.launch {
-            _selectedHabit.value?.let { habit ->
-                val pinDeferred = async(Dispatchers.IO) { habitRepository.updateHabitToPint(habit.habit)  }
+            _selectedHabit.value?.let { currentSelectedHabitTask ->
+
+                val updatedHabitEntity = currentSelectedHabitTask.habit.copy(
+                    isPinned = currentSelectedHabitTask.habit.isPinned?.not() ?: false
+                )
+
+                val pinDeferred = async(Dispatchers.IO) { habitRepository.updateHabitToPint(updatedHabitEntity) }
 
                 val resultPin = pinDeferred.await()
+
+                resultPin.onSuccess {
+                    _selectedHabit.value = currentSelectedHabitTask.copy(
+                        habit = updatedHabitEntity
+                    )
+                }.onFailure { e ->
+                    Log.e("HomeViewModel", "Error al anclar/desanclar hábito: ${e.message}")
+                }
             }
         }
     }

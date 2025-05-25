@@ -4,6 +4,10 @@ import androidx.compose.material3.CardColors
 import androidx.compose.ui.graphics.Color
 import java.util.Date
 
+enum class FilterType {
+    TODAY, WEEK, TREE_DAYS
+}
+
 enum class NoteType{
     DAILY, WEEKLY, CUSTOM, SIMPLE
 }

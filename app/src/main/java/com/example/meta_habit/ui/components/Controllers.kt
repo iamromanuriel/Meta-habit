@@ -45,7 +45,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.meta_habit.ui.screen.home.FilterTypeAndLabel
 import com.example.meta_habit.ui.utils.ColorType
+import com.example.meta_habit.ui.utils.FilterType
+import com.example.meta_habit.ui.utils.NoteType
 import com.example.meta_habit.ui.utils.getNameMouthSpanish
 import java.util.Date
 
@@ -76,7 +79,9 @@ fun SelectionColor(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DropdownSelectDate(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    stateFilter: FilterTypeAndLabel,
+    onSelected: (FilterType)-> Unit = {}
 ){
     var isExpanded by  remember { mutableStateOf(false) }
 
@@ -84,41 +89,38 @@ fun DropdownSelectDate(
         TextButton(
             onClick = { isExpanded = !isExpanded },
         ) {
-            Text(text= Date().getNameMouthSpanish(), color = Color.Black, style = MaterialTheme.typography.headlineSmall)
+            Text(text= stateFilter.label?: "", color = Color.Black, style = MaterialTheme.typography.headlineSmall)
 
         }
 
-        AnimatedVisibility(isExpanded,
-                enter = slideInVertically(
-                    initialOffsetY = { -40 }
-                ) + expandVertically(expandFrom = Alignment.Bottom)+
-                        scaleIn(
-                            transformOrigin = _root_ide_package_.androidx.compose.ui.graphics.TransformOrigin(0.8f, 0f)
-                        ) +
-                        fadeIn(initialAlpha = 0.3f)
-            ) {
-            DropdownMenu(
-                expanded = isExpanded,
-                onDismissRequest = { isExpanded = !isExpanded },
-            ) {
+        DropdownMenu(
+            expanded = isExpanded,
+            onDismissRequest = { isExpanded = !isExpanded },
+        ) {
 
-                DropdownMenuItem(
-                    text = { Text(text = "Hoy") },
-                    onClick = {  },
-                )
+            DropdownMenuItem(
+                text = { Text(text = "Hoy") },
+                onClick = {
+                    onSelected(FilterType.TODAY)
+                    isExpanded = !isExpanded
+                },
+            )
 
-                DropdownMenuItem(
-                    modifier = Modifier.weight(200F),
-                    text = { Text(text = "3 Dias") },
-                    onClick = {  },
-                )
+            DropdownMenuItem(
+                text = { Text(text = "3 Dias") },
+                onClick = {
+                    onSelected(FilterType.TREE_DAYS)
+                    isExpanded = !isExpanded
+                },
+            )
 
-                DropdownMenuItem(
-                    modifier = Modifier.weight(200F),
-                    text = { Text(text = "Semana") },
-                    onClick = {  },
-                )
-            }
+            DropdownMenuItem(
+                text = { Text(text = "Semana") },
+                onClick = {
+                    onSelected(FilterType.WEEK)
+                    isExpanded = !isExpanded
+                },
+            )
         }
     }
 }

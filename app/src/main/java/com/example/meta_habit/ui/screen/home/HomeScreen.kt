@@ -64,12 +64,16 @@ fun HomeScreen(
     var showButtonSheet by remember { mutableStateOf(false) }
     var showDialogCreateNote by remember { mutableStateOf(false) }
     val listHabit = viewModel.listOfHabit.collectAsStateWithLifecycle()
+    val selectedFilter by viewModel.selectedFilter.collectAsStateWithLifecycle()
 
 
     Scaffold (
         topBar = {
             TopAppBar(
-                title = { DropdownSelectDate() },
+                title = { DropdownSelectDate(
+                    stateFilter = selectedFilter,
+                    onSelected = viewModel::onSelectFilter
+                ) },
                 actions = {
                     IconButton (
                         onClick = {

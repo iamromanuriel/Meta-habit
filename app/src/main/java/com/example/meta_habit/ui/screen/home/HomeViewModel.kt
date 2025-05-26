@@ -12,6 +12,7 @@ import com.example.meta_habit.ui.utils.RepeatType
 import com.example.meta_habit.ui.utils.getLocalDate
 import com.example.meta_habit.ui.utils.getNameMouthSpanish
 import com.example.meta_habit.ui.utils.isValidateDateThreeDays
+import com.example.meta_habit.ui.utils.isValidateDateThreeDaysReminder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,8 +51,11 @@ class HomeViewModel(
             }
 
             launch {
+
                 habitRepository.getListOfHabitWithTasks().collect{ habitTask ->
                     _listOfHabit.value = habitTask
+                        val dateReminder = habitTask.map { it.habit.dateReminder }
+                        println("dateReminder :: $dateReminder")
                     _listFilterOfHabit.value = habitTask
                     _selectedHabit.value?.let { currentSelected ->
                         _listOfHabit.value.find { it.habit.id == currentSelected.habit.id }?.let { updatedHabit ->
@@ -77,16 +81,14 @@ class HomeViewModel(
             }
             FilterType.WEEK -> {
 
-                "Semana"
+                "Semanal"
             }
             FilterType.TREE_DAYS -> {
                 val listFilter = _listOfHabit.value.filter { currentHabits ->
-                    (currentHabits.habit.repetition
-                        ?: 0) == RepeatType.THREE_DAYS.ordinal && isValidateDateThreeDays(
+                    isValidateDateThreeDaysReminder(
                         Date(
                             currentHabits.habit.dateReminder ?: 0
-                        ).getLocalDate()
-                    )
+                        ).getLocalDate())
                 }
                 _listFilterOfHabit.value = listFilter
                 "Proximos 3 dias"

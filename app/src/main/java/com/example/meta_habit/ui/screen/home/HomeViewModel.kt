@@ -8,8 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.meta_habit.data.db.entity.HabitWithTasks
 import com.example.meta_habit.data.repository.HabitRepository
 import com.example.meta_habit.ui.utils.FilterType
-import com.example.meta_habit.ui.utils.getDayNumMonthFromDate
+import com.example.meta_habit.ui.utils.RepeatType
+import com.example.meta_habit.ui.utils.getLocalDate
 import com.example.meta_habit.ui.utils.getNameMouthSpanish
+import com.example.meta_habit.ui.utils.isValidateDateThreeDays
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +24,7 @@ data class FilterTypeAndLabel(
     val label: String? = null
 )
 
+@RequiresApi(Build.VERSION_CODES.O)
 class HomeViewModel(
     private val habitRepository: HabitRepository
 ): ViewModel() {
@@ -29,7 +32,9 @@ class HomeViewModel(
     private val _selectedHabit =  MutableStateFlow<HabitWithTasks?>(null)
 
     private val _listOfHabit = MutableStateFlow<List<HabitWithTasks>>(emptyList())
-    val listOfHabit = _listOfHabit.asStateFlow()
+
+    private val _listFilterOfHabit = MutableStateFlow<List<HabitWithTasks>>(emptyList())
+    val listOfHabit = _listFilterOfHabit.asStateFlow()
 
     private val _selectedFilter = MutableStateFlow(FilterTypeAndLabel(filterType = FilterType.TODAY))
     val selectedFilter = _selectedFilter.asStateFlow()
@@ -38,8 +43,16 @@ class HomeViewModel(
         println("onInitViewModelHome ::")
         viewModelScope.launch {
             launch {
+                val updateFilterLabel = _selectedFilter.value.copy(
+                    label = Date().getNameMouthSpanish()
+                )
+                _selectedFilter.value = updateFilterLabel
+            }
+
+            launch {
                 habitRepository.getListOfHabitWithTasks().collect{ habitTask ->
                     _listOfHabit.value = habitTask
+                    _listFilterOfHabit.value = habitTask
                     _selectedHabit.value?.let { currentSelected ->
                         _listOfHabit.value.find { it.habit.id == currentSelected.habit.id }?.let { updatedHabit ->
                             _selectedHabit.value = updatedHabit
@@ -59,12 +72,23 @@ class HomeViewModel(
     fun onSelectFilter(filterType: FilterType){
         val label: String = when(filterType){
             FilterType.TODAY -> {
+                _listFilterOfHabit.value = _listOfHabit.value
                 Date().getNameMouthSpanish()
             }
             FilterType.WEEK -> {
+
                 "Semana"
             }
             FilterType.TREE_DAYS -> {
+                val listFilter = _listOfHabit.value.filter { currentHabits ->
+                    (currentHabits.habit.repetition
+                        ?: 0) == RepeatType.THREE_DAYS.ordinal && isValidateDateThreeDays(
+                        Date(
+                            currentHabits.habit.dateReminder ?: 0
+                        ).getLocalDate()
+                    )
+                }
+                _listFilterOfHabit.value = listFilter
                 "Proximos 3 dias"
             }
         }

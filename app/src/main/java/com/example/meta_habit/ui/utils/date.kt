@@ -4,15 +4,14 @@ package com.example.meta_habit.ui.utils
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
-import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.Month
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import kotlin.time.Duration.Companion.days
+import kotlin.math.abs
 
 fun getCurrentWeekDays(): List<Date> {
     val calendar = Calendar.getInstance()
@@ -67,12 +66,13 @@ fun Calendar.clearTime(){
 fun Date.getNameMouthSpanish(): String{
 
     val months = listOf<String>("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
+    val daysOfWeek = listOf<String>("Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo")
 
     val localDate = this.toInstant()
         .atZone(ZoneId.systemDefault())
         .toLocalDate()
 
-    return "${localDate.dayOfWeek} ${localDate.dayOfMonth} de ${months[localDate.month.ordinal]}"
+    return "${daysOfWeek[localDate.dayOfWeek.ordinal]} ${localDate.dayOfMonth} de ${months[localDate.month.ordinal]}"
 }
 
 
@@ -82,14 +82,45 @@ fun currentDate(): Date{
     return calendar.time
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+fun Date.getLocalDate(): LocalDate{
+    return this.toInstant()
+        .atZone(ZoneId.systemDefault())
+        .toLocalDate()
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun isThreeDaysLater(date: LocalDate, today: LocalDate): Boolean{
+    val daysBetween = abs(today.toEpochDay() - date.toEpochDay())
+    return daysBetween % 3 == 0L
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun isValidateDateThreeDays( date: LocalDate): Boolean{
+    val today = LocalDate.now()
+    if(date == today) return true
+    return isThreeDaysLater(date, today)
+}
+
+
+
+
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun main() {
     val months = listOf<String>("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
-    val day = Date()
+    val daysOfWeek = listOf<String>("Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo")
 
-    print(day.getNameMouthSpanish())
+    val localDate = Date().toInstant()
+        .atZone(ZoneId.systemDefault())
+        .toLocalDate()
 
+    val threeDay = localDate
+
+    val isThreeDays = isValidateDateThreeDays(threeDay)
+
+    println(isThreeDays)
 }
 
 

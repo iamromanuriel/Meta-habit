@@ -52,9 +52,13 @@ fun ColorType.buildColorCard(): CardColors{
     )
 }
 
+fun getRepeatType(ordinal: Int): RepeatType?{
+    return RepeatType.entries.find { it.ordinal == ordinal }
+
+}
+
 
 fun main(){
-    val dateMil = 1747699200000
-    val date = Date(dateMil)
-    println(date)
+    val reminderType = getRepeatType(0)
+    println(reminderType)
 }

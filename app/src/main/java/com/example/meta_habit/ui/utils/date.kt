@@ -6,7 +6,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import java.time.LocalDate
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Calendar
 import java.util.Date
@@ -119,50 +118,37 @@ fun getNextThreeDayReminderDate(baseDate: LocalDate): LocalDate {
     return today.plusDays(offset)
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+fun getNextAWeek(baseDate: LocalDate): LocalDate{
+    val today = LocalDate.now()
+    val dayBetween = today.toEpochDay() - baseDate.toEpochDay()
+    val offset = if(dayBetween >= 0){
+        val remainder = dayBetween % 7
+        val daysUntilNext = if(remainder == 0L) 7 else 7 - remainder
+        daysUntilNext
+    }else{
+        abs(dayBetween) % 7
+    }
+    return today.plusDays(offset)
+}
+
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun isValidateDateThreeDaysReminder(date: LocalDate): Boolean{
-
+fun isValidateDateThreeDaysReminder(date: LocalDate, type: RepeatType?): Boolean{
     val today = LocalDate.now()
     if(date == today) return true
 
-    println("dateRecorder ${date}")
 
-    val countDay =  today.toEpochDay() - date.toEpochDay()
-
-    val dateNext = getNextThreeDayReminderDate(date)
-
-    println("NextDateRecorder ${dateNext}")
-
-    val dateReminder = today.plusDays(countDay)
-
-
-
-    println("dateRecorderConverter ${dateReminder}")
-
-    if(!isThreeDaysLater(dateReminder, today)) return false
-
-    return (1 until 4).map {
-        today.plusDays(it.toLong()) }.contains(dateReminder)
-}
-
-
-@RequiresApi(Build.VERSION_CODES.O)
-fun isValidateDateThreeDaysReminderTest(startDate: LocalDate): Boolean {
-    val today = LocalDate.now()
-
-    for (i in 0..2) {
-        val dateToCheck = today.plusDays(i.toLong())
-        val daysBetween = dateToCheck.toEpochDay() - startDate.toEpochDay()
-
-        if (daysBetween >= 0 && daysBetween % 3 == 0L) {
-            return true
-        }
+    val dateNext = when (type) {
+        RepeatType.THREE_DAYS -> getNextThreeDayReminderDate(date)
+        RepeatType.WEEKLY -> getNextAWeek(date)
+        else -> null
     }
 
-    return false
-}
 
+    return (1 until 4).map {
+        today.plusDays(it.toLong()) }.contains(dateNext)
+}
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -172,7 +158,8 @@ fun main() {
     val remindersDate = remindersTime.map { it.toDate() }.map { it.getLocalDate() }
 
     remindersDate.forEach {
-        print("fecha :: ${isValidateDateThreeDaysReminder(it)} $it \n")
+        print("date :: ${it}, nextDay :: ${getNextAWeek(it)} \n")
+        //print("fecha :: ${isValidateDateThreeDaysReminder(it)} $it \n\n")
     }
 
 }

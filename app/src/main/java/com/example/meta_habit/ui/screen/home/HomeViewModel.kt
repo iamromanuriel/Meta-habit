@@ -8,10 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.meta_habit.data.db.entity.HabitWithTasks
 import com.example.meta_habit.data.repository.HabitRepository
 import com.example.meta_habit.ui.utils.FilterType
-import com.example.meta_habit.ui.utils.RepeatType
 import com.example.meta_habit.ui.utils.getLocalDate
 import com.example.meta_habit.ui.utils.getNameMouthSpanish
-import com.example.meta_habit.ui.utils.isValidateDateThreeDays
+import com.example.meta_habit.ui.utils.getRepeatType
 import com.example.meta_habit.ui.utils.isValidateDateThreeDaysReminder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -80,15 +79,16 @@ class HomeViewModel(
                 Date().getNameMouthSpanish()
             }
             FilterType.WEEK -> {
-
                 "Semanal"
             }
             FilterType.TREE_DAYS -> {
                 val listFilter = _listOfHabit.value.filter { currentHabits ->
                     isValidateDateThreeDaysReminder(
-                        Date(
+                        date = Date(
                             currentHabits.habit.dateReminder ?: 0
-                        ).getLocalDate())
+                        ).getLocalDate(),
+                        type = getRepeatType(currentHabits.habit.repetition?:0)
+                    )
                 }
                 _listFilterOfHabit.value = listFilter
                 "Proximos 3 dias"

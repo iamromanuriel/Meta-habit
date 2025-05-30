@@ -56,8 +56,9 @@ import org.koin.androidx.compose.koinViewModel
 fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel<HomeViewModel>(),
     onNavigateToDetail: () -> Unit = {},
+    onNavigateToCreate: () -> Unit = {},
     onNavigateToNotification: () -> Unit = {}
-){
+) {
     var scope = rememberCoroutineScope()
     var sheetState = rememberModalBottomSheetState()
 
@@ -67,18 +68,20 @@ fun HomeScreen(
     val selectedFilter by viewModel.selectedFilter.collectAsStateWithLifecycle()
 
 
-    Scaffold (
+    Scaffold(
         topBar = {
             TopAppBar(
-                title = { DropdownSelectDate(
-                    stateFilter = selectedFilter,
-                    onSelected = viewModel::onSelectFilter
-                ) },
+                title = {
+                    DropdownSelectDate(
+                        stateFilter = selectedFilter,
+                        onSelected = viewModel::onSelectFilter
+                    )
+                },
                 actions = {
-                    IconButton (
+                    IconButton(
                         onClick = {
                             onNavigateToNotification()
-                        }){
+                        }) {
                         Icon(imageVector = Icons.Default.Notifications, contentDescription = "")
                     }
                 }
@@ -102,7 +105,7 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
 
-            items(listHabit.value){ habit ->
+            items(listHabit.value) { habit ->
                 CardNoteBasic(
                     habit = habit,
                     onClick = {
@@ -113,11 +116,12 @@ fun HomeScreen(
             }
         }
 
-        if(showButtonSheet){
+        if (showButtonSheet) {
             ModalBottomSheet(
                 onDismissRequest = {
                     println("onDismissRequest bottomSheet")
-                    showButtonSheet = false },
+                    showButtonSheet = false
+                },
                 sheetState = sheetState
             ) {
                 LayoutOptions(
@@ -128,22 +132,20 @@ fun HomeScreen(
             }
         }
 
-        if(showDialogCreateNote){
-            CreateScreen(
-                sheetState = sheetState,
-                onDismiss = { showDialogCreateNote = false }
-            )
+        if (showDialogCreateNote) {
+            onNavigateToCreate()
         }
     }
 }
+
 @Composable
-fun AnimateVectorDrawable(){
+fun AnimateVectorDrawable() {
 }
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
-fun HomeScreenPreview(){
+fun HomeScreenPreview() {
     HomeScreen()
 }

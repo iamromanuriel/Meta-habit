@@ -147,7 +147,8 @@ fun isValidateDateThreeDaysReminder(date: LocalDate, type: RepeatType?): Boolean
 
 
     return (1 until 4).map {
-        today.plusDays(it.toLong()) }.contains(dateNext)
+        today.plusDays(it.toLong()) }
+        .contains(dateNext)
 }
 
 

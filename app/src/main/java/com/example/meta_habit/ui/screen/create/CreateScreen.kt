@@ -38,7 +38,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun CreateScreen(
     modifier: Modifier = Modifier,
     sheetState: SheetState,
-    viewModel: CreateViewModel = koinViewModel<CreateViewModel>(),
+    viewModel: CreateViewModel,
     onDismiss: () -> Unit = {}
 ) {
     val showDialogOptionRepeat = remember { mutableStateOf(false) }
@@ -58,12 +58,12 @@ fun CreateScreen(
 
     val stateResult = viewModel.result.collectAsStateWithLifecycle()
 
-    LaunchedEffect (stateResult.value){
+    LaunchedEffect(stateResult.value) {
         stateResult.value?.let {
-            if(it.isSuccess){
+            if (it.isSuccess) {
                 Log.d("TAG", "CreateScreen: ${it.getOrNull()}")
                 onDismiss()
-            }else {
+            } else {
                 Log.d("TAG", "CreateScreen: ${it.getOrNull()}")
             }
         }
@@ -74,111 +74,100 @@ fun CreateScreen(
             onDismiss()
         },
         onCreate = {
-            viewModel.onSaveNote(title = stateTitle, enableReminder = enableRemember.value, description = stateDescription)
+            viewModel.onSaveNote(
+                title = stateTitle,
+                enableReminder = enableRemember.value,
+                description = stateDescription
+            )
         },
-    layout = {
-        LayoutCreateDetailNote(
-            stateIsRepeat = enableRemember,
-            stateColorSelected = selectedColor,
-            listTask = stateListTask.value,
-            stateTitle = stateTitle,
-            stateDescription = stateDescription,
-            dateReminder = datePickerState,
-            onChangeTitle = { title -> stateTitle = title },
-            onShowDialogRepeat = {
-                showDialogOptionRepeat.value = true
-            },
-            onShowDialogPicker = {
-                showDialogPicker.value = true
-            },
-            onShowDialogLabel = {
-                showDialogOptionLabel.value = true
-            },
-            onSelectedColor = { color ->
-                viewModel.onSelectedColor(color)
-            },
-            onCreatedNewTask = { task ->
-                viewModel.onAddNewTaskToList(task)
-            },
-            onChangeDescription = { text -> stateDescription = text }
-        )
-
-        if(showDialogOptionRepeat.value){
-            DialogBasic(
-                onSelected = {},
-                content = {
-                    LayoutOptionRepeat(
-                        title = "Repetir",
-                        options = RepeatType.entries.toTypedArray(),
-                        selected = selectedRepeat.value,
-                        onSelected = {
-                            showDialogOptionRepeat.value = false
-                            viewModel.onSelectedRepeat(it)
-                        },
-                        itemToString = { it.value },
-                    )
-                }
+        layout = {
+            LayoutCreateDetailNote(
+                stateIsRepeat = enableRemember,
+                stateColorSelected = selectedColor,
+                listTask = stateListTask.value,
+                stateTitle = stateTitle,
+                stateDescription = stateDescription,
+                dateReminder = datePickerState,
+                onChangeTitle = { title -> stateTitle = title },
+                onShowDialogRepeat = {
+                    showDialogOptionRepeat.value = true
+                },
+                onShowDialogPicker = {
+                    showDialogPicker.value = true
+                },
+                onShowDialogLabel = {
+                    showDialogOptionLabel.value = true
+                },
+                onSelectedColor = { color ->
+                    viewModel.onSelectedColor(color)
+                },
+                onCreatedNewTask = { task ->
+                    viewModel.onAddNewTaskToList(task)
+                },
+                onChangeDescription = { text -> stateDescription = text }
             )
-        }
 
-        if(showDialogOptionLabel.value){
-            DialogBasic(
-                onSelected = {},
-                content = {
-                    LayoutOptionRepeat(
-                        title = "Etiquetas",
-                        options = LabelTypes.entries.toTypedArray(),
-                        selected = selectedLabel.value,
-                        onSelected = {
-                            showDialogOptionLabel.value = false
-                            viewModel.onSelectedLabel(it)
-                        },
-                        itemToString = { it.value }
-                    )
-                }
-            )
-        }
-
-        
-
-        if(showDialogPicker.value){
-            DatePickerDialog(
-                onDismissRequest = { showDialogPicker.value = false },
-                confirmButton = {
-
-                    Button(
-                        onClick = {
-                            viewModel.selectDateMillis(datePickerState.selectedDateMillis)
-                            showDialogPicker.value = false
-                        }
-                    ) {
-                        Text("Aceptar")
+            if (showDialogOptionRepeat.value) {
+                DialogBasic(
+                    onSelected = {},
+                    content = {
+                        LayoutOptionRepeat(
+                            title = "Repetir",
+                            options = RepeatType.entries.toTypedArray(),
+                            selected = selectedRepeat.value,
+                            onSelected = {
+                                showDialogOptionRepeat.value = false
+                                viewModel.onSelectedRepeat(it)
+                            },
+                            itemToString = { it.value },
+                        )
                     }
-
-
-                }
-            ){
-                DatePicker(
-                    state = datePickerState
                 )
             }
+
+            if (showDialogOptionLabel.value) {
+                DialogBasic(
+                    onSelected = {},
+                    content = {
+                        LayoutOptionRepeat(
+                            title = "Etiquetas",
+                            options = LabelTypes.entries.toTypedArray(),
+                            selected = selectedLabel.value,
+                            onSelected = {
+                                showDialogOptionLabel.value = false
+                                viewModel.onSelectedLabel(it)
+                            },
+                            itemToString = { it.value }
+                        )
+                    }
+                )
+            }
+
+
+
+            if (showDialogPicker.value) {
+                DatePickerDialog(
+                    onDismissRequest = { showDialogPicker.value = false },
+                    confirmButton = {
+
+                        Button(
+                            onClick = {
+                                viewModel.selectDateMillis(datePickerState.selectedDateMillis)
+                                showDialogPicker.value = false
+                            }
+                        ) {
+                            Text("Aceptar")
+                        }
+
+
+                    }
+                ) {
+                    DatePicker(
+                        state = datePickerState
+                    )
+                }
+            }
         }
-    }
     )
 
-}
-
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
-@Composable
-fun CreateScreenPreview(){
-    Scaffold { innerPadding ->
-        CreateScreen(
-            modifier = Modifier.padding(innerPadding),
-            sheetState = rememberModalBottomSheetState(),
-
-        )
-    }
 }

@@ -103,7 +103,7 @@ fun DialogFullScreen(
                         Icon(imageVector = Icons.Default.Close, contentDescription = "")
                     }
 
-                    Text(text="Crea tu nota")
+                    Text(text="Crea tu nota", style = MaterialTheme.typography.titleMedium)
 
                     TextButton(
                         onClick = { onCreate() },

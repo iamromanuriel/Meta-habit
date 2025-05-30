@@ -8,9 +8,12 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,20 +24,26 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.meta_habit.ui.screen.create.CreateScreen
+import com.example.meta_habit.ui.screen.create.CreateViewModel
 import com.example.meta_habit.ui.screen.detail.DetailScreen
 import com.example.meta_habit.ui.screen.home.HomeScreen
 import com.example.meta_habit.ui.screen.notification.NotificationScreen
 import kotlinx.serialization.Serializable
+import org.koin.androidx.compose.koinViewModel
 import java.util.Objects
 
 @Serializable
 object Home
+@Serializable
+object Create
 @Serializable
 object Detail
 @Serializable
 object Notification
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation(){
@@ -54,10 +63,26 @@ fun Navigation(){
                         navController.navigate(Detail)
                     }
                 },
+                onNavigateToCreate = {
+                    navigateToDetail(backStackEntry){
+                        navController.navigate(Create)
+                    }
+                },
                 onNavigateToNotification = {
                     navigateToDetail(backStackEntry){
                         navController.navigate(Notification)
                     }
+                }
+            )
+        }
+
+        composable<Create>() { backStackEntry ->
+            val viewModel: CreateViewModel = koinViewModel()
+            CreateScreen(
+                viewModel = viewModel,
+                sheetState = rememberModalBottomSheetState(),
+                onDismiss = {
+                    navController.popBackStack()
                 }
             )
         }

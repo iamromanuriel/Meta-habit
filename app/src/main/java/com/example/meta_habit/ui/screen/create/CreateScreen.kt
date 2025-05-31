@@ -88,6 +88,8 @@ fun CreateScreen(
                 stateTitle = stateTitle,
                 stateDescription = stateDescription,
                 dateReminder = datePickerState,
+                stateLabel = selectedLabel.value,
+                stateRepeat = selectedRepeat.value,
                 onChangeTitle = { title -> stateTitle = title },
                 onShowDialogRepeat = {
                     showDialogOptionRepeat.value = true

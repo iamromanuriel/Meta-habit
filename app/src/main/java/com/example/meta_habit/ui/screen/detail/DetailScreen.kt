@@ -37,6 +37,8 @@ import com.example.meta_habit.ui.components.LayoutCreateDetailNote
 import com.example.meta_habit.ui.components.ListWeekDays
 import com.example.meta_habit.ui.components.TopBarDialogBasic
 import com.example.meta_habit.ui.utils.ColorType
+import com.example.meta_habit.ui.utils.LabelTypes
+import com.example.meta_habit.ui.utils.RepeatType
 import com.example.meta_habit.ui.utils.getDayNameFromDate
 import com.example.meta_habit.ui.utils.getReminderDay
 import com.example.meta_habit.ui.utils.rememberRestrictedDatePickerState
@@ -129,6 +131,8 @@ fun DetailScreen(
                         stateColorSelected = remember { mutableStateOf(ColorType.Blue) },
                         listTask = emptyList(),
                         stateTitle = habitTask?.habit?.title?:"",
+                        stateLabel = LabelTypes.WORK,
+                        stateRepeat = RepeatType.DAILY,
                         stateDescription = "",
                         onShowDialogRepeat = {},
                         onShowDialogPicker = {},

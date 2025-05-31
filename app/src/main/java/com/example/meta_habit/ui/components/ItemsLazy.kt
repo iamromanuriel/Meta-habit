@@ -21,9 +21,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemLazyCheck(
     modifier: Modifier = Modifier,
@@ -73,6 +76,11 @@ fun ItemLazyCheck(
             onValueChange = {
                 habitTask?.description = it
             },
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            )
         )
     }
 }

@@ -26,11 +26,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -42,7 +47,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.ui.screen.home.FilterTypeAndLabel
@@ -136,11 +144,36 @@ fun ItemColorSelection(
         modifier = modifier
             .clip(CircleShape)
             .size(50.dp)
-            .background(if(stateColorSelected.value.value == color.value) color.value else color.value.copy(alpha = 0.3F))
-            .border(width = if(stateColorSelected.value == color) 2.dp else 1.dp, color = if(stateColorSelected.value == color) Color.Black else color.value, shape = CircleShape)
+            .background(color.value)
+            .border(width = if(stateColorSelected.value == color) 2.dp else 1.dp, color = if(stateColorSelected.value == color) Color.Gray else color.value, shape = CircleShape)
             .clickable {
                 onSelected(color)
             }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TextFieldBasic(
+    value: String,
+    onValueChange: (String) -> Unit,
+    isCenterText: Boolean = false,
+    label: String? = null,
+    modifier: Modifier = Modifier,
+){
+    TextField(
+        modifier = modifier.fillMaxWidth(),
+        value = value,
+        textStyle = if(isCenterText) TextStyle(
+            textAlign = TextAlign.Center
+        ) else LocalTextStyle.current,
+        shape = RoundedCornerShape(12.dp),
+        onValueChange = onValueChange,
+        colors = TextFieldDefaults.textFieldColors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
+        )
     )
 }
 
@@ -148,7 +181,7 @@ fun ItemColorSelection(
 @Composable
 fun SelectionColorPreview(){
     SelectionColor(
-        stateColorSelected = remember { mutableStateOf(ColorType.GRAY) }
+        stateColorSelected = remember { mutableStateOf(ColorType.PURPLE) }
     )
 
 }

@@ -5,11 +5,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -26,15 +29,18 @@ import androidx.compose.material3.CardColors
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -52,6 +58,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.ui.utils.ColorType
@@ -69,6 +76,8 @@ fun LayoutCreateDetailNote(
     stateTitle: String,
     stateDescription: String,
     listTask: List<String>,
+    stateLabel: LabelTypes,
+    stateRepeat: RepeatType,
     onShowDialogRepeat: () -> Unit,
     onShowDialogPicker: () -> Unit,
     onShowDialogLabel: () -> Unit,
@@ -76,194 +85,204 @@ fun LayoutCreateDetailNote(
     onCreatedNewTask: (String) -> Unit,
     onChangeTitle: (String) -> Unit,
     onChangeDescription: (String) -> Unit
-){
-
-    val brush = remember {
-        Brush.linearGradient(
-            colors = listOf(Color.Red, Color.Blue)
-        )
-    }
-
-    Column {
+) {
 
 
-
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         LayoutCreateCheckList(
             onCreateNewTask = onCreatedNewTask,
             listTask = listTask,
             content = {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = modifier.padding(top = 20.dp)
                 ) {
-                    Icon(imageVector = Icons.Rounded.CheckCircle, contentDescription = "", modifier = modifier.size(60.dp), tint = Color.Green.copy(alpha = 0.3F))
-                    TextField(
-                        modifier = modifier.fillMaxWidth(),
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Icon(
+                        imageVector = Icons.Rounded.CheckCircle,
+                        contentDescription = "",
+                        modifier = modifier.size(60.dp),
+                        tint = Color.Green.copy(alpha = 0.3F)
+                    )
+                    Spacer(modifier = Modifier.height(30.dp))
+
+                    TextFieldBasic(
                         value = stateTitle,
-                        label = { Text("Title") },
                         onValueChange = onChangeTitle,
-                        textStyle = TextStyle(brush = brush),
+                        isCenterText = true
                     )
                 }
-                Card(
-                    modifier = modifier.padding(10.dp),
-                    colors = CardColors(
-                        containerColor = Color.White,
-                        contentColor = Color.Black,
-                        disabledContentColor = MaterialTheme.colorScheme.onSecondary,
-                        disabledContainerColor = MaterialTheme.colorScheme.secondary
-                    ),
-                    border = BorderStroke(width = 1.dp, color = Color.Gray)
+                Column {
 
-                ) {
-                    Column {
-
-                        TextButton(
-                            onClick = { onShowDialogPicker() },
-                            modifier = modifier.fillMaxWidth(),
-                            colors = ButtonColors(
-                                containerColor = Color.Transparent,
-                                contentColor = Color.Black,
-                                disabledContentColor = Color.Blue,
-                                disabledContainerColor = Color.Transparent
-                            )
+                    TextButton (
+                        onClick = { onShowDialogPicker() },
+                        modifier = modifier.fillMaxWidth(),
+                        colors = ButtonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = Color.Black,
+                            disabledContentColor = Color.Blue,
+                            disabledContainerColor = Color.Transparent
+                        )
+                    ) {
+                        Row(
+                            modifier = modifier
+                                .fillMaxWidth()
+                                .padding(6.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(
-                                modifier = modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 6.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Row {
-                                    Icon(
-                                        imageVector = Icons.Default.DateRange,
-                                        contentDescription = "")
+                            Row {
 
-                                    Text("Fecha", modifier = modifier.padding(horizontal = 6.dp), fontWeight = FontWeight.Bold)
-                                }
-                                Row {
-                                    dateReminder.selectedDateMillis?.getReminderDay()
-                                        ?.let { Text(it, modifier = modifier.padding(horizontal = 6.dp)) }
-                                    Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "")
-                                }
-                            }
-                        }
+                                Text(
+                                    "Fecha: ",
+                                    modifier = modifier.padding(horizontal = 6.dp),
+                                    color = Color.Gray,
+                                )
 
-                        TextButton(
-                            onClick = { onShowDialogRepeat() },
-                            modifier = modifier.fillMaxWidth(),
-                            colors = ButtonColors(
-                                containerColor = Color.Transparent,
-                                contentColor = Color.Black,
-                                disabledContentColor = Color.Blue,
-                                disabledContainerColor = Color.Transparent
-                            )
-                        ) {
-                            Row(
-                                modifier = modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 6.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Row {
-                                    Icon(
-                                        imageVector = Icons.Default.Refresh,
-                                        contentDescription = "")
-
-                                    Text("Repetir", modifier = modifier.padding(horizontal = 6.dp), fontWeight = FontWeight.Bold)
-                                }
-                                Row {
-                                    Text("Diario", modifier = modifier.padding(horizontal = 6.dp))
-                                    Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "")
-                                }
-                            }
-                        }
-
-                        TextButton(
-                            onClick = {},
-                            modifier = modifier.fillMaxWidth(),
-                            colors = ButtonColors(
-                                containerColor = Color.Transparent,
-                                contentColor = Color.Black,
-                                disabledContentColor = Color.Blue,
-                                disabledContainerColor = Color.Transparent
-                            )
-                        ) {
-                            Row(
-                                modifier = modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 6.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Row {
-                                    Icon(
-                                        imageVector = Icons.Default.AddCircle,
-                                        contentDescription = "")
-
-                                    Text("Recordatorio", modifier = modifier.padding(horizontal = 6.dp), fontWeight = FontWeight.Bold)
-                                }
-                                Row {
-                                    Switch(
-                                        checked = stateIsRepeat.value,
-                                        onCheckedChange = {
-                                            stateIsRepeat.value = it
-                                        }
+                                dateReminder.selectedDateMillis?.getReminderDay()?.let {
+                                    Text(
+                                        it,
+                                        modifier = modifier.padding(horizontal = 6.dp)
                                     )
                                 }
                             }
-                        }
+                            Row {
 
-                        TextButton(
-                            onClick = {
-                                onShowDialogLabel()
-                            },
-                            modifier = modifier.fillMaxWidth(),
-                            colors = ButtonColors(
-                                containerColor = Color.Transparent,
-                                contentColor = Color.Black,
-                                disabledContentColor = Color.Blue,
-                                disabledContainerColor = Color.Transparent
-                            )
-                        ) {
-                            Row(
-                                modifier = modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 6.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Row {
-                                    Icon(
-                                        imageVector = Icons.Default.Notifications,
-                                        contentDescription = "")
-
-                                    Text("Etiqueta", modifier = modifier.padding(horizontal = 6.dp), fontWeight = FontWeight.Bold)
-                                }
-                                Row {
-                                    Text("Elementos", modifier = modifier.padding(horizontal = 6.dp))
-                                    Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "")
-                                }
+                                Icon(
+                                    imageVector = Icons.Default.KeyboardArrowRight,
+                                    contentDescription = ""
+                                )
                             }
                         }
-
-                        TextField(
-                            modifier = modifier.fillMaxWidth(),
-                            value = stateDescription,
-                            label = { Text("Description") },
-                            onValueChange = onChangeDescription,
-                            textStyle = TextStyle(brush = brush),
-                        )
-
-                        SelectionColor(
-                            onSelected = { color ->
-                                onSelectedColor(color)
-                            },
-                            stateColorSelected = stateColorSelected
-                        )
                     }
+
+                    TextButton(
+                        onClick = { onShowDialogRepeat() },
+                        modifier = modifier.fillMaxWidth(),
+                        colors = ButtonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = Color.Black,
+                            disabledContentColor = Color.Blue,
+                            disabledContainerColor = Color.Transparent
+                        )
+                    ) {
+                        Row(
+                            modifier = modifier
+                                .fillMaxWidth()
+                                .padding(6.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row {
+
+                                Text(
+                                    "Repetir:",
+                                    modifier = modifier.padding(horizontal = 6.dp),
+                                    color = Color.Gray
+                                )
+                                Text(stateRepeat.value, modifier = modifier.padding(horizontal = 6.dp))
+                            }
+                            Row {
+
+                                Icon(
+                                    imageVector = Icons.Default.KeyboardArrowRight,
+                                    contentDescription = ""
+                                )
+                            }
+                        }
+                    }
+
+                    TextButton(
+                        onClick = {},
+                        modifier = modifier.fillMaxWidth(),
+                        colors = ButtonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = Color.Black,
+                            disabledContentColor = Color.Blue,
+                            disabledContainerColor = Color.Transparent
+                        )
+                    ) {
+                        Row(
+                            modifier = modifier
+                                .fillMaxWidth()
+                                .padding(6.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row {
+
+                                Text(
+                                    "Recordatorio: ",
+                                    modifier = modifier.padding(horizontal = 6.dp),
+                                    color = Color.Gray
+                                )
+                            }
+                            Row {
+                                Switch(
+                                    checked = stateIsRepeat.value,
+                                    onCheckedChange = {
+                                        stateIsRepeat.value = it
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+                    TextButton(
+                        onClick = {
+                            onShowDialogLabel()
+                        },
+                        modifier = modifier.fillMaxWidth(),
+                        colors = ButtonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = Color.Black,
+                            disabledContentColor = Color.Blue,
+                            disabledContainerColor = Color.Transparent
+                        )
+                    ) {
+                        Row(
+                            modifier = modifier
+                                .fillMaxWidth()
+                                .padding(6.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row {
+
+                                Text(
+                                    "Etiqueta",
+                                    modifier = modifier.padding(horizontal = 6.dp),
+                                    color = Color.Gray
+                                )
+
+                                Text(
+                                    stateLabel.value,
+                                    modifier = modifier.padding(horizontal = 6.dp)
+                                )
+                            }
+                            Row {
+
+                                Icon(
+                                    imageVector = Icons.Default.KeyboardArrowRight,
+                                    contentDescription = ""
+                                )
+                            }
+                        }
+                    }
+
+                    TextFieldBasic(
+                        value = stateDescription,
+                        onValueChange = onChangeDescription,
+                        label = "Descripcion"
+                    )
+
+                    SelectionColor(
+                        onSelected = { color ->
+                            onSelectedColor(color)
+                        },
+                        stateColorSelected = stateColorSelected
+                    )
                 }
             }
         )
@@ -271,13 +290,14 @@ fun LayoutCreateDetailNote(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LayoutCreateCheckList(
     modifier: Modifier = Modifier,
     listTask: List<String> = emptyList(),
     onCreateNewTask: (String) -> Unit,
     content: @Composable () -> Unit = {}
-){
+) {
     val focusManager = LocalFocusManager.current
     var taskDescription by remember { mutableStateOf("") }
     LazyColumn {
@@ -287,16 +307,24 @@ fun LayoutCreateCheckList(
             TextField(
                 modifier = modifier.fillMaxWidth(),
                 value = taskDescription,
-                label = { Text("Description") },
+                label = { Text("Tareas") },
                 onValueChange = { text -> taskDescription = text },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = {
                     onCreateNewTask(taskDescription)
                     taskDescription = ""
-                })
+                }), shape = RoundedCornerShape(12.dp),
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                )
             )
+
+            Spacer(modifier = modifier.height(20.dp))
         }
-        items(listTask){
+
+        items(listTask) {
             ItemLazyCheck(description = it)
         }
     }
@@ -313,21 +341,25 @@ fun <T> LayoutOptionRepeat(
     selected: T,
     onSelected: (T) -> Unit,
     itemToString: (T) -> String
-){
+) {
     val selectedState = remember { mutableStateOf(selected) }
 
     Card {
-        Column (
+        Column(
             modifier = modifier.fillMaxWidth()
-        ){
-            Text(text= title, style = MaterialTheme.typography.titleMedium, modifier = modifier.padding(10.dp))
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = modifier.padding(10.dp)
+            )
             LazyColumn {
-                items(options){ item ->
+                items(options) { item ->
                     Row(
                         modifier = modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceAround,
                         verticalAlignment = Alignment.CenterVertically
-                    ){
+                    ) {
                         Text(text = itemToString(item), fontWeight = FontWeight.Medium)
                         RadioButton(
                             selected = selectedState.value == item,
@@ -343,8 +375,8 @@ fun <T> LayoutOptionRepeat(
 
 @Preview
 @Composable
-fun LayoutOptionRepeatPreview(){
-    Scaffold  { innerPadding ->
+fun LayoutOptionRepeatPreview() {
+    Scaffold { innerPadding ->
         LayoutOptionRepeat(
             modifier = Modifier.padding(innerPadding),
             title = "Etiquetas",
@@ -359,16 +391,18 @@ fun LayoutOptionRepeatPreview(){
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun LayoutCreateDetailNotePreview(){
-    Scaffold  { innerPadding ->
+fun LayoutCreateDetailNotePreview() {
+    Scaffold { innerPadding ->
         LayoutCreateDetailNote(
             modifier = Modifier.padding(innerPadding),
             stateIsRepeat = remember { mutableStateOf(false) },
-            stateColorSelected = remember { mutableStateOf(ColorType.GRAY) },
+            stateColorSelected = remember { mutableStateOf(ColorType.PURPLE) },
             dateReminder = rememberDatePickerState(),
             listTask = optionRepeat,
             stateTitle = "",
             stateDescription = "",
+            stateLabel = LabelTypes.WORK,
+            stateRepeat = RepeatType.DAILY,
             onShowDialogRepeat = {},
             onShowDialogPicker = {},
             onShowDialogLabel = {},

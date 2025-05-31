@@ -2,7 +2,11 @@ package com.example.meta_habit.ui.utils
 
 import androidx.compose.material3.CardColors
 import androidx.compose.ui.graphics.Color
-import java.util.Date
+import com.example.meta_habit.ui.theme.BlueLight
+import com.example.meta_habit.ui.theme.GreenLight
+import com.example.meta_habit.ui.theme.OrangeLight
+import com.example.meta_habit.ui.theme.Purple80
+import com.example.meta_habit.ui.theme.RedLight
 
 enum class FilterType {
     TODAY, WEEK, TREE_DAYS
@@ -28,11 +32,11 @@ enum class NotificationTypes(var value: String){
 
 
 enum class ColorType(val value: Color){
-    RED(Color.Red),
-    Blue(Color.Blue),
-    YELLOW(Color.Yellow),
-    GREEN(Color.Green),
-    GRAY(Color.Gray)
+    RED(RedLight),
+    ORANGE(OrangeLight),
+    GREEN(GreenLight),
+    Blue(BlueLight),
+    PURPLE(Purple80)
 }
 
 

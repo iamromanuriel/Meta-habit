@@ -25,9 +25,6 @@ class CreateViewModel(
     private val _selectedColor = MutableStateFlow(ColorType.Blue)
     val selectedColor = _selectedColor.asStateFlow()
 
-    private val _selectedDateMillis = MutableStateFlow(null as Long?)
-    val selectedDateMillis = _selectedDateMillis.asStateFlow()
-
     private val _listTask = MutableStateFlow(listOf<String>())
     val listTask = _listTask.asStateFlow()
 
@@ -46,10 +43,6 @@ class CreateViewModel(
         _selectedColor.value = color
     }
 
-    fun selectDateMillis(dateMillis: Long?){
-        _selectedDateMillis.value = dateMillis
-    }
-
     fun onAddNewTaskToList(newTask: String){
         _listTask.value += newTask
     }
@@ -60,14 +53,14 @@ class CreateViewModel(
         }
     }
 
-    fun onSaveNote(title: String, enableReminder: Boolean, description: String){
+    fun onSaveNote(title: String, enableReminder: Boolean, millisDate: Long, description: String){
         viewModelScope.launch {
             val savedResultHabit = async(Dispatchers.IO){
                 habitRepository.onSaveHabit(
                     title = title,
                     repetition = _selectedStateRepeat.value.ordinal,
                     hasReminder = enableReminder,
-                    dateReminder = _selectedDateMillis.value?:0,
+                    dateReminder = millisDate,
                     tag = _selectedLabel.value.ordinal,
                     color = _selectedColor.value.ordinal
                 )

@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.twotone.MailOutline
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
@@ -103,10 +104,10 @@ fun LayoutCreateDetailNote(
                 ) {
                     Spacer(modifier = Modifier.height(20.dp))
                     Icon(
-                        imageVector = Icons.Rounded.CheckCircle,
+                        imageVector = Icons.TwoTone.MailOutline,
                         contentDescription = "",
                         modifier = modifier.size(60.dp),
-                        tint = Color.Green.copy(alpha = 0.3F)
+                        tint = Color.Black.copy(alpha = 0.8F)
                     )
                     Spacer(modifier = Modifier.height(30.dp))
 
@@ -216,7 +217,7 @@ fun LayoutCreateDetailNote(
                             Row {
 
                                 Text(
-                                    "Recordatorio: ",
+                                    "Recordar con notificaciòn: ",
                                     modifier = modifier.padding(horizontal = 6.dp),
                                     color = Color.Gray
                                 )

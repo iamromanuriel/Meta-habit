@@ -54,7 +54,7 @@ fun ItemLazyCheck(
     onEditDescription: (String) -> Unit = {},
     enabled: Boolean = false
 ){
-
+    val focusManager = LocalFocusManager.current
     var stateDescription by remember { mutableStateOf(habitTask?.description?: description) }
 
     Row (
@@ -85,6 +85,7 @@ fun ItemLazyCheck(
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions (onDone = {
                 onEditDescription(stateDescription)
+                focusManager.clearFocus()
             })
         )
     }

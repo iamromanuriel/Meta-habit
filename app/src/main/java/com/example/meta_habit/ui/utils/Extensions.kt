@@ -21,6 +21,20 @@ import java.util.Date
 fun rememberTodayMillis(): Long{
     return remember{
         val calendar = Calendar.getInstance().apply {
+            add(Calendar.DATE, 0)
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        calendar.timeInMillis
+    }
+}
+
+@Composable
+fun rememberYesterdayMillis(): Long {
+    return remember {
+        val calendar = Calendar.getInstance().apply {
             add(Calendar.DATE, -1)
             set(Calendar.HOUR_OF_DAY, 0)
             set(Calendar.MINUTE, 0)
@@ -34,8 +48,8 @@ fun rememberTodayMillis(): Long{
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun rememberRestrictedDatePickerState(
-    minDateMillis: Long = rememberTodayMillis(),
-    initialSelectedDateMillis: Long? = minDateMillis
+    minDateMillis: Long = rememberYesterdayMillis(),
+    initialSelectedDateMillis: Long? = rememberTodayMillis()
 ): DatePickerState{
     return rememberDatePickerState(
         initialDisplayMode = DisplayMode.Picker,

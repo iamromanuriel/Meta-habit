@@ -77,6 +77,7 @@ fun CreateScreen(
             viewModel.onSaveNote(
                 title = stateTitle,
                 enableReminder = enableRemember.value,
+                millisDate = datePickerState.selectedDateMillis ?:0,
                 description = stateDescription
             )
         },
@@ -158,7 +159,6 @@ fun CreateScreen(
 
                         Button(
                             onClick = {
-                                viewModel.selectDateMillis(datePickerState.selectedDateMillis)
                                 showDialogPicker.value = false
                             }
                         ) {

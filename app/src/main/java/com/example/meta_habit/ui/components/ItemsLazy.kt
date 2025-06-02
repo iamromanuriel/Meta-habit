@@ -51,13 +51,15 @@ fun ItemLazyCheck(
     habitTask: HabitTaskEntity? = null,
     description: String = "",
     onChangeTask: (Boolean) -> Unit = {},
+    onEditDescription: (String) -> Unit = {},
     enabled: Boolean = false
 ){
+
+    var stateDescription by remember { mutableStateOf(habitTask?.description?: description) }
 
     Row (
         modifier = modifier
     ){
-
         habitTask?.let {
             if(enabled){
                 Checkbox(
@@ -69,18 +71,21 @@ fun ItemLazyCheck(
             }
         }
 
-
         TextField(
             modifier = modifier.fillMaxWidth(),
-            value = habitTask?.description?: description,
+            value = stateDescription,
             onValueChange = {
-                habitTask?.description = it
+                stateDescription = it
             },
             colors = TextFieldDefaults.textFieldColors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent
-            )
+            ),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions (onDone = {
+                onEditDescription(stateDescription)
+            })
         )
     }
 }

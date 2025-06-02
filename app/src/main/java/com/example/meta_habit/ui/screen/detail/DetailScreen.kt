@@ -117,7 +117,7 @@ fun DetailScreen(
     if(isShowDialogEdit){
         DialogBasic(
             modifier = Modifier.fillMaxWidth(),
-            onSelected = {
+            onDismiss = {
                 isShowDialogEdit = false
             },
             content = {
@@ -127,10 +127,14 @@ fun DetailScreen(
                         onDone = viewModel::onEditTask
                     )
                     LayoutCreateDetailNote(
-                        stateIsRepeat = remember { mutableStateOf(habitTask?.habit?.hasReminder?:false) },
+                        stateIsRepeat = remember {
+                            mutableStateOf(
+                                habitTask?.habit?.hasReminder ?: false
+                            )
+                        },
                         stateColorSelected = remember { mutableStateOf(ColorType.Blue) },
                         listTask = emptyList(),
-                        stateTitle = habitTask?.habit?.title?:"",
+                        stateTitle = habitTask?.habit?.title ?: "",
                         stateLabel = LabelTypes.WORK,
                         stateRepeat = RepeatType.DAILY,
                         stateDescription = "",
@@ -142,6 +146,9 @@ fun DetailScreen(
                         onChangeTitle = {},
                         onChangeDescription = {},
                         dateReminder = rememberRestrictedDatePickerState(),
+                        onEditTask = { _, _ ->
+
+                        },
                     )
                 }
             }

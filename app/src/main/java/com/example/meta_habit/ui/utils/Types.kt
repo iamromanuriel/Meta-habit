@@ -17,7 +17,7 @@ enum class NoteType{
 }
 
 enum class RepeatType (var value: String){
-    DAILY("Diario"), WEEKLY("Semanal"), MONTHLY("Mensual"), THREE_DAYS("3 dias")
+    ONLY_ONE("Una vez"), DAILY("Diario"), WEEKLY("Semanal"), MONTHLY("Mensual"), THREE_DAYS("3 dias")
 }
 
 enum class LabelTypes(var value: String){

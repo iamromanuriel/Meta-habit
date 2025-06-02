@@ -1,6 +1,5 @@
 package com.example.meta_habit.ui.screen.create
 
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.meta_habit.data.repository.HabitRepository
@@ -17,7 +16,7 @@ class CreateViewModel(
     private val habitRepository: HabitRepository
 ): ViewModel() {
 
-    private val _selectedStateRepeat = MutableStateFlow(RepeatType.DAILY)
+    private val _selectedStateRepeat = MutableStateFlow(RepeatType.ONLY_ONE)
     val selectedStateRepeat = _selectedStateRepeat.asStateFlow()
 
     private val _selectedLabel = MutableStateFlow(LabelTypes.LECTURE)
@@ -53,6 +52,12 @@ class CreateViewModel(
 
     fun onAddNewTaskToList(newTask: String){
         _listTask.value += newTask
+    }
+
+    fun onEditTask( taskDescription: String, index: Int,){
+        _listTask.value = _listTask.value.toMutableList().apply {
+            this[index] = taskDescription
+        }
     }
 
     fun onSaveNote(title: String, enableReminder: Boolean, description: String){

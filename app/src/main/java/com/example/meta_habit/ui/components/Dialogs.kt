@@ -1,5 +1,13 @@
 package com.example.meta_habit.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -72,6 +80,7 @@ fun LayoutOptions(
 fun DialogFullScreen(
     onDismiss: () -> Unit,
     onCreate: () -> Unit,
+    showDialog: Boolean,
     layout: @Composable () -> Unit,
     modifier: Modifier = Modifier
 ){
@@ -79,41 +88,67 @@ fun DialogFullScreen(
         onDismissRequest = { onDismiss() },
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ){
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-                .padding()
+        AnimatedVisibility(
+            visible = showDialog,
+            enter = fadeIn(
+                animationSpec = tween(
+                    durationMillis = 3000,
+                    easing = FastOutSlowInEasing
+                )
+            ) + scaleIn(
+                animationSpec = tween(
+                    durationMillis = 500,
+                    easing = FastOutSlowInEasing
+                )
+            ),
+            exit = fadeOut(
+                animationSpec = tween(
+                    durationMillis = 300,
+                    easing = LinearEasing
+                )
+            ) + scaleOut(
+                animationSpec = tween(
+                    durationMillis = 300,
+                    easing = LinearEasing
+                )
+            )
         ) {
-            Column(
+            Surface(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding()
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = modifier.fillMaxWidth()
-                ){
-                    IconButton (
-                        onClick = { onDismiss() },
-                        modifier = modifier.padding()
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = modifier.fillMaxWidth()
+                    ){
+                        IconButton (
+                            onClick = { onDismiss() },
+                            modifier = modifier.padding()
 
-                    ) {
-                        Icon(imageVector = Icons.Default.Close, contentDescription = "")
+                        ) {
+                            Icon(imageVector = Icons.Default.Close, contentDescription = "")
+                        }
+
+                        Text(text="Crea tu nota", style = MaterialTheme.typography.titleMedium)
+
+                        TextButton(
+                            onClick = { onCreate() },
+                            modifier = modifier.padding()
+                        ) {
+                            Text("Crear")
+                        }
                     }
 
-                    Text(text="Crea tu nota", style = MaterialTheme.typography.titleMedium)
-
-                    TextButton(
-                        onClick = { onCreate() },
-                        modifier = modifier.padding()
-                    ) {
-                        Text("Crear")
-                    }
+                    layout()
                 }
-
-                layout()
             }
         }
     }
@@ -122,12 +157,12 @@ fun DialogFullScreen(
 @Composable
 fun DialogBasic(
     modifier: Modifier = Modifier,
-    onSelected: (Int) -> Unit,
+    onDismiss: () -> Unit,
     content: @Composable () -> Unit,
 
     ){
     Dialog(
-        onDismissRequest = {  },
+        onDismissRequest = { onDismiss() },
     ){
         content()
     }
@@ -141,7 +176,7 @@ fun LayoutOptionsPreview(){
         Scaffold { innerPadding ->
             DialogBasic(
                 modifier = Modifier.padding(innerPadding),
-                onSelected = {},
+                onDismiss = {},
                 content = {
                     LayoutOptionRepeat(
                         title = "Opciones",

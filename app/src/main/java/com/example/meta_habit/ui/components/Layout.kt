@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -84,7 +85,8 @@ fun LayoutCreateDetailNote(
     onSelectedColor: (ColorType) -> Unit,
     onCreatedNewTask: (String) -> Unit,
     onChangeTitle: (String) -> Unit,
-    onChangeDescription: (String) -> Unit
+    onChangeDescription: (String) -> Unit,
+    onEditTask: (String, Int) -> Unit
 ) {
 
 
@@ -93,6 +95,7 @@ fun LayoutCreateDetailNote(
     ) {
         LayoutCreateCheckList(
             onCreateNewTask = onCreatedNewTask,
+            onEditTask = onEditTask,
             listTask = listTask,
             content = {
                 Column(
@@ -296,6 +299,7 @@ fun LayoutCreateCheckList(
     modifier: Modifier = Modifier,
     listTask: List<String> = emptyList(),
     onCreateNewTask: (String) -> Unit,
+    onEditTask: (String, Int) -> Unit,
     content: @Composable () -> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current
@@ -324,8 +328,10 @@ fun LayoutCreateCheckList(
             Spacer(modifier = modifier.height(20.dp))
         }
 
-        items(listTask) {
-            ItemLazyCheck(description = it)
+        itemsIndexed(listTask) { index, item ->
+            ItemLazyCheck(
+                description = item,
+                onEditDescription = { onEditTask(it, index) })
         }
     }
 }
@@ -351,13 +357,17 @@ fun <T> LayoutOptionRepeat(
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
-                modifier = modifier.padding(10.dp)
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                modifier = modifier.fillMaxWidth().padding(10.dp)
             )
-            LazyColumn {
+            LazyColumn(
+                modifier = modifier.padding(horizontal = 10.dp)
+            ) {
                 items(options) { item ->
                     Row(
                         modifier = modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceAround,
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(text = itemToString(item), fontWeight = FontWeight.Medium)
@@ -409,7 +419,11 @@ fun LayoutCreateDetailNotePreview() {
             onSelectedColor = {},
             onCreatedNewTask = {},
             onChangeTitle = {},
-            onChangeDescription = {}
+            onChangeDescription = {},
+            onEditTask = { item, index ->
+
+            },
+
         )
     }
 }

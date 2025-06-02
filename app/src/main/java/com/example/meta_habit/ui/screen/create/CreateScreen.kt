@@ -80,6 +80,7 @@ fun CreateScreen(
                 description = stateDescription
             )
         },
+        showDialog = true,
         layout = {
             LayoutCreateDetailNote(
                 stateIsRepeat = enableRemember,
@@ -106,12 +107,15 @@ fun CreateScreen(
                 onCreatedNewTask = { task ->
                     viewModel.onAddNewTaskToList(task)
                 },
-                onChangeDescription = { text -> stateDescription = text }
+                onChangeDescription = { text -> stateDescription = text },
+                onEditTask = { item, index ->
+                    viewModel.onEditTask(item, index)
+                }
             )
 
             if (showDialogOptionRepeat.value) {
                 DialogBasic(
-                    onSelected = {},
+                    onDismiss = { showDialogOptionRepeat.value = false },
                     content = {
                         LayoutOptionRepeat(
                             title = "Repetir",
@@ -129,7 +133,7 @@ fun CreateScreen(
 
             if (showDialogOptionLabel.value) {
                 DialogBasic(
-                    onSelected = {},
+                    onDismiss = { showDialogOptionLabel.value = false },
                     content = {
                         LayoutOptionRepeat(
                             title = "Etiquetas",
@@ -169,7 +173,7 @@ fun CreateScreen(
                     )
                 }
             }
-        }
+        },
     )
 
 }

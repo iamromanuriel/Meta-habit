@@ -1,10 +1,11 @@
 package com.example.meta_habit.ui.components
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,8 +22,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -43,6 +48,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
+import com.example.meta_habit.ui.theme.RedLight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,15 +59,15 @@ fun ItemLazyCheck(
     onChangeTask: (Boolean) -> Unit = {},
     onEditDescription: (String) -> Unit = {},
     enabled: Boolean = false
-){
+) {
     val focusManager = LocalFocusManager.current
-    var stateDescription by remember { mutableStateOf(habitTask?.description?: description) }
+    var stateDescription by remember { mutableStateOf(habitTask?.description ?: description) }
 
-    Row (
+    Row(
         modifier = modifier
-    ){
+    ) {
         habitTask?.let {
-            if(enabled){
+            if (enabled) {
                 Checkbox(
                     checked = habitTask.isCheck,
                     onCheckedChange = {
@@ -83,7 +89,7 @@ fun ItemLazyCheck(
                 disabledIndicatorColor = Color.Transparent
             ),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions (onDone = {
+            keyboardActions = KeyboardActions(onDone = {
                 onEditDescription(stateDescription)
                 focusManager.clearFocus()
             })
@@ -97,10 +103,10 @@ fun ItemListCheckEditable(
     habitTask: HabitTaskEntity? = null,
     onChangeTaskCheck: (Boolean) -> Unit = {},
     onChangeTaskDescription: (String) -> Unit = {},
-){
+) {
     val focusManager = LocalFocusManager.current
-    var description by remember { mutableStateOf(habitTask?.description?:"") }
-    var isCheck by remember { mutableStateOf(habitTask?.isCheck?:false) }
+    var description by remember { mutableStateOf(habitTask?.description ?: "") }
+    var isCheck by remember { mutableStateOf(habitTask?.isCheck ?: false) }
 
     Row {
         habitTask?.let {
@@ -117,7 +123,7 @@ fun ItemListCheckEditable(
                 value = description,
                 onValueChange = { text -> description = text },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions (onDone = {
+                keyboardActions = KeyboardActions(onDone = {
                     onChangeTaskDescription(description)
                     focusManager.clearFocus()
                 })
@@ -130,23 +136,26 @@ fun ItemListCheckEditable(
 fun ItemNotification(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
-){
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
             .clickable { onClick() }
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.size(30.dp)
+            modifier = Modifier
+                .size(30.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .background(Color.Blue.copy(alpha = 0.2F))
-        ){
+        ) {
             Icon(
                 imageVector = Icons.Default.Email,
                 contentDescription = "",
                 tint = Color.Blue.copy(alpha = 0.5F),
-                modifier = Modifier.padding())
+                modifier = Modifier.padding()
+            )
         }
 
         Column(
@@ -155,20 +164,107 @@ fun ItemNotification(
                 .padding(horizontal = 10.dp, vertical = 12.dp)
         ) {
             Text("Clase de ingles", fontWeight = FontWeight.Bold)
-            Text("Tu clase de ingles comienza en 4 horas", style = TextStyle(fontWeight = FontWeight.Light))
+            Text(
+                "Tu clase de ingles comienza en 4 horas",
+                style = TextStyle(fontWeight = FontWeight.Light)
+            )
         }
 
         Box(
-            modifier = Modifier.size(10.dp)
+            modifier = Modifier
+                .size(10.dp)
                 .clip(CircleShape)
                 .background(Color.Blue)
         )
     }
 }
 
+@Composable
+fun TaskEditable(
+    modifier: Modifier = Modifier,
+    habitTask: HabitTaskEntity? = null,
+    onChangeTaskCheck: (Boolean) -> Unit = {},
+    onChangeTaskDescription: (String) -> Unit = {},
+) {
+
+    val focusManager = LocalFocusManager.current
+    var description by remember { mutableStateOf(habitTask?.description ?: "") }
+    ListItem(
+        headlineContent = {
+            TextField(
+                modifier = modifier.fillMaxWidth(),
+                value = description,
+                onValueChange = { text -> description = text },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
+                    onChangeTaskDescription(description)
+                    focusManager.clearFocus()
+                })
+            )
+        },
+        trailingContent = {
+            Checkbox(
+                modifier = Modifier.clip(CircleShape),
+                checked = habitTask?.isCheck ?: false,
+                onCheckedChange = {
+                    onChangeTaskCheck(habitTask?.isCheck ?: false)
+                },
+                colors = CheckboxColors(
+                    checkedCheckmarkColor = Color.Red,
+                    uncheckedCheckmarkColor = Color.Gray,
+                    checkedBoxColor = Color.Blue,
+                    uncheckedBoxColor = Color.Cyan,
+                    disabledCheckedBoxColor = Color.Yellow,
+                    disabledUncheckedBoxColor = Color.DarkGray,
+                    disabledIndeterminateBoxColor = Color.Magenta,
+                    checkedBorderColor = Color.Red,
+                    uncheckedBorderColor = Color.Blue,
+                    disabledBorderColor = Color.Green,
+                    disabledUncheckedBorderColor = Color.Yellow,
+                    disabledIndeterminateBorderColor = Color.Cyan
+                )
+
+            )
+        }
+    )
+}
+
+
+
+@Composable
+fun CustomCircularCheckbox() {
+    val isChecked = remember { mutableStateOf(false) }
+
+    val circleColor = if (isChecked.value) RedLight else Color.Transparent
+    val borderColor = if (isChecked.value) Color.Transparent else Color.Gray
+
+    IconButton(
+        onClick = {},
+        colors = IconButtonColors(
+            containerColor = circleColor,
+            contentColor = circleColor,
+            disabledContainerColor = circleColor,
+            disabledContentColor = circleColor
+        )
+    ) {
+        Icon(
+            imageVector = Icons.Default.Check,
+            contentDescription = "Checked",
+            tint = Color.Red,
+            modifier = Modifier.size(16.dp) // Tamaño de la palomita
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun CustomCircularCheckboxPreview() {
+    CustomCircularCheckbox()
+}
+
 @Preview(showBackground = true)
 @Composable
-private fun ItemLazyCheckPreview(){
-    ItemListCheckEditable()
+private fun ItemLazyCheckPreview() {
+    TaskEditable()
 }
 

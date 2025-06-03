@@ -30,11 +30,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.meta_habit.ui.components.CustomCircularCheckbox
 import com.example.meta_habit.ui.components.DialogBasic
 import com.example.meta_habit.ui.components.ItemLazyCheck
 import com.example.meta_habit.ui.components.ItemListCheckEditable
 import com.example.meta_habit.ui.components.LayoutCreateDetailNote
 import com.example.meta_habit.ui.components.ListWeekDays
+import com.example.meta_habit.ui.components.TaskEditable
 import com.example.meta_habit.ui.components.TopBarDialogBasic
 import com.example.meta_habit.ui.utils.ColorType
 import com.example.meta_habit.ui.utils.LabelTypes
@@ -94,11 +96,12 @@ fun DetailScreen(
             }
 
             items(habitTask?.task?: emptyList()){ task ->
-                ItemListCheckEditable(
+                TaskEditable(
                     habitTask = task,
                     onChangeTaskCheck = { viewModel.onCheckTask(task, it) },
                     onChangeTaskDescription = { viewModel.onEditDescriptionTask(task, it) }
                 )
+                CustomCircularCheckbox()
             }
 
             item {

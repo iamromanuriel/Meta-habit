@@ -30,8 +30,9 @@ fun ItemDay(
 ){
     Card(
         modifier = Modifier
-            .width(48.dp)
-            .height(48.dp)
+            .width(75.dp)
+            .height(80.dp)
+            .padding(horizontal = 6.dp)
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
@@ -47,7 +48,7 @@ fun ItemDay(
 @Composable
 fun ListWeekDays(){
     LazyRow(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         items(items = getCurrentWeekDays()){ day ->

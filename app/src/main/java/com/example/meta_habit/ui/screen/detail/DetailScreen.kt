@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -62,7 +63,7 @@ fun DetailScreen(
             TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
+                        Icon(imageVector = Icons.Default.KeyboardArrowLeft, contentDescription = "")
                     }
                 },
                 actions = {
@@ -99,9 +100,9 @@ fun DetailScreen(
                 TaskEditable(
                     habitTask = task,
                     onChangeTaskCheck = { viewModel.onCheckTask(task, it) },
-                    onChangeTaskDescription = { viewModel.onEditDescriptionTask(task, it) }
+                    onChangeTaskDescription = { viewModel.onEditDescriptionTask(task, it) },
                 )
-                CustomCircularCheckbox()
+
             }
 
             item {

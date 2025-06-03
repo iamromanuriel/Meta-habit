@@ -28,8 +28,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -179,6 +181,7 @@ fun ItemNotification(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskEditable(
     modifier: Modifier = Modifier,
@@ -189,6 +192,7 @@ fun TaskEditable(
 
     val focusManager = LocalFocusManager.current
     var description by remember { mutableStateOf(habitTask?.description ?: "") }
+
     ListItem(
         headlineContent = {
             TextField(
@@ -199,47 +203,107 @@ fun TaskEditable(
                 keyboardActions = KeyboardActions(onDone = {
                     onChangeTaskDescription(description)
                     focusManager.clearFocus()
-                })
+                }),
+                colors =  TextFieldDefaults.colors(
+                        // Colores del contenedor (fondo)
+                        focusedContainerColor =  MaterialTheme.colorScheme.background, // Un azul claro
+                        unfocusedContainerColor = MaterialTheme.colorScheme.background, // Un verde muy claro
+                        disabledContainerColor = Color(0xFFF5F5F5), // Gris claro para deshabilitado
+                        errorContainerColor = Color(0xFFFFEBEE),   // Rosa muy claro para error
+
+                        // Colores del texto de entrada
+                        focusedTextColor = Color.Black,
+                        unfocusedTextColor = Color.DarkGray,
+                        disabledTextColor = Color.Gray,
+                        errorTextColor = Color.Red,
+
+                        // Colores del cursor
+                        cursorColor = Color.Blue, // El cursor cuando está enfocado
+                        errorCursorColor = Color.Red, // El cursor cuando hay un error
+
+                        // Colores del label (etiqueta)
+                        focusedLabelColor = Color.Blue,
+                        unfocusedLabelColor = Color.Transparent,
+                        disabledLabelColor = Color.LightGray,
+                        errorLabelColor = Color.Red,
+
+                        // Colores del placeholder
+                        focusedPlaceholderColor = Color.LightGray,
+                        unfocusedPlaceholderColor = Color.LightGray,
+                        disabledPlaceholderColor = Color.LightGray,
+                        errorPlaceholderColor = Color.Red,
+
+                        // Colores de los íconos (leadingIcon y trailingIcon)
+                        focusedLeadingIconColor = Color.Blue,
+                        unfocusedLeadingIconColor = Color.Gray,
+                        disabledLeadingIconColor = Color.LightGray,
+                        errorLeadingIconColor = Color.Red,
+
+                        focusedTrailingIconColor = Color.Blue,
+                        unfocusedTrailingIconColor = Color.Gray,
+                        disabledTrailingIconColor = Color.LightGray,
+                        errorTrailingIconColor = Color.Red,
+
+                        // Colores de la línea indicadora (subrayado)
+                        focusedIndicatorColor = Color.Blue,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.LightGray,
+                        errorIndicatorColor = Color.Red,
+
+                        // Colores de la línea de ayuda (helper text)
+                        focusedSupportingTextColor = Color.DarkGray,
+                        unfocusedSupportingTextColor = Color.Gray,
+                        disabledSupportingTextColor = Color.LightGray,
+                        errorSupportingTextColor = Color.Red,
+
+                        // Colores del prefijo y sufijo
+                        focusedPrefixColor = Color.DarkGray,
+                        unfocusedPrefixColor = Color.Gray,
+                        disabledPrefixColor = Color.LightGray,
+                        errorPrefixColor = Color.Red,
+
+                        focusedSuffixColor = Color.DarkGray,
+                        unfocusedSuffixColor = Color.Gray,
+                        disabledSuffixColor = Color.LightGray,
+                        errorSuffixColor = Color.Red
+                    )
             )
         },
-        trailingContent = {
-            Checkbox(
-                modifier = Modifier.clip(CircleShape),
-                checked = habitTask?.isCheck ?: false,
-                onCheckedChange = {
-                    onChangeTaskCheck(habitTask?.isCheck ?: false)
-                },
-                colors = CheckboxColors(
-                    checkedCheckmarkColor = Color.Red,
-                    uncheckedCheckmarkColor = Color.Gray,
-                    checkedBoxColor = Color.Blue,
-                    uncheckedBoxColor = Color.Cyan,
-                    disabledCheckedBoxColor = Color.Yellow,
-                    disabledUncheckedBoxColor = Color.DarkGray,
-                    disabledIndeterminateBoxColor = Color.Magenta,
-                    checkedBorderColor = Color.Red,
-                    uncheckedBorderColor = Color.Blue,
-                    disabledBorderColor = Color.Green,
-                    disabledUncheckedBorderColor = Color.Yellow,
-                    disabledIndeterminateBorderColor = Color.Cyan
-                )
+        supportingContent = {
 
+        },
+        trailingContent = {
+            CustomCircularCheckbox(
+                checked = habitTask?.isCheck ?: false,
+                onCheckedChange = onChangeTaskCheck
             )
-        }
+        },
+        modifier = Modifier.
+        border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(12.dp))
     )
 }
 
 
-
 @Composable
-fun CustomCircularCheckbox() {
-    val isChecked = remember { mutableStateOf(false) }
+fun CustomCircularCheckbox(
+    modifier: Modifier = Modifier,
+    checked: Boolean = false,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    var isChecked by remember { mutableStateOf(value = checked) }
 
-    val circleColor = if (isChecked.value) RedLight else Color.Transparent
-    val borderColor = if (isChecked.value) Color.Transparent else Color.Gray
+    val circleColor = if (isChecked) RedLight else Color.Transparent
+    val borderColor = if (isChecked) Color.Transparent else Color.Gray
 
     IconButton(
-        onClick = {},
+        modifier = modifier
+            .size(30.dp)
+            .border(width = 1.dp, color = borderColor, shape = CircleShape)
+            .clip(CircleShape),
+        onClick = {
+            isChecked = isChecked.not()
+            onCheckedChange(isChecked)
+        },
         colors = IconButtonColors(
             containerColor = circleColor,
             contentColor = circleColor,
@@ -247,19 +311,24 @@ fun CustomCircularCheckbox() {
             disabledContentColor = circleColor
         )
     ) {
-        Icon(
-            imageVector = Icons.Default.Check,
-            contentDescription = "Checked",
-            tint = Color.Red,
-            modifier = Modifier.size(16.dp) // Tamaño de la palomita
-        )
+        if (isChecked) {
+            Icon(
+                imageVector = Icons.Default.Check,
+                contentDescription = "Checked",
+                tint = Color.White,
+                modifier = Modifier.size(16.dp) // Tamaño de la palomita
+            )
+        }
+
     }
 }
 
 @Preview
 @Composable
 private fun CustomCircularCheckboxPreview() {
-    CustomCircularCheckbox()
+    CustomCircularCheckbox(
+        onCheckedChange = {}
+    )
 }
 
 @Preview(showBackground = true)

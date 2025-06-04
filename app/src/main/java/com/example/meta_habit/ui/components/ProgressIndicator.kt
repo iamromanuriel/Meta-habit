@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,7 +27,8 @@ import java.util.Date
 
 @Composable
 fun ItemDay(
-    day: Date
+    day: Date,
+    isToday: Boolean = false
 ){
     Card(
         modifier = Modifier
@@ -39,8 +41,8 @@ fun ItemDay(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth().fillMaxHeight()
         ) {
-            Text(text = day.getDayNumMonthFromDate().toString())
-            Text(text = day.getDayNameFromDate().substring(0, 3), fontWeight = FontWeight.Bold)
+            Text(text = day.getDayNumMonthFromDate().toString(), color = if(isToday) Color.Black else Color.Gray, fontWeight = FontWeight.Bold)
+            Text(text = day.getDayNameFromDate().substring(0, 3), fontWeight = FontWeight.Bold, color = if(isToday) Color.Black else Color.Gray)
         }
     }
 }
@@ -52,7 +54,8 @@ fun ListWeekDays(){
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         items(items = getCurrentWeekDays()){ day ->
-            ItemDay(day)
+            val isToday = day.getDayNameFromDate() == Date().getDayNameFromDate()
+            ItemDay(day, isToday)
         }
     }
 }

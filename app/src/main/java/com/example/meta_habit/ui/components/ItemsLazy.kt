@@ -21,6 +21,9 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxColors
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,6 +53,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
+import com.example.meta_habit.ui.theme.MetaHabitTheme
 import com.example.meta_habit.ui.theme.RedLight
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -193,18 +197,28 @@ fun TaskEditable(
     val focusManager = LocalFocusManager.current
     var description by remember { mutableStateOf(habitTask?.description ?: "") }
 
-    ListItem(
-        headlineContent = {
-            TextField(
-                modifier = modifier.fillMaxWidth(),
-                value = description,
-                onValueChange = { text -> description = text },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    onChangeTaskDescription(description)
-                    focusManager.clearFocus()
-                }),
-                colors =  TextFieldDefaults.colors(
+    Card(
+        border = BorderStroke(1.dp, Color.LightGray),
+        colors = CardColors(
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = Color.Blue,
+            disabledContainerColor = Color.LightGray,
+            disabledContentColor = Color.LightGray
+        ),
+        modifier = modifier
+    ) {
+        ListItem(
+            headlineContent = {
+                TextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = description,
+                    onValueChange = { text -> description = text },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = {
+                        onChangeTaskDescription(description)
+                        focusManager.clearFocus()
+                    }),
+                    colors =  TextFieldDefaults.colors(
                         // Colores del contenedor (fondo)
                         focusedContainerColor =  MaterialTheme.colorScheme.background, // Un azul claro
                         unfocusedContainerColor = MaterialTheme.colorScheme.background, // Un verde muy claro
@@ -267,20 +281,20 @@ fun TaskEditable(
                         disabledSuffixColor = Color.LightGray,
                         errorSuffixColor = Color.Red
                     )
-            )
-        },
-        supportingContent = {
+                )
+            },
+            supportingContent = {
 
-        },
-        trailingContent = {
-            CustomCircularCheckbox(
-                checked = habitTask?.isCheck ?: false,
-                onCheckedChange = onChangeTaskCheck
-            )
-        },
-        modifier = Modifier.
-        border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(12.dp))
-    )
+            },
+            trailingContent = {
+                CustomCircularCheckbox(
+                    checked = habitTask?.isCheck ?: false,
+                    onCheckedChange = onChangeTaskCheck
+                )
+            },
+            modifier = modifier
+        )
+    }
 }
 
 
@@ -316,7 +330,7 @@ fun CustomCircularCheckbox(
                 imageVector = Icons.Default.Check,
                 contentDescription = "Checked",
                 tint = Color.White,
-                modifier = Modifier.size(16.dp) // Tamaño de la palomita
+                modifier = Modifier.size(16.dp)
             )
         }
 
@@ -334,6 +348,9 @@ private fun CustomCircularCheckboxPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun ItemLazyCheckPreview() {
-    TaskEditable()
+    MetaHabitTheme {
+        TaskEditable()
+    }
+
 }
 

@@ -98,6 +98,7 @@ fun DetailScreen(
 
             items(habitTask?.task?: emptyList()){ task ->
                 TaskEditable(
+                    modifier = Modifier.padding(10.dp),
                     habitTask = task,
                     onChangeTaskCheck = { viewModel.onCheckTask(task, it) },
                     onChangeTaskDescription = { viewModel.onEditDescriptionTask(task, it) },
@@ -109,7 +110,9 @@ fun DetailScreen(
                 Spacer(modifier = Modifier.height(10.dp))
                 OutlinedButton (
                     onClick = viewModel::onConfirmSaveEdit,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp)
                     ) {
                     Text(text = "Eliminar")
                 }

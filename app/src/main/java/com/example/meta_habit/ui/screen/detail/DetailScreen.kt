@@ -178,6 +178,7 @@ fun DetailScreen(
                         onEditTask = { _, _ ->
 
                         },
+                        onRemoveTask = {}
                     )
                 }
             }

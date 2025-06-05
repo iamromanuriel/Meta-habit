@@ -111,6 +111,9 @@ fun CreateScreen(
                 onChangeDescription = { text -> stateDescription = text },
                 onEditTask = { item, index ->
                     viewModel.onEditTask(item, index)
+                },
+                onRemoveTask = { index ->
+                    viewModel.onRemoveItemTask(index)
                 }
             )
 

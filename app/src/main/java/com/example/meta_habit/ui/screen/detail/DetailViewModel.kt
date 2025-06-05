@@ -33,6 +33,7 @@ class DetailViewModel(
         viewModelScope.launch {
             launch {
                 habitRepository.getHabitWithTask().collect{ habitWithTask ->
+
                     _state.value = HabitScreenState( habit = habitWithTask )
                 }
             }

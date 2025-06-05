@@ -1,5 +1,6 @@
 package com.example.meta_habit.ui.screen.create
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.meta_habit.data.repository.HabitRepository
@@ -52,6 +53,14 @@ class CreateViewModel(
             this[index] = taskDescription
         }
     }
+
+    fun onRemoveItemTask(index: Int){
+        _listTask.value = _listTask.value.toMutableList().apply {
+            Log.d("REMOVETASKLIST",index.toString())
+            this.removeAt(index)
+        }
+    }
+
 
     fun onSaveNote(title: String, enableReminder: Boolean, millisDate: Long, description: String){
         viewModelScope.launch {

@@ -9,7 +9,7 @@ import com.example.meta_habit.data.db.entity.HabitWithTasks
 import com.example.meta_habit.data.repository.HabitRepository
 import com.example.meta_habit.ui.utils.FilterType
 import com.example.meta_habit.ui.utils.getLocalDate
-import com.example.meta_habit.ui.utils.getNameMouthSpanish
+import com.example.meta_habit.ui.utils.getDayOfWeekDayMonthMontNameSimple
 import com.example.meta_habit.ui.utils.getRepeatType
 import com.example.meta_habit.ui.utils.isValidateDateThreeDaysReminder
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +44,7 @@ class HomeViewModel(
         viewModelScope.launch {
             launch {
                 val updateFilterLabel = _selectedFilter.value.copy(
-                    label = Date().getNameMouthSpanish()
+                    label = Date().getDayOfWeekDayMonthMontNameSimple()
                 )
                 _selectedFilter.value = updateFilterLabel
             }
@@ -76,7 +76,7 @@ class HomeViewModel(
         val label: String = when(filterType){
             FilterType.TODAY -> {
                 _listFilterOfHabit.value = _listOfHabit.value
-                Date().getNameMouthSpanish()
+                Date().getDayOfWeekDayMonthMontNameSimple()
             }
             FilterType.WEEK -> {
                 "Semanal"

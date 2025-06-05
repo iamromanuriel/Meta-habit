@@ -57,8 +57,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
+import com.example.meta_habit.ui.theme.BlueLight
+import com.example.meta_habit.ui.theme.Gray50
 import com.example.meta_habit.ui.theme.MetaHabitTheme
 import com.example.meta_habit.ui.theme.RedLight
+import com.example.meta_habit.ui.theme.getColorsTextField
 import com.example.meta_habit.ui.utils.getDayNameFromDate
 import com.example.meta_habit.ui.utils.getReminderDay
 import com.example.meta_habit.ui.utils.getReminderTimeDay
@@ -205,8 +208,8 @@ fun TaskEditable(
 
     val focusManager = LocalFocusManager.current
     var description by remember { mutableStateOf(habitTask?.description ?: "") }
-    var isCheck by remember { mutableStateOf(habitTask?.isCheck) }
-    val colorBackground = if(isCheck == true) Color.LightGray else MaterialTheme.colorScheme.background
+    var isCheck by remember { mutableStateOf(habitTask?.isCheck?: false) }
+    val colorBackground = if(isCheck == true) Gray50 else MaterialTheme.colorScheme.background
 
     Card(
         border = BorderStroke(1.dp, Color.LightGray),
@@ -223,75 +226,14 @@ fun TaskEditable(
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = description,
+                    enabled = isCheck.not(),
                     onValueChange = { text -> description = text },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = {
                         onChangeTaskDescription(description)
                         focusManager.clearFocus()
                     }),
-                    colors =  TextFieldDefaults.colors(
-                        // Colores del contenedor (fondo)
-                        focusedContainerColor =  MaterialTheme.colorScheme.background,
-                        unfocusedContainerColor = colorBackground,//MaterialTheme.colorScheme.background, // Un verde muy claro
-                        disabledContainerColor = Color(0xFFF5F5F5), // Gris claro para deshabilitado
-                        errorContainerColor = Color(0xFFFFEBEE),   // Rosa muy claro para error
-
-                        // Colores del texto de entrada
-                        focusedTextColor = Color.Black,
-                        unfocusedTextColor = Color.DarkGray,
-                        disabledTextColor = Color.Gray,
-                        errorTextColor = Color.Red,
-
-                        // Colores del cursor
-                        cursorColor = Color.Blue, // El cursor cuando está enfocado
-                        errorCursorColor = Color.Red, // El cursor cuando hay un error
-
-                        // Colores del label (etiqueta)
-                        focusedLabelColor = Color.Blue,
-                        unfocusedLabelColor = Color.Transparent,
-                        disabledLabelColor = Color.LightGray,
-                        errorLabelColor = Color.Red,
-
-                        // Colores del placeholder
-                        focusedPlaceholderColor = Color.LightGray,
-                        unfocusedPlaceholderColor = Color.LightGray,
-                        disabledPlaceholderColor = Color.LightGray,
-                        errorPlaceholderColor = Color.Red,
-
-                        // Colores de los íconos (leadingIcon y trailingIcon)
-                        focusedLeadingIconColor = Color.Blue,
-                        unfocusedLeadingIconColor = Color.Gray,
-                        disabledLeadingIconColor = Color.LightGray,
-                        errorLeadingIconColor = Color.Red,
-
-                        focusedTrailingIconColor = Color.Blue,
-                        unfocusedTrailingIconColor = Color.Gray,
-                        disabledTrailingIconColor = Color.LightGray,
-                        errorTrailingIconColor = Color.Red,
-
-                        // Colores de la línea indicadora (subrayado)
-                        focusedIndicatorColor = Color.Blue,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.LightGray,
-                        errorIndicatorColor = Color.Red,
-
-                        // Colores de la línea de ayuda (helper text)
-                        focusedSupportingTextColor = Color.DarkGray,
-                        unfocusedSupportingTextColor = Color.Gray,
-                        disabledSupportingTextColor = Color.LightGray,
-                        errorSupportingTextColor = Color.Red,
-
-                        // Colores del prefijo y sufijo
-                        focusedPrefixColor = Color.DarkGray,
-                        unfocusedPrefixColor = Color.Gray,
-                        disabledPrefixColor = Color.LightGray,
-                        errorPrefixColor = Color.Red,
-
-                        focusedSuffixColor = Color.DarkGray,
-                        unfocusedSuffixColor = Color.Gray,
-                        disabledSuffixColor = Color.LightGray,
-                        errorSuffixColor = Color.Red
-                    )
+                    colors = getColorsTextField(baseColor = colorBackground)
                 )
             },
             supportingContent = {
@@ -374,6 +316,7 @@ private fun CustomCircularCheckboxPreview() {
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 private fun ItemLazyCheckPreview() {

@@ -58,11 +58,14 @@ fun ColorType.buildColorCard(): CardColors{
 
 fun getRepeatType(ordinal: Int): RepeatType?{
     return RepeatType.entries.find { it.ordinal == ordinal }
+}
 
+fun getLabelType(ordinal: Int): LabelTypes?{
+    return LabelTypes.entries.find { it.ordinal == ordinal }
 }
 
 
 fun main(){
-    val reminderType = getRepeatType(0)
+    val reminderType = getRepeatType(4)
     println(reminderType)
 }

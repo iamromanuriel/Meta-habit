@@ -4,7 +4,9 @@ package com.example.meta_habit.ui.utils
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.Month
 import java.time.ZoneId
 import java.time.format.TextStyle
 import java.util.Calendar
@@ -12,6 +14,10 @@ import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
 
+/**
+ * get list date with actual days of week
+ *
+ */
 fun getCurrentWeekDays(): List<Date> {
     val calendar = Calendar.getInstance()
     val weekDays = mutableListOf<Date>()
@@ -24,17 +30,16 @@ fun getCurrentWeekDays(): List<Date> {
     return weekDays
 }
 
+
 @SuppressLint("NewApi")
-fun Date.getDayNameFromDate(): String{
-    val localDate = this.toInstant()
-        .atZone(ZoneId.systemDefault())
-        .toLocalDate()
+fun Date.getDayNameFromDate(): String {
+    val localDate = this.getLocalDate()
 
     return localDate.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
 }
 
 @SuppressLint("NewApi")
-fun Date.getDayNumMonthFromDate(): Int{
+fun Date.getDayNumMonthFromDate(): Int {
     val dayNumMonth = this.toInstant()
         .atZone(ZoneId.systemDefault())
         .toLocalDate()
@@ -44,15 +49,15 @@ fun Date.getDayNumMonthFromDate(): Int{
 
 @SuppressLint("NewApi")
 fun Long.getReminderDay(): String {
-    val  date = this.toDate()
-    val dateZoneLocal =  date.toInstant()
+    val date = this.toDate()
+    val dateZoneLocal = date.toInstant()
         .atZone(ZoneId.systemDefault())
 
     return "${dateZoneLocal.dayOfMonth} ${dateZoneLocal.month}"
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun Long.getReminderTimeDay(): String{
+fun Long.getReminderTimeDay(): String {
     val date = this.toDate()
     val dateZoneLocal = date.toInstant()
         .atZone(ZoneId.systemDefault())
@@ -60,53 +65,84 @@ fun Long.getReminderTimeDay(): String{
     return "${dateZoneLocal.hour}:${dateZoneLocal.minute}"
 }
 
-fun Long.toDate(): Date{
+fun Long.toDate(): Date {
     return Date(this)
 }
 
-fun Calendar.clearTime(){
+fun Calendar.clearTime() {
     this.set(Calendar.HOUR_OF_DAY, 0)
     this.set(Calendar.MINUTE, 0)
     this.set(Calendar.SECOND, 0)
 }
 
+/**
+ * to get string format Jue 5 de jun
+ */
 @RequiresApi(Build.VERSION_CODES.O)
-fun Date.getNameMouthSpanish(): String{
-
-    val months = listOf<String>("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
-    val daysOfWeek = listOf<String>("Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo")
+fun Date.getDayOfWeekDayMonthMontNameSimple(): String {
 
     val localDate = this.toInstant()
         .atZone(ZoneId.systemDefault())
         .toLocalDate()
 
-    return "${daysOfWeek[localDate.dayOfWeek.ordinal]} ${localDate.dayOfMonth} de ${months[localDate.month.ordinal]}"
+    return "${localDate.dayOfWeek.dayOfWeekSimple()} ${localDate.dayOfMonth} de ${localDate.month.monthNameSimple()}"
 }
 
 
-fun currentDate(): Date{
+/**
+ * to get string format name day spanish: Jue
+ */
+fun DayOfWeek.dayOfWeekSimple() : String{
+    val daysOfWeek = listOf("Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom")
+    return daysOfWeek[ordinal];
+}
+
+/**
+ * to get string format name month spanish: Jun
+ */
+fun Month.monthNameSimple(): String{
+    val months = listOf(
+        "Ene",
+        "Feb",
+        "Mar",
+        "Abr",
+        "May",
+        "Jun",
+        "Jul",
+        "Ago",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dic"
+    )
+
+    return months[ordinal]
+}
+
+
+fun currentDate(): Date {
     val calendar = Calendar.getInstance()
     calendar.clearTime()
     return calendar.time
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun Date.getLocalDate(): LocalDate{
+fun Date.getLocalDate(): LocalDate {
     return this.toInstant()
         .atZone(ZoneId.systemDefault())
         .toLocalDate()
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun isThreeDaysLater(date: LocalDate, today: LocalDate): Boolean{
+fun isThreeDaysLater(date: LocalDate, today: LocalDate): Boolean {
     val daysBetween = abs(today.toEpochDay() - date.toEpochDay())
     return daysBetween % 3 == 0L
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun isValidateDateThreeDays( date: LocalDate): Boolean{
+fun isValidateDateThreeDays(date: LocalDate): Boolean {
     val today = LocalDate.now()
-    if(date == today) return true
+    if (date == today) return true
     return isThreeDaysLater(date, today)
 }
 
@@ -128,14 +164,14 @@ fun getNextThreeDayReminderDate(baseDate: LocalDate): LocalDate {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun getNextAWeek(baseDate: LocalDate): LocalDate{
+fun getNextAWeek(baseDate: LocalDate): LocalDate {
     val today = LocalDate.now()
     val dayBetween = today.toEpochDay() - baseDate.toEpochDay()
-    val offset = if(dayBetween >= 0){
+    val offset = if (dayBetween >= 0) {
         val remainder = dayBetween % 7
-        val daysUntilNext = if(remainder == 0L) 7 else 7 - remainder
+        val daysUntilNext = if (remainder == 0L) 7 else 7 - remainder
         daysUntilNext
-    }else{
+    } else {
         abs(dayBetween) % 7
     }
     return today.plusDays(offset)
@@ -143,9 +179,9 @@ fun getNextAWeek(baseDate: LocalDate): LocalDate{
 
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun isValidateDateThreeDaysReminder(date: LocalDate, type: RepeatType?): Boolean{
+fun isValidateDateThreeDaysReminder(date: LocalDate, type: RepeatType?): Boolean {
     val today = LocalDate.now()
-    if(date == today) return true
+    if (date == today) return true
 
 
     val dateNext = when (type) {
@@ -156,7 +192,8 @@ fun isValidateDateThreeDaysReminder(date: LocalDate, type: RepeatType?): Boolean
 
 
     return (1 until 4).map {
-        today.plusDays(it.toLong()) }
+        today.plusDays(it.toLong())
+    }
         .contains(dateNext)
 }
 
@@ -164,7 +201,20 @@ fun isValidateDateThreeDaysReminder(date: LocalDate, type: RepeatType?): Boolean
 @RequiresApi(Build.VERSION_CODES.O)
 fun main() {
     val today = LocalDate.now()
-    val remindersTime = listOf(1747699200000, 1747785600000, 1747872000000, 1747872000000, 1747958400000, 1747872000000, 1747872000000, 1747872000000, 1747872000000, 1747958400000, 1748044800000, 1748304000000)
+    val remindersTime = listOf(
+        1747699200000,
+        1747785600000,
+        1747872000000,
+        1747872000000,
+        1747958400000,
+        1747872000000,
+        1747872000000,
+        1747872000000,
+        1747872000000,
+        1747958400000,
+        1748044800000,
+        1748304000000
+    )
     val remindersDate = remindersTime.map { it.toDate() }.map { it.getLocalDate() }
 
     remindersDate.forEach {

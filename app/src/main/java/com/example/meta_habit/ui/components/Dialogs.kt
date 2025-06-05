@@ -156,7 +156,7 @@ fun DialogFullScreen(
 
 @Composable
 fun DialogBasic(
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.fillMaxWidth(),
     onDismiss: () -> Unit,
     content: @Composable () -> Unit,
 

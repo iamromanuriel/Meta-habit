@@ -84,6 +84,19 @@ class HabitRepository(
         }
     }
 
+    suspend fun deleteHabit(): Result<Unit>{
+        return try {
+            if(selectedHabit.value == null){
+                Result.failure(Exception("Habit not selected"))
+            }else{
+                appDatabase.habitDao().deleteHabit(habitEntity = selectedHabit.value!!)
+                Result.success(Unit)
+            }
+        }catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
     suspend fun updateHabitToPint(habit: HabitEntity): Result<Unit>{
         return try {
             appDatabase.habitDao().updateHabit(habit)

@@ -1,5 +1,7 @@
 package com.example.meta_habit.ui.screen.detail
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,8 +10,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
@@ -19,12 +23,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,20 +50,25 @@ import com.example.meta_habit.ui.utils.ColorType
 import com.example.meta_habit.ui.utils.LabelTypes
 import com.example.meta_habit.ui.utils.RepeatType
 import com.example.meta_habit.ui.utils.getDayNameFromDate
+import com.example.meta_habit.ui.utils.getLabelType
 import com.example.meta_habit.ui.utils.getReminderDay
+import com.example.meta_habit.ui.utils.getRepeatType
 import com.example.meta_habit.ui.utils.rememberRestrictedDatePickerState
 import com.example.meta_habit.ui.utils.toDate
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
     onBack: () -> Unit = {},
     viewModel: DetailViewModel = koinViewModel<DetailViewModel>()
 ){
-
+    val coroutineScope = rememberCoroutineScope()
     var isShowDialogEdit by remember { mutableStateOf(false) }
-    val habitTask by viewModel.habitWithTask.collectAsStateWithLifecycle()
+    val snackBarHostState = remember { SnackbarHostState() }
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold (
         topBar = {
@@ -71,8 +83,11 @@ fun DetailScreen(
                         Icon(imageVector = Icons.Default.Edit, contentDescription = "")
                     }
                 },
-                title = { Text(text = habitTask?.habit?.title ?: "Detalle") }
+                title = { Text(text = state.habit?.habit?.title ?: "Detalle") }
             )
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState)
         }
     ){ innerPadding ->
         LazyColumn(
@@ -83,11 +98,11 @@ fun DetailScreen(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 5.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    habitTask?.habit?.dateCreate?.getReminderDay().let {
+                    state.habit?.habit?.dateCreate?.getReminderDay().let {
                         Text(text = "Creacion: ${it}")
                     }
 
-                    habitTask?.habit?.dateUpdate?.getReminderDay().let {
+                    state.habit?.habit?.dateUpdate?.getReminderDay().let {
                         Text(text = "Ultima modificacion: ${it}")
                     }
 
@@ -96,7 +111,7 @@ fun DetailScreen(
                 Spacer(modifier = Modifier.fillMaxWidth().height(10.dp))
             }
 
-            items(habitTask?.task?: emptyList()){ task ->
+            items(state.habit?.task?: emptyList()){ task ->
                 TaskEditable(
                     modifier = Modifier.padding(6.dp),
                     habitTask = task,
@@ -109,7 +124,11 @@ fun DetailScreen(
             item {
                 Spacer(modifier = Modifier.height(10.dp))
                 OutlinedButton (
-                    onClick = viewModel::onConfirmSaveEdit,
+                    onClick = {
+                        coroutineScope.launch {
+                            snackBarHostState.showSnackbar("Delete habit")
+                        }
+                    },//viewModel::onDeleteHabit,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 10.dp)
@@ -128,7 +147,10 @@ fun DetailScreen(
                 isShowDialogEdit = false
             },
             content = {
-                Card {
+                Card (
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     TopBarDialogBasic(
                         onClose = { isShowDialogEdit = false },
                         onDone = viewModel::onEditTask
@@ -136,14 +158,14 @@ fun DetailScreen(
                     LayoutCreateDetailNote(
                         stateIsRepeat = remember {
                             mutableStateOf(
-                                habitTask?.habit?.hasReminder ?: false
+                                state.habit?.habit?.hasReminder ?: false
                             )
                         },
                         stateColorSelected = remember { mutableStateOf(ColorType.Blue) },
                         listTask = emptyList(),
-                        stateTitle = habitTask?.habit?.title ?: "",
-                        stateLabel = LabelTypes.WORK,
-                        stateRepeat = RepeatType.DAILY,
+                        stateTitle = state.habit?.habit?.title ?: "",
+                        stateLabel = getLabelType(state.habit?.habit?.tag?:0)?: LabelTypes.WORK,
+                        stateRepeat = getRepeatType(state.habit?.habit?.repetition?:0)?: RepeatType.DAILY,
                         stateDescription = "",
                         onShowDialogRepeat = {},
                         onShowDialogPicker = {},
@@ -165,6 +187,7 @@ fun DetailScreen(
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun DetailScreenPreview(){

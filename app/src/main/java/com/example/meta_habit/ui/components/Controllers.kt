@@ -1,6 +1,5 @@
 package com.example.meta_habit.ui.components
 
-import android.content.ClipData.Item
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -26,28 +25,21 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.ui.screen.home.FilterTypeAndLabel
 import com.example.meta_habit.ui.utils.ColorType
 import com.example.meta_habit.ui.utils.FilterType
-import com.example.meta_habit.ui.utils.NoteType
-import com.example.meta_habit.ui.utils.getNameMouthSpanish
-import java.util.Date
 
 
 @Composable

@@ -51,6 +51,15 @@ fun Long.getReminderDay(): String {
     return "${dateZoneLocal.dayOfMonth} ${dateZoneLocal.month}"
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+fun Long.getReminderTimeDay(): String{
+    val date = this.toDate()
+    val dateZoneLocal = date.toInstant()
+        .atZone(ZoneId.systemDefault())
+
+    return "${dateZoneLocal.hour}:${dateZoneLocal.minute}"
+}
+
 fun Long.toDate(): Date{
     return Date(this)
 }

@@ -98,7 +98,7 @@ fun DetailScreen(
 
             items(habitTask?.task?: emptyList()){ task ->
                 TaskEditable(
-                    modifier = Modifier.padding(10.dp),
+                    modifier = Modifier.padding(6.dp),
                     habitTask = task,
                     onChangeTaskCheck = { viewModel.onCheckTask(task, it) },
                     onChangeTaskDescription = { viewModel.onEditDescriptionTask(task, it) },

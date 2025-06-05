@@ -1,5 +1,8 @@
 package com.example.meta_habit.ui.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Spacer
@@ -31,6 +34,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -55,6 +59,10 @@ import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
 import com.example.meta_habit.ui.theme.MetaHabitTheme
 import com.example.meta_habit.ui.theme.RedLight
+import com.example.meta_habit.ui.utils.getDayNameFromDate
+import com.example.meta_habit.ui.utils.getReminderDay
+import com.example.meta_habit.ui.utils.getReminderTimeDay
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -185,6 +193,7 @@ fun ItemNotification(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskEditable(
@@ -196,11 +205,13 @@ fun TaskEditable(
 
     val focusManager = LocalFocusManager.current
     var description by remember { mutableStateOf(habitTask?.description ?: "") }
+    var isCheck by remember { mutableStateOf(habitTask?.isCheck) }
+    val colorBackground = if(isCheck == true) Color.LightGray else MaterialTheme.colorScheme.background
 
     Card(
         border = BorderStroke(1.dp, Color.LightGray),
         colors = CardColors(
-            containerColor = MaterialTheme.colorScheme.background,
+            containerColor = colorBackground,
             contentColor = Color.Blue,
             disabledContainerColor = Color.LightGray,
             disabledContentColor = Color.LightGray
@@ -220,8 +231,8 @@ fun TaskEditable(
                     }),
                     colors =  TextFieldDefaults.colors(
                         // Colores del contenedor (fondo)
-                        focusedContainerColor =  MaterialTheme.colorScheme.background, // Un azul claro
-                        unfocusedContainerColor = MaterialTheme.colorScheme.background, // Un verde muy claro
+                        focusedContainerColor =  MaterialTheme.colorScheme.background,
+                        unfocusedContainerColor = colorBackground,//MaterialTheme.colorScheme.background, // Un verde muy claro
                         disabledContainerColor = Color(0xFFF5F5F5), // Gris claro para deshabilitado
                         errorContainerColor = Color(0xFFFFEBEE),   // Rosa muy claro para error
 
@@ -284,14 +295,32 @@ fun TaskEditable(
                 )
             },
             supportingContent = {
-
+                AnimatedVisibility(visible = isCheck == true) {
+                    habitTask?.dateCheck?.let {
+                        Text(text= it.getReminderTimeDay())
+                    }
+                }
             },
             trailingContent = {
                 CustomCircularCheckbox(
                     checked = habitTask?.isCheck ?: false,
-                    onCheckedChange = onChangeTaskCheck
+                    onCheckedChange = {
+                        isCheck = it;
+                        onChangeTaskCheck(it)
+                    }
                 )
             },
+            colors = ListItemColors(
+                containerColor = colorBackground,
+                headlineColor = Color.Gray,
+                leadingIconColor = Color.Black,
+                overlineColor = Color.Gray,
+                supportingTextColor = Color.Gray,
+                trailingIconColor = Color.Gray,
+                disabledHeadlineColor = Color.Gray,
+                disabledLeadingIconColor = Color.Gray,
+                disabledTrailingIconColor = Color.Gray
+            ),
             modifier = modifier
         )
     }

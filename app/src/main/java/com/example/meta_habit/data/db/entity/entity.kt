@@ -40,7 +40,7 @@ data class HabitTaskEntity(
     var habitId: Long,
     var description: String,
     var isCheck: Boolean = false,
-    val dateCheck: Long
+    var dateCheck: Long
 )
 
 @Entity(

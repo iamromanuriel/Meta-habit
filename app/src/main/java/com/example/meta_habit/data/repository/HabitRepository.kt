@@ -100,6 +100,7 @@ class HabitRepository(
     suspend fun updateHabitTaskCheck(taskEntity: HabitTaskEntity, isChecked: Boolean): Result<Unit>{
         return try {
             taskEntity.isCheck = isChecked
+            taskEntity.dateCheck = Date().time
             appDatabase.habitTaskDao().updateHabitTask(taskEntity)
             Result.success(Unit)
         }catch (e: Exception){

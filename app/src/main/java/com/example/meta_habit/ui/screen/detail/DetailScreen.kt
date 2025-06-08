@@ -69,6 +69,7 @@ fun DetailScreen(
     var isShowDialogEdit by remember { mutableStateOf(false) }
     val snackBarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val daysOfWeek by viewModel.listDaysChecked.collectAsStateWithLifecycle()
 
     Scaffold (
         topBar = {
@@ -107,7 +108,9 @@ fun DetailScreen(
                     }
 
                 }
-                ListWeekDays()
+                ListWeekDays(
+                    listDaysChecked = daysOfWeek,
+                )
                 Spacer(modifier = Modifier.fillMaxWidth().height(10.dp))
             }
 

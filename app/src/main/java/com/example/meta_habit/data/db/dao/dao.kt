@@ -21,6 +21,9 @@ interface DaoHabit{
     @Query("SELECT * FROM habit")
     fun getListOfHabit(): Flow<List<HabitEntity>>
 
+    @Query("SELECT * FROM habit where repetition > 0")
+    fun getAllHabitRepeat(): List<HabitEntity>
+
     @Transaction
     @Query("SELECT * FROM habit")
     fun getListOfHabitWithTasks(): Flow<List<HabitWithTasks>>

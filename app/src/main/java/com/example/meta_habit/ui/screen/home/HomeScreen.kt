@@ -60,7 +60,7 @@ fun HomeScreen(
     onNavigateToNotification: () -> Unit = {}
 ) {
     var scope = rememberCoroutineScope()
-    var sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState()
 
     var showButtonSheet by remember { mutableStateOf(false) }
     var showDialogCreateNote by remember { mutableStateOf(false) }

@@ -91,6 +91,7 @@ fun ItemLazyCheck(
                 stateDescription = it
             },
             colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent

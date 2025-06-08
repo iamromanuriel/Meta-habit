@@ -200,28 +200,16 @@ fun isValidateDateThreeDaysReminder(date: LocalDate, type: RepeatType?): Boolean
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun main() {
-    val today = LocalDate.now()
-    val remindersTime = listOf(
-        1747699200000,
-        1747785600000,
-        1747872000000,
-        1747872000000,
-        1747958400000,
-        1747872000000,
-        1747872000000,
-        1747872000000,
-        1747872000000,
-        1747958400000,
-        1748044800000,
-        1748304000000
-    )
-    val remindersDate = remindersTime.map { it.toDate() }.map { it.getLocalDate() }
 
-    remindersDate.forEach {
-        print("date :: ${it}, nextDay :: ${getNextAWeek(it)} \n")
-        //print("fecha :: ${isValidateDateThreeDaysReminder(it)} $it \n\n")
+    val date = 1749232534809L
+
+    println(date.toDate().getLocalDate())
+
+    getCurrentWeekDays().forEach {
+        if(it.getLocalDate() == date.toDate().getLocalDate()){
+            println("true ${it}")
+        }
     }
-
 }
 
 

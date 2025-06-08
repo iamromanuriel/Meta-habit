@@ -66,6 +66,6 @@ fun getLabelType(ordinal: Int): LabelTypes?{
 
 
 fun main(){
-    val reminderType = getRepeatType(4)
+    val reminderType = getRepeatType(0)
     println(reminderType)
 }

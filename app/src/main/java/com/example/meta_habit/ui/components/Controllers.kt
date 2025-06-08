@@ -78,7 +78,7 @@ fun DropdownSelectDate(
         TextButton(
             onClick = { isExpanded = !isExpanded },
         ) {
-            Text(text= stateFilter.label?: "", color = Color.Black, style = MaterialTheme.typography.headlineSmall)
+            Text(text= stateFilter.label?: "", color = Color.Black, style = MaterialTheme.typography.titleMedium)
 
         }
 

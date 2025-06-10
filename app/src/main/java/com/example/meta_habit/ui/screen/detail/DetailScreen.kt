@@ -49,6 +49,7 @@ import com.example.meta_habit.ui.components.TopBarDialogBasic
 import com.example.meta_habit.ui.utils.ColorType
 import com.example.meta_habit.ui.utils.LabelTypes
 import com.example.meta_habit.ui.utils.RepeatType
+import com.example.meta_habit.ui.utils.getColorToOrdinalEnum
 import com.example.meta_habit.ui.utils.getDayNameFromDate
 import com.example.meta_habit.ui.utils.getLabelType
 import com.example.meta_habit.ui.utils.getReminderDay
@@ -70,6 +71,7 @@ fun DetailScreen(
     val snackBarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val daysOfWeek by viewModel.listDaysChecked.collectAsStateWithLifecycle()
+    val stateColorSelected = remember { mutableStateOf((state.habit?.habit?.color?:0).getColorToOrdinalEnum()) }
 
     Scaffold (
         topBar = {
@@ -156,15 +158,11 @@ fun DetailScreen(
                 ) {
                     TopBarDialogBasic(
                         onClose = { isShowDialogEdit = false },
-                        onDone = viewModel::onEditTask
+                        onDone = viewModel::onConfirmSaveEdit
                     )
                     LayoutCreateDetailNote(
-                        stateIsRepeat = remember {
-                            mutableStateOf(
-                                state.habit?.habit?.hasReminder ?: false
-                            )
-                        },
-                        stateColorSelected = remember { mutableStateOf(ColorType.Blue) },
+                        stateIsRepeat = state.habit?.habit?.hasReminder ?: false,
+                        colorSelected = ColorType.Blue,
                         listTask = emptyList(),
                         stateTitle = state.habit?.habit?.title ?: "",
                         stateLabel = getLabelType(state.habit?.habit?.tag?:0)?: LabelTypes.WORK,
@@ -188,12 +186,4 @@ fun DetailScreen(
         )
     }
 
-}
-
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview
-@Composable
-fun DetailScreenPreview(){
-    DetailScreen()
 }

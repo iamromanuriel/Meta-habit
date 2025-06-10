@@ -46,7 +46,7 @@ import com.example.meta_habit.ui.utils.FilterType
 
 fun SelectionColor(
     modifier: Modifier = Modifier,
-    stateColorSelected: State<ColorType>,
+    stateColorSelected: ColorType,
     onSelected: (ColorType) -> Unit = {},
 ){
     Row (
@@ -117,7 +117,7 @@ fun DropdownSelectDate(
 @Composable
 fun ItemColorSelection(
     modifier: Modifier = Modifier,
-    stateColorSelected: State<ColorType>,
+    stateColorSelected: ColorType,
     color: ColorType,
     onSelected: (ColorType) -> Unit = {}
 ){
@@ -126,7 +126,7 @@ fun ItemColorSelection(
             .clip(CircleShape)
             .size(50.dp)
             .background(color.value)
-            .border(width = if(stateColorSelected.value == color) 2.dp else 1.dp, color = if(stateColorSelected.value == color) Color.Gray else color.value, shape = CircleShape)
+            .border(width = if(stateColorSelected == color) 2.dp else 1.dp, color = if(stateColorSelected == color) Color.Gray else color.value, shape = CircleShape)
             .clickable {
                 onSelected(color)
             }
@@ -162,7 +162,7 @@ fun TextFieldBasic(
 @Composable
 fun SelectionColorPreview(){
     SelectionColor(
-        stateColorSelected = remember { mutableStateOf(ColorType.PURPLE) }
+        stateColorSelected = ColorType.PURPLE
     )
 
 }

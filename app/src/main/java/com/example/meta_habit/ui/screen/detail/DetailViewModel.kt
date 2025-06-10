@@ -39,6 +39,7 @@ class DetailViewModel(
     private val _selectedDay = MutableStateFlow<Date?>(null)
     val selectedDay = _selectedDay.asStateFlow()
 
+
     private val _state = MutableStateFlow(HabitScreenState())
     val state : StateFlow<HabitScreenState>
         get() = _state
@@ -48,6 +49,7 @@ class DetailViewModel(
             launch {
                 habitRepository.getHabitWithTask()
                     .collect{ habitWithTask ->
+
                     getCurrentWeekDays().forEach { day ->
                         habitWithTask.task.find { it.dateCheck.toDate().getLocalDate() == day.getLocalDate() }.also {
                             if(it !=null && it.isCheck){
@@ -70,7 +72,6 @@ class DetailViewModel(
 
     fun onConfirmSaveEdit(){}
 
-    fun onEditTask(){}
 
     fun onSelectedRepeat(repeatType: RepeatType){
     }

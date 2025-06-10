@@ -47,12 +47,12 @@ fun CreateScreen(
 
     var stateTitle by remember { mutableStateOf("") }
     var stateDescription by remember { mutableStateOf("") }
-    val enableRemember = remember { mutableStateOf(false) }
+    val enableRemember by remember { mutableStateOf(false) }
     val datePickerState = rememberRestrictedDatePickerState()
-    val selectedRepeat = viewModel.selectedStateRepeat.collectAsStateWithLifecycle()
-    val selectedLabel = viewModel.selectedLabel.collectAsStateWithLifecycle()
-    val selectedColor = viewModel.selectedColor.collectAsStateWithLifecycle()
-    val stateListTask = viewModel.listTask.collectAsStateWithLifecycle()
+    val selectedRepeat by viewModel.selectedStateRepeat.collectAsStateWithLifecycle()
+    val selectedLabel by viewModel.selectedLabel.collectAsStateWithLifecycle()
+    val selectedColor by viewModel.selectedColor.collectAsStateWithLifecycle()
+    val stateListTask by viewModel.listTask.collectAsStateWithLifecycle()
     val scape = rememberCoroutineScope()
 
 
@@ -76,7 +76,7 @@ fun CreateScreen(
         onCreate = {
             viewModel.onSaveNote(
                 title = stateTitle,
-                enableReminder = enableRemember.value,
+                enableReminder = enableRemember,
                 millisDate = datePickerState.selectedDateMillis ?:0,
                 description = stateDescription
             )
@@ -85,13 +85,13 @@ fun CreateScreen(
         layout = {
             LayoutCreateDetailNote(
                 stateIsRepeat = enableRemember,
-                stateColorSelected = selectedColor,
-                listTask = stateListTask.value,
+                colorSelected = selectedColor,
+                listTask = stateListTask,
                 stateTitle = stateTitle,
                 stateDescription = stateDescription,
                 dateReminder = datePickerState,
-                stateLabel = selectedLabel.value,
-                stateRepeat = selectedRepeat.value,
+                stateLabel = selectedLabel,
+                stateRepeat = selectedRepeat,
                 onChangeTitle = { title -> stateTitle = title },
                 onShowDialogRepeat = {
                     showDialogOptionRepeat.value = true
@@ -121,10 +121,10 @@ fun CreateScreen(
                 DialogBasic(
                     onDismiss = { showDialogOptionRepeat.value = false },
                     content = {
-                        LayoutOptionRepeat(
+                        LayoutOptionRepeat<RepeatType>(
                             title = "Repetir",
                             options = RepeatType.entries.toTypedArray(),
-                            selected = selectedRepeat.value,
+                            selected = selectedRepeat,
                             onSelected = {
                                 showDialogOptionRepeat.value = false
                                 viewModel.onSelectedRepeat(it)
@@ -139,10 +139,10 @@ fun CreateScreen(
                 DialogBasic(
                     onDismiss = { showDialogOptionLabel.value = false },
                     content = {
-                        LayoutOptionRepeat(
+                        LayoutOptionRepeat<LabelTypes>(
                             title = "Etiquetas",
                             options = LabelTypes.entries.toTypedArray(),
-                            selected = selectedLabel.value,
+                            selected = selectedLabel,
                             onSelected = {
                                 showDialogOptionLabel.value = false
                                 viewModel.onSelectedLabel(it)

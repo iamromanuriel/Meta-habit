@@ -57,8 +57,8 @@ import com.example.meta_habit.ui.utils.getReminderDay
 @Composable
 fun LayoutCreateDetailNote(
     modifier: Modifier = Modifier,
-    stateIsRepeat: MutableState<Boolean>,
-    stateColorSelected: State<ColorType>,
+    stateIsRepeat: Boolean = false,
+    colorSelected: ColorType,
     dateReminder: DatePickerState,
     stateTitle: String,
     stateDescription: String,
@@ -75,6 +75,9 @@ fun LayoutCreateDetailNote(
     onEditTask: (String, Int) -> Unit,
     onRemoveTask: (Int) -> Unit
 ) {
+
+    var isCheck by remember { mutableStateOf(stateIsRepeat) }
+    var stateColorSelected by remember { mutableStateOf(colorSelected) }
 
 
     Column(
@@ -211,9 +214,9 @@ fun LayoutCreateDetailNote(
                             }
                             Row {
                                 Switch(
-                                    checked = stateIsRepeat.value,
+                                    checked = stateIsRepeat,
                                     onCheckedChange = {
-                                        stateIsRepeat.value = it
+                                        isCheck = it
                                     }
                                 )
                             }
@@ -272,7 +275,7 @@ fun LayoutCreateDetailNote(
                         onSelected = { color ->
                             onSelectedColor(color)
                         },
-                        stateColorSelected = stateColorSelected
+                        stateColorSelected = colorSelected
                     )
                 }
             }
@@ -396,8 +399,8 @@ fun LayoutCreateDetailNotePreview() {
     Scaffold { innerPadding ->
         LayoutCreateDetailNote(
             modifier = Modifier.padding(innerPadding),
-            stateIsRepeat = remember { mutableStateOf(false) },
-            stateColorSelected = remember { mutableStateOf(ColorType.PURPLE) },
+            stateIsRepeat = false,
+            colorSelected = ColorType.PURPLE,
             dateReminder = rememberDatePickerState(),
             listTask = optionRepeat,
             stateTitle = "",

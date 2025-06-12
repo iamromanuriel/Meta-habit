@@ -5,6 +5,7 @@ import com.example.meta_habit.data.db.AppDatabase
 import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
 import com.example.meta_habit.data.db.entity.HabitWithTasks
+import com.example.meta_habit.ui.utils.ColorType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -125,6 +126,19 @@ class HabitRepository(
         return try {
             taskEntity.description = description
             appDatabase.habitTaskDao().updateHabitTask(taskEntity)
+            Result.success(Unit)
+        }catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
+
+    suspend fun updateHabit(
+        color: ColorType,
+    ): Result<Unit>{
+        return try {
+            selectedHabit.value?.color = color.ordinal
+            selectedHabit.value?.let { appDatabase.habitDao().updateHabit(it) }
             Result.success(Unit)
         }catch (e: Exception){
             Result.failure(e)

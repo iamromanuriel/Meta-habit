@@ -70,8 +70,8 @@ fun DetailScreen(
     var isShowDialogEdit by remember { mutableStateOf(false) }
     val snackBarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val daysOfWeek by viewModel.listDaysChecked.collectAsStateWithLifecycle()
-    val stateColorSelected = remember { mutableStateOf((state.habit?.habit?.color?:0).getColorToOrdinalEnum()) }
+    val selectColor by viewModel.selectedColor.collectAsStateWithLifecycle()
+    val enableReminder by viewModel.enableReminder.collectAsStateWithLifecycle()
 
     Scaffold (
         topBar = {
@@ -111,7 +111,7 @@ fun DetailScreen(
 
                 }
                 ListWeekDays(
-                    listDaysChecked = daysOfWeek,
+                    listDaysChecked = state.listDaysChecked,
                 )
                 Spacer(modifier = Modifier.fillMaxWidth().height(10.dp))
             }
@@ -161,9 +161,8 @@ fun DetailScreen(
                         onDone = viewModel::onConfirmSaveEdit
                     )
                     LayoutCreateDetailNote(
-                        stateIsRepeat = state.habit?.habit?.hasReminder ?: false,
-                        colorSelected = ColorType.Blue,
-                        listTask = emptyList(),
+                        stateIsRepeat = enableReminder,
+                        colorSelected = selectColor?:ColorType.PURPLE,
                         stateTitle = state.habit?.habit?.title ?: "",
                         stateLabel = getLabelType(state.habit?.habit?.tag?:0)?: LabelTypes.WORK,
                         stateRepeat = getRepeatType(state.habit?.habit?.repetition?:0)?: RepeatType.DAILY,
@@ -171,7 +170,10 @@ fun DetailScreen(
                         onShowDialogRepeat = {},
                         onShowDialogPicker = {},
                         onShowDialogLabel = {},
-                        onSelectedColor = {},
+                        onSelectedColor = {
+                            viewModel.onSelectedColor(it)
+                            isShowDialogEdit = false
+                        },
                         onCreatedNewTask = {},
                         onChangeTitle = {},
                         onChangeDescription = {},

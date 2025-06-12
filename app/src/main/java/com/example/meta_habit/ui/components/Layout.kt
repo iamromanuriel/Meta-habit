@@ -62,7 +62,7 @@ fun LayoutCreateDetailNote(
     dateReminder: DatePickerState,
     stateTitle: String,
     stateDescription: String,
-    listTask: List<String>,
+    listTask: List<String>? = null,
     stateLabel: LabelTypes,
     stateRepeat: RepeatType,
     onShowDialogRepeat: () -> Unit,
@@ -288,7 +288,7 @@ fun LayoutCreateDetailNote(
 @Composable
 fun LayoutCreateCheckList(
     modifier: Modifier = Modifier,
-    listTask: List<String> = emptyList(),
+    listTask: List<String>? = null,
     onCreateNewTask: (String) -> Unit,
     onEditTask: (String, Int) -> Unit,
     onRemoveTask: (Int) -> Unit,
@@ -300,33 +300,39 @@ fun LayoutCreateCheckList(
         item {
 
             content()
-            TextField(
-                modifier = modifier.fillMaxWidth(),
-                value = taskDescription,
-                label = { Text("Tareas") },
-                onValueChange = { text -> taskDescription = text },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    onCreateNewTask(taskDescription)
-                    taskDescription = ""
-                }), shape = RoundedCornerShape(12.dp),
-                colors = TextFieldDefaults.textFieldColors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
+
+            listTask?.let {
+                TextField(
+                    modifier = modifier.fillMaxWidth(),
+                    value = taskDescription,
+                    label = { Text("Tareas") },
+                    onValueChange = { text -> taskDescription = text },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = {
+                        onCreateNewTask(taskDescription)
+                        taskDescription = ""
+                    }), shape = RoundedCornerShape(12.dp),
+                    colors = TextFieldDefaults.textFieldColors(
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent
+                    )
                 )
-            )
 
-            Spacer(modifier = modifier.height(20.dp))
+                Spacer(modifier = modifier.height(20.dp))
+            }
+
+        }
+        listTask?.let {
+            itemsIndexed(listTask) { index, item ->
+                ItemLazyCheck(
+                    description = item,
+                    onEditDescription = { onEditTask(it, index) },
+                    onRemove = { onRemoveTask(index) }
+                )
+            }
         }
 
-        itemsIndexed(listTask) { index, item ->
-            ItemLazyCheck(
-                description = item,
-                onEditDescription = { onEditTask(it, index) },
-                onRemove = { onRemoveTask(index) }
-            )
-        }
     }
 }
 

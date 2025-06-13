@@ -100,6 +100,19 @@ class HabitRepository(
         }
     }
 
+    suspend fun addTaskToHabit(task: String): Result<Unit>{
+        return try {
+            val habitTaskEntity = HabitTaskEntity(
+                habitId = selectedHabit.value?.id?: 0,
+                description = task
+            )
+            appDatabase.habitTaskDao().insertGetId(habitTaskEntity)
+            Result.success(Unit)
+        } catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
     suspend fun updateHabitToPint(habit: HabitEntity): Result<Unit>{
         return try {
             appDatabase.habitDao().updateHabit(habit)

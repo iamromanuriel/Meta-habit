@@ -2,6 +2,7 @@ package com.example.meta_habit.ui.screen.detail
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,7 +12,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
@@ -26,6 +30,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,6 +42,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -47,6 +54,7 @@ import com.example.meta_habit.ui.components.LayoutCreateDetailNote
 import com.example.meta_habit.ui.components.LayoutOptionRepeat
 import com.example.meta_habit.ui.components.ListWeekDays
 import com.example.meta_habit.ui.components.TaskEditable
+import com.example.meta_habit.ui.components.TextFieldBasic
 import com.example.meta_habit.ui.components.TopBarDialogBasic
 import com.example.meta_habit.ui.utils.ColorType
 import com.example.meta_habit.ui.utils.LabelTypes
@@ -72,6 +80,8 @@ fun DetailScreen(
     var isShowDialogEdit by remember { mutableStateOf(false) }
     var isShowDialogOptionRepeat by remember { mutableStateOf(false) }
     var isShowDialogOptionLabel by remember { mutableStateOf(false) }
+    var isShowButtonAdd by remember { mutableStateOf(true) }
+    var taskDescription by remember { mutableStateOf("") }
 
     val snackBarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -148,6 +158,27 @@ fun DetailScreen(
 
             item {
                 Spacer(modifier = Modifier.height(10.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(8.dp)
+                ) {
+                    TextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = taskDescription,
+                        label = { Text("Tareas") },
+                        onValueChange = { text -> taskDescription = text },
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(onDone = {
+                            viewModel.onAddNewTaskToList(taskDescription)
+                            taskDescription = ""
+                        }), shape = RoundedCornerShape(12.dp),
+                        colors = TextFieldDefaults.textFieldColors(
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            disabledIndicatorColor = Color.Transparent
+                        )
+                    )
+
+                }
                 OutlinedButton (
                     onClick = {
                         coroutineScope.launch {
@@ -197,9 +228,7 @@ fun DetailScreen(
                         onChangeTitle = {},
                         onChangeDescription = {},
                         dateReminder = rememberRestrictedDatePickerState(),
-                        onEditTask = { _, _ ->
-
-                        },
+                        onEditTask = { _, _ -> },
                         onRemoveTask = {},
                         onChangeRepeat = viewModel::onEnableReminder
                     )

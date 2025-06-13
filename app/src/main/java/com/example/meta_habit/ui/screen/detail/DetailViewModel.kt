@@ -70,7 +70,7 @@ class DetailViewModel(
                         val listDaysChecked = emptyList<DayIsChecked>().toMutableList()
                         getCurrentWeekDays().forEach { day ->
                             habitWithTask.task.find {
-                                it.dateCheck.toDate().getLocalDate() == day.getLocalDate()
+                                it.dateCheck?.toDate()?.getLocalDate() == day.getLocalDate()
                             }.also {
                                 if (it != null && it.isCheck) {
                                     listDaysChecked += DayIsChecked(day, true)
@@ -129,6 +129,10 @@ class DetailViewModel(
     }
 
     fun onAddNewTaskToList(newTask: String) {
+        viewModelScope.launch {
+            val addTaskDeferred = async(Dispatchers.IO) { habitRepository.addTaskToHabit(newTask) }
+            val resultAddTask = addTaskDeferred.await()
+        }
     }
 
     fun onEnableReminder(isCheck: Boolean) {

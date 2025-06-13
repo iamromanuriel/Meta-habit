@@ -28,6 +28,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +44,7 @@ import com.example.meta_habit.ui.components.DialogBasic
 import com.example.meta_habit.ui.components.ItemLazyCheck
 import com.example.meta_habit.ui.components.ItemListCheckEditable
 import com.example.meta_habit.ui.components.LayoutCreateDetailNote
+import com.example.meta_habit.ui.components.LayoutOptionRepeat
 import com.example.meta_habit.ui.components.ListWeekDays
 import com.example.meta_habit.ui.components.TaskEditable
 import com.example.meta_habit.ui.components.TopBarDialogBasic
@@ -68,10 +70,28 @@ fun DetailScreen(
 ){
     val coroutineScope = rememberCoroutineScope()
     var isShowDialogEdit by remember { mutableStateOf(false) }
+    var isShowDialogOptionRepeat by remember { mutableStateOf(false) }
+    var isShowDialogOptionLabel by remember { mutableStateOf(false) }
+
     val snackBarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val stateAction by viewModel.stateAction.collectAsStateWithLifecycle()
+
     val selectColor by viewModel.selectedColor.collectAsStateWithLifecycle()
     val enableReminder by viewModel.enableReminder.collectAsStateWithLifecycle()
+    val selectedRepeat by viewModel.selectedRepeat.collectAsStateWithLifecycle()
+    val selectedLabel by viewModel.selectedLabel.collectAsStateWithLifecycle()
+
+
+    LaunchedEffect(stateAction) {
+        stateAction?.let {
+            if (it.isSuccess) {
+                isShowDialogEdit = false
+            } else {
+                snackBarHostState.showSnackbar("Error")
+            }
+        }
+    }
 
     Scaffold (
         topBar = {
@@ -164,15 +184,14 @@ fun DetailScreen(
                         stateIsRepeat = enableReminder,
                         colorSelected = selectColor?:ColorType.PURPLE,
                         stateTitle = state.habit?.habit?.title ?: "",
-                        stateLabel = getLabelType(state.habit?.habit?.tag?:0)?: LabelTypes.WORK,
-                        stateRepeat = getRepeatType(state.habit?.habit?.repetition?:0)?: RepeatType.DAILY,
+                        stateLabel = selectedLabel?: LabelTypes.WORK, //getLabelType(state.habit?.habit?.tag?:0)?: LabelTypes.WORK,
+                        stateRepeat = selectedRepeat?: RepeatType.DAILY, //getRepeatType(state.habit?.habit?.repetition?:0)?: RepeatType.DAILY,
                         stateDescription = "",
-                        onShowDialogRepeat = {},
+                        onShowDialogRepeat = { isShowDialogOptionRepeat = true },
                         onShowDialogPicker = {},
-                        onShowDialogLabel = {},
+                        onShowDialogLabel = { isShowDialogOptionLabel = true},
                         onSelectedColor = {
                             viewModel.onSelectedColor(it)
-                            isShowDialogEdit = false
                         },
                         onCreatedNewTask = {},
                         onChangeTitle = {},
@@ -181,10 +200,52 @@ fun DetailScreen(
                         onEditTask = { _, _ ->
 
                         },
-                        onRemoveTask = {}
+                        onRemoveTask = {},
+                        onChangeRepeat = viewModel::onEnableReminder
                     )
                 }
             }
+        )
+    }
+
+    if(isShowDialogOptionRepeat){
+        DialogBasic(
+            onDismiss = {
+                isShowDialogOptionRepeat = false
+            },
+            content = {
+                LayoutOptionRepeat(
+                    title = "Repetir",
+                    options = RepeatType.entries.toTypedArray(),
+                    selected = selectedRepeat,
+                    onSelected = {
+                        viewModel.onSelectedRepeat(it)
+                        isShowDialogOptionRepeat = false
+                    },
+                    itemToString = { it?.value?:"" }
+                )
+            }
+        )
+    }
+
+    if(isShowDialogOptionLabel){
+        DialogBasic(
+            onDismiss = {
+                isShowDialogOptionLabel = false
+            },
+            content = {
+                LayoutOptionRepeat<LabelTypes>(
+                    title = "Etiqueta",
+                    options = LabelTypes.entries.toTypedArray(),
+                    selected = selectedLabel ?: LabelTypes.WORK,
+                    onSelected = {
+                        viewModel.onSelectedLabel(it)
+                        isShowDialogOptionLabel = false
+                    },
+                    itemToString = { it.value }
+                )
+            }
+
         )
     }
 

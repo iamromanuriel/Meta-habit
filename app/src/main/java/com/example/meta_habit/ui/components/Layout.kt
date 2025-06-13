@@ -73,7 +73,8 @@ fun LayoutCreateDetailNote(
     onChangeTitle: (String) -> Unit,
     onChangeDescription: (String) -> Unit,
     onEditTask: (String, Int) -> Unit,
-    onRemoveTask: (Int) -> Unit
+    onRemoveTask: (Int) -> Unit,
+    onChangeRepeat : (Boolean) -> Unit
 ) {
 
     var isCheck by remember { mutableStateOf(stateIsRepeat) }
@@ -214,9 +215,10 @@ fun LayoutCreateDetailNote(
                             }
                             Row {
                                 Switch(
-                                    checked = stateIsRepeat,
+                                    checked = isCheck,
                                     onCheckedChange = {
                                         isCheck = it
+                                        onChangeRepeat(it)
                                     }
                                 )
                             }
@@ -424,7 +426,7 @@ fun LayoutCreateDetailNotePreview() {
 
             },
             onRemoveTask = {},
-
+            onChangeRepeat = {}
         )
     }
 }

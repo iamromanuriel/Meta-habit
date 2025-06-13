@@ -16,6 +16,7 @@ import com.example.meta_habit.ui.utils.RepeatType
 import com.example.meta_habit.ui.utils.getColorToOrdinalEnum
 import com.example.meta_habit.ui.utils.getCurrentWeekDays
 import com.example.meta_habit.ui.utils.getLocalDate
+import com.example.meta_habit.ui.utils.getRepeatType
 import com.example.meta_habit.ui.utils.toDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -31,7 +32,7 @@ import java.util.Date
 @RequiresApi(Build.VERSION_CODES.O)
 class DetailViewModel(
     private val habitRepository: HabitRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
     private val _errorMessage = MutableStateFlow(null)
@@ -42,32 +43,48 @@ class DetailViewModel(
     val selectedColor = _selectedColor.asStateFlow()
     private val _enableReminder = MutableStateFlow(false)
     val enableReminder = _enableReminder.asStateFlow()
+    private val _selectedRepeat = MutableStateFlow<RepeatType?>(null)
+    val selectedRepeat = _selectedRepeat.asStateFlow()
+    private val _selectedLabel = MutableStateFlow<LabelTypes?>(null)
+    val selectedLabel = _selectedLabel.asStateFlow()
+
+    private val _savedChangeHabit = MutableStateFlow<Result<Unit>?>(null)
+    val stateAction = _savedChangeHabit.asStateFlow()
 
 
     private val _state = MutableStateFlow(HabitScreenState())
-    val state : StateFlow<HabitScreenState>
+    val state: StateFlow<HabitScreenState>
         get() = _state
 
     init {
         viewModelScope.launch {
             launch {
                 habitRepository.getHabitWithTask()
-                    .collect{ habitWithTask ->
-                        _selectedColor.value = (habitWithTask.habit.color?:0).getColorToOrdinalEnum()
-                        _enableReminder.value = habitWithTask.habit.hasReminder?:false
+                    .collect { habitWithTask ->
+                        _selectedColor.value =
+                            (habitWithTask.habit.color ?: 0).getColorToOrdinalEnum()
+                        _enableReminder.value = habitWithTask.habit.hasReminder ?: false
+                        _selectedRepeat.value = getRepeatType(
+                            (habitWithTask.habit.repetition ?: RepeatType.DAILY.ordinal)
+                        )
                         val listDaysChecked = emptyList<DayIsChecked>().toMutableList()
-                    getCurrentWeekDays().forEach { day ->
-                        habitWithTask.task.find { it.dateCheck.toDate().getLocalDate() == day.getLocalDate() }.also {
-                            if(it !=null && it.isCheck){
-                                listDaysChecked += DayIsChecked(day, true)
-                            }else{
-                                listDaysChecked += DayIsChecked(day, false)
+                        getCurrentWeekDays().forEach { day ->
+                            habitWithTask.task.find {
+                                it.dateCheck.toDate().getLocalDate() == day.getLocalDate()
+                            }.also {
+                                if (it != null && it.isCheck) {
+                                    listDaysChecked += DayIsChecked(day, true)
+                                } else {
+                                    listDaysChecked += DayIsChecked(day, false)
+                                }
                             }
                         }
-                    }
 
-                    _state.value = HabitScreenState( habit = habitWithTask, listDaysChecked = listDaysChecked.toList() )
-                }
+                        _state.value = HabitScreenState(
+                            habit = habitWithTask,
+                            listDaysChecked = listDaysChecked.toList()
+                        )
+                    }
             }
 
             launch {
@@ -76,55 +93,76 @@ class DetailViewModel(
         }
     }
 
-    fun onConfirmSaveEdit(){
+    fun onConfirmSaveEdit() {
         viewModelScope.launch {
-            val editHabitDeferred = async(Dispatchers.IO) { habitRepository.updateHabit(color = _selectedColor.value?:ColorType.PURPLE) }
+            val editHabitDeferred = async(Dispatchers.IO) {
+                habitRepository.updateHabit(
+                    color = _selectedColor.value ?: ColorType.PURPLE,
+                    isReminder = _enableReminder.value,
+                    repeatType = _selectedRepeat.value,
+                    labelType = _selectedLabel.value,
+                )
+            }
             val resultEditHabit = editHabitDeferred.await()
 
-            Log.d("ON-EDIT-HABIT",resultEditHabit.toString())
+            _savedChangeHabit.value = resultEditHabit
+
+            Log.d("ON-EDIT-HABIT", resultEditHabit.toString())
         }
     }
 
 
-    fun onSelectedRepeat(repeatType: RepeatType){
+    fun onSelectedRepeat(repeatType: RepeatType?) {
+        _selectedRepeat.value = repeatType
     }
 
-    fun onSelectedLabel(labelType: LabelTypes){
+    fun onSelectedLabel(labelType: LabelTypes) {
+        _selectedLabel.value = labelType
     }
 
-    fun onSelectedColor(color: ColorType){
+    fun onSelectedColor(color: ColorType) {
         _selectedColor.value = color
-        Log.d("ON-EDIT-COLOR",color.toString())
+        Log.d("ON-EDIT-COLOR", color.toString())
     }
 
-    fun selectDateMillis(dateMillis: Long?){
+    fun selectDateMillis(dateMillis: Long?) {
     }
 
-    fun onAddNewTaskToList(newTask: String){
+    fun onAddNewTaskToList(newTask: String) {
     }
 
-    fun onCheckTask(task: HabitTaskEntity, isChecked: Boolean){
+    fun onEnableReminder(isCheck: Boolean) {
+        _enableReminder.value = isCheck
+    }
+
+    fun onCheckTask(task: HabitTaskEntity, isChecked: Boolean) {
         viewModelScope.launch {
-            val checkedTaskDeferred = async(Dispatchers.IO){ habitRepository.updateHabitTaskCheck(task, isChecked) }
+            val checkedTaskDeferred =
+                async(Dispatchers.IO) { habitRepository.updateHabitTaskCheck(task, isChecked) }
             val resultCheckTask = checkedTaskDeferred.await()
 
         }
     }
 
-    fun onEditDescriptionTask(task: HabitTaskEntity, description: String){
+    fun onEditDescriptionTask(task: HabitTaskEntity, description: String) {
         viewModelScope.launch {
-            val editDescriptionDeferred = async(Dispatchers.IO){ habitRepository.updateHabitTaskDescription(task, description) }
+            val editDescriptionDeferred = async(Dispatchers.IO) {
+                habitRepository.updateHabitTaskDescription(
+                    task,
+                    description
+                )
+            }
             val resultEditDescription = editDescriptionDeferred.await()
 
         }
     }
 
-    fun onDeleteHabit(){
+    fun onDeleteHabit() {
         viewModelScope.launch {
             val deleteHabitDeferred = async(Dispatchers.IO) { habitRepository.deleteHabit() }
             val resultHabitDelete = deleteHabitDeferred.await()
 
-            Log.d("ON-DELETE",resultHabitDelete.toString())
+            Log.d("ON-DELETE", resultHabitDelete.toString())
         }
     }
 

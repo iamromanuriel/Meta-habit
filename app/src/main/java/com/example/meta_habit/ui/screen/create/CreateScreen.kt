@@ -114,7 +114,8 @@ fun CreateScreen(
                 },
                 onRemoveTask = { index ->
                     viewModel.onRemoveItemTask(index)
-                }
+                },
+                onChangeRepeat = {}
             )
 
             if (showDialogOptionRepeat.value) {

@@ -6,6 +6,8 @@ import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
 import com.example.meta_habit.data.db.entity.HabitWithTasks
 import com.example.meta_habit.ui.utils.ColorType
+import com.example.meta_habit.ui.utils.LabelTypes
+import com.example.meta_habit.ui.utils.RepeatType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -135,9 +137,15 @@ class HabitRepository(
 
     suspend fun updateHabit(
         color: ColorType,
+        isReminder: Boolean,
+        repeatType: RepeatType?,
+        labelType: LabelTypes?
     ): Result<Unit>{
         return try {
             selectedHabit.value?.color = color.ordinal
+            selectedHabit.value?.hasReminder = isReminder
+            repeatType?.ordinal.let { selectedHabit.value?.repetition = it }
+            labelType?.ordinal.let { selectedHabit.value?.tag = it }
             selectedHabit.value?.let { appDatabase.habitDao().updateHabit(it) }
             Result.success(Unit)
         }catch (e: Exception){

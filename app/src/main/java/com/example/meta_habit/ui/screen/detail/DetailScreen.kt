@@ -3,6 +3,13 @@ package com.example.meta_habit.ui.screen.detail
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -75,12 +82,11 @@ import org.koin.compose.viewmodel.koinViewModel
 fun DetailScreen(
     onBack: () -> Unit = {},
     viewModel: DetailViewModel = koinViewModel<DetailViewModel>()
-){
+) {
     val coroutineScope = rememberCoroutineScope()
     var isShowDialogEdit by remember { mutableStateOf(false) }
     var isShowDialogOptionRepeat by remember { mutableStateOf(false) }
     var isShowDialogOptionLabel by remember { mutableStateOf(false) }
-    var isShowButtonAdd by remember { mutableStateOf(true) }
     var taskDescription by remember { mutableStateOf("") }
 
     val snackBarHostState = remember { SnackbarHostState() }
@@ -103,7 +109,7 @@ fun DetailScreen(
         }
     }
 
-    Scaffold (
+    Scaffold(
         topBar = {
             TopAppBar(
                 navigationIcon = {
@@ -122,13 +128,15 @@ fun DetailScreen(
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)
         }
-    ){ innerPadding ->
+    ) { innerPadding ->
         LazyColumn(
             modifier = Modifier.padding(innerPadding)
         ) {
             item {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 5.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp, vertical = 5.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     state.habit?.habit?.dateCreate?.getReminderDay().let {
@@ -143,10 +151,12 @@ fun DetailScreen(
                 ListWeekDays(
                     listDaysChecked = state.listDaysChecked,
                 )
-                Spacer(modifier = Modifier.fillMaxWidth().height(10.dp))
+                Spacer(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(10.dp))
             }
 
-            items(state.habit?.task?: emptyList()){ task ->
+            items(state.habit?.task ?: emptyList()) { task ->
                 TaskEditable(
                     modifier = Modifier.padding(6.dp),
                     habitTask = task,
@@ -159,7 +169,9 @@ fun DetailScreen(
             item {
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
                 ) {
                     TextField(
                         modifier = Modifier.fillMaxWidth(),
@@ -179,7 +191,7 @@ fun DetailScreen(
                     )
 
                 }
-                OutlinedButton (
+                OutlinedButton(
                     onClick = {
                         coroutineScope.launch {
                             snackBarHostState.showSnackbar("Delete habit")
@@ -188,7 +200,7 @@ fun DetailScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 10.dp)
-                    ) {
+                ) {
                     Text(text = "Eliminar")
                 }
             }
@@ -196,15 +208,17 @@ fun DetailScreen(
     }
 
 
-    if(isShowDialogEdit){
+    AnimatedVisibility(
+        visible = isShowDialogEdit,
+    ) {
         DialogBasic(
             modifier = Modifier.fillMaxWidth(),
             onDismiss = {
                 isShowDialogEdit = false
             },
             content = {
-                Card (
-                    shape = RoundedCornerShape(10.dp),
+                Card(
+                    shape = RoundedCornerShape(24.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     TopBarDialogBasic(
@@ -213,14 +227,16 @@ fun DetailScreen(
                     )
                     LayoutCreateDetailNote(
                         stateIsRepeat = enableReminder,
-                        colorSelected = selectColor?:ColorType.PURPLE,
+                        colorSelected = selectColor ?: ColorType.PURPLE,
                         stateTitle = state.habit?.habit?.title ?: "",
-                        stateLabel = selectedLabel?: LabelTypes.WORK, //getLabelType(state.habit?.habit?.tag?:0)?: LabelTypes.WORK,
-                        stateRepeat = selectedRepeat?: RepeatType.DAILY, //getRepeatType(state.habit?.habit?.repetition?:0)?: RepeatType.DAILY,
+                        stateLabel = selectedLabel
+                            ?: LabelTypes.WORK, //getLabelType(state.habit?.habit?.tag?:0)?: LabelTypes.WORK,
+                        stateRepeat = selectedRepeat
+                            ?: RepeatType.DAILY, //getRepeatType(state.habit?.habit?.repetition?:0)?: RepeatType.DAILY,
                         stateDescription = "",
                         onShowDialogRepeat = { isShowDialogOptionRepeat = true },
                         onShowDialogPicker = {},
-                        onShowDialogLabel = { isShowDialogOptionLabel = true},
+                        onShowDialogLabel = { isShowDialogOptionLabel = true },
                         onSelectedColor = {
                             viewModel.onSelectedColor(it)
                         },
@@ -237,7 +253,7 @@ fun DetailScreen(
         )
     }
 
-    if(isShowDialogOptionRepeat){
+    if (isShowDialogOptionRepeat) {
         DialogBasic(
             onDismiss = {
                 isShowDialogOptionRepeat = false
@@ -251,13 +267,13 @@ fun DetailScreen(
                         viewModel.onSelectedRepeat(it)
                         isShowDialogOptionRepeat = false
                     },
-                    itemToString = { it?.value?:"" }
+                    itemToString = { it?.value ?: "" }
                 )
             }
         )
     }
 
-    if(isShowDialogOptionLabel){
+    if (isShowDialogOptionLabel) {
         DialogBasic(
             onDismiss = {
                 isShowDialogOptionLabel = false

@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 
 @Entity(tableName = "habit")
-data class HabitEntity (
+data class HabitEntity(
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0,
     var title: String? = null,
@@ -31,9 +31,9 @@ data class HabitEntity (
             entity = HabitEntity::class,
             parentColumns = ["id"],
             childColumns = ["habitId"],
-    )],
+        )],
     indices = [Index("habitId")]
-    )
+)
 data class HabitTaskEntity(
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0,
@@ -52,7 +52,7 @@ data class HabitTaskEntity(
             childColumns = ["habitId"]
         )],
     indices = [Index("habitId")]
-    )
+)
 data class NotificationEntity(
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0,
@@ -72,3 +72,17 @@ data class HabitWithTasks(
     val task: List<HabitTaskEntity>
 )
 
+@Entity(
+    tableName = "habit_log",
+    foreignKeys = [
+        ForeignKey(entity = HabitEntity::class, parentColumns = ["id"], childColumns = ["habitId"])
+    ],
+    indices = [Index("habitId")]
+)
+data class HabitLogEntity(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+    val habitId: Long,
+    val date: Long,
+    val isCompleted: Boolean = false
+)

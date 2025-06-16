@@ -78,8 +78,6 @@ fun LayoutCreateDetailNote(
 ) {
 
     var isCheck by remember { mutableStateOf(stateIsRepeat) }
-    var stateColorSelected by remember { mutableStateOf(colorSelected) }
-
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally

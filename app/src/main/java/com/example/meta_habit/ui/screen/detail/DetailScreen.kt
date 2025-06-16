@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
@@ -99,6 +100,7 @@ fun DetailScreen(
     val selectedLabel by viewModel.selectedLabel.collectAsStateWithLifecycle()
 
 
+
     LaunchedEffect(stateAction) {
         stateAction?.let {
             if (it.isSuccess) {
@@ -118,6 +120,14 @@ fun DetailScreen(
                     }
                 },
                 actions = {
+
+                    IconButton(onClick = {
+                        coroutineScope.launch {
+                            snackBarHostState.showSnackbar("Deleted")
+                        }
+                    }) {
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = "")
+                    }
                     IconButton(onClick = { isShowDialogEdit = true }) {
                         Icon(imageVector = Icons.Default.Edit, contentDescription = "")
                     }
@@ -191,22 +201,10 @@ fun DetailScreen(
                     )
 
                 }
-                OutlinedButton(
-                    onClick = {
-                        coroutineScope.launch {
-                            snackBarHostState.showSnackbar("Delete habit")
-                        }
-                    },//viewModel::onDeleteHabit,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp)
-                ) {
-                    Text(text = "Eliminar")
-                }
+
             }
         }
     }
-
 
     AnimatedVisibility(
         visible = isShowDialogEdit,
@@ -217,18 +215,21 @@ fun DetailScreen(
                 isShowDialogEdit = false
             },
             content = {
+                var titleState by remember { mutableStateOf(state.habit?.habit?.title?:"") }
                 Card(
                     shape = RoundedCornerShape(24.dp),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().padding(10.dp)
                 ) {
                     TopBarDialogBasic(
                         onClose = { isShowDialogEdit = false },
-                        onDone = viewModel::onConfirmSaveEdit
+                        onDone = {
+                            viewModel.onConfirmSaveEdit(titleState)
+                        }
                     )
                     LayoutCreateDetailNote(
                         stateIsRepeat = enableReminder,
                         colorSelected = selectColor ?: ColorType.PURPLE,
-                        stateTitle = state.habit?.habit?.title ?: "",
+                        stateTitle = titleState,
                         stateLabel = selectedLabel
                             ?: LabelTypes.WORK, //getLabelType(state.habit?.habit?.tag?:0)?: LabelTypes.WORK,
                         stateRepeat = selectedRepeat
@@ -241,7 +242,7 @@ fun DetailScreen(
                             viewModel.onSelectedColor(it)
                         },
                         onCreatedNewTask = {},
-                        onChangeTitle = {},
+                        onChangeTitle = { titleState = it },
                         onChangeDescription = {},
                         dateReminder = rememberRestrictedDatePickerState(),
                         onEditTask = { _, _ -> },

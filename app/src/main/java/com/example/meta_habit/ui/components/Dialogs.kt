@@ -163,6 +163,7 @@ fun DialogBasic(
     ){
     Dialog(
         onDismissRequest = { onDismiss() },
+        properties = DialogProperties(usePlatformDefaultWidth = false)
     ){
         content()
     }

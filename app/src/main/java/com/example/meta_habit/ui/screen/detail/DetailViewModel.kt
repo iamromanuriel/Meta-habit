@@ -93,10 +93,11 @@ class DetailViewModel(
         }
     }
 
-    fun onConfirmSaveEdit() {
+    fun onConfirmSaveEdit(title: String) {
         viewModelScope.launch {
             val editHabitDeferred = async(Dispatchers.IO) {
                 habitRepository.updateHabit(
+                    title = title,
                     color = _selectedColor.value ?: ColorType.PURPLE,
                     isReminder = _enableReminder.value,
                     repeatType = _selectedRepeat.value,

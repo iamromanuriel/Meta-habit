@@ -47,6 +47,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
@@ -209,9 +210,9 @@ fun TaskEditable(
 ) {
 
     val focusManager = LocalFocusManager.current
-    var description by remember { mutableStateOf(habitTask?.description ?: "") }
+    var description by remember { mutableStateOf(habitTask?.description ?: "Description") }
     var isCheck by remember { mutableStateOf(habitTask?.isCheck?: false) }
-    val colorBackground = if(isCheck == true) Gray50 else MaterialTheme.colorScheme.background
+    val colorBackground = if(isCheck) Gray50 else MaterialTheme.colorScheme.background
 
     Card(
         border = BorderStroke(1.dp, Color.LightGray),
@@ -229,6 +230,7 @@ fun TaskEditable(
                     modifier = Modifier.fillMaxWidth(),
                     value = description,
                     enabled = isCheck.not(),
+                    textStyle = TextStyle(textDecoration = if(isCheck)TextDecoration.LineThrough else TextDecoration.None),
                     onValueChange = { text -> description = text },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = {

@@ -149,12 +149,14 @@ class HabitRepository(
 
 
     suspend fun updateHabit(
+        title: String,
         color: ColorType,
         isReminder: Boolean,
         repeatType: RepeatType?,
         labelType: LabelTypes?
     ): Result<Unit>{
         return try {
+            selectedHabit.value?.title = title
             selectedHabit.value?.color = color.ordinal
             selectedHabit.value?.hasReminder = isReminder
             repeatType?.ordinal.let { selectedHabit.value?.repetition = it }

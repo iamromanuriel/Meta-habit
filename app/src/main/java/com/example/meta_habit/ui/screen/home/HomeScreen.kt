@@ -4,9 +4,12 @@ import android.graphics.drawable.AnimatedImageDrawable
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -34,6 +37,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -98,19 +102,22 @@ fun HomeScreen(
         }
     ) { innerPadding ->
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
+        LazyColumn (
             contentPadding = innerPadding,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(horizontal = 10.dp)
         ) {
 
             items(listHabit.value) { habit ->
                 CardNoteBasic(
                     habit = habit,
-                    onClick = {
+                    onClickOption = {
                         showButtonSheet = true
                         viewModel.onSelectNote(habit)
+                    },
+                    onClick = {
+                        viewModel.onSelectNote(habit)
+                        onNavigateToDetail()
                     }
                 )
             }

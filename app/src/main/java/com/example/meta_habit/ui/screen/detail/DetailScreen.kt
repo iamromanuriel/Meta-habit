@@ -132,7 +132,7 @@ fun DetailScreen(
                         Icon(imageVector = Icons.Default.Edit, contentDescription = "")
                     }
                 },
-                title = { Text(text = state.habit?.habit?.title ?: "Detalle") }
+                title = { Text(text = state.habit?.habit?.title ?: "Detalle", maxLines = 1) }
             )
         },
         snackbarHost = {
@@ -276,11 +276,13 @@ fun DetailScreen(
 
     if (isShowDialogOptionLabel) {
         DialogBasic(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
             onDismiss = {
                 isShowDialogOptionLabel = false
             },
             content = {
                 LayoutOptionRepeat<LabelTypes>(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
                     title = "Etiqueta",
                     options = LabelTypes.entries.toTypedArray(),
                     selected = selectedLabel ?: LabelTypes.WORK,

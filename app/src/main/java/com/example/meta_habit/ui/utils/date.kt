@@ -53,7 +53,9 @@ fun Long.getReminderDay(): String {
     val dateZoneLocal = date.toInstant()
         .atZone(ZoneId.systemDefault())
 
-    return "${dateZoneLocal.dayOfMonth} ${dateZoneLocal.month}"
+    val months = listOf("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic")
+
+    return "${dateZoneLocal.dayOfMonth} ${months[dateZoneLocal.monthValue -1]}"
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -203,13 +205,9 @@ fun main() {
 
     val date = 1749232534809L
 
-    println(date.toDate().getLocalDate())
+    println(date.getReminderDay())
 
-    getCurrentWeekDays().forEach {
-        if(it.getLocalDate() == date.toDate().getLocalDate()){
-            println("true ${it}")
-        }
-    }
+
 }
 
 

@@ -20,9 +20,11 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -32,9 +34,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.data.db.entity.HabitEntity
@@ -46,53 +51,84 @@ import com.example.meta_habit.ui.utils.getReminderDay
 fun CardNoteBasic(
     modifier: Modifier = Modifier,
     habit: HabitWithTasks,
-    onClick: () -> Unit = {}
-){
+    onClick: () -> Unit = {},
+    onClickOption: () -> Unit = {}
+) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        border = BorderStroke(1.dp, Color.Gray),
         onClick = onClick,
     ) {
-        Column(modifier = modifier.padding(8.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = habit.habit.title ?: "Title",
-                    modifier = modifier.padding(vertical = 6.dp),
-                    fontWeight = FontWeight.Bold,
-                )
+        Column(modifier = modifier) {
 
-                if(habit.habit.isPinned == true) { Icon(Icons.Default.Favorite , contentDescription = "") }
+            Box(
+                modifier = Modifier,
+                contentAlignment = Alignment.TopEnd
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    IconButton(
+                        onClick = onClickOption
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.MoreVert,
+                            contentDescription = "Option habit",
+                            tint = Color.Gray
+                        )
+                    }
+
+                    Text(
+                        text = habit.habit.title ?: "Title",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
+
+                }
+                if (habit.habit.isPinned == true) {
+                    Icon(Icons.Default.Favorite, contentDescription = "", modifier = Modifier.padding(8.dp))
+                }
             }
 
-            Column(modifier = Modifier.height(80.dp)){
+
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 habit.task.take(3).forEach { task ->
                     Row(
                         modifier = modifier.padding(vertical = 4.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.Top
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        if(task.isCheck){
+                        if (task.isCheck) {
                             Box(
                                 modifier = Modifier
-                                    .size(10.dp)
-                                    .border(1.dp, Color.Gray, RoundedCornerShape(2.dp)),
+                                    .size(16.dp)
+                                    .border(1.dp, Color.Gray, RoundedCornerShape(4.dp)),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Icon(imageVector = Icons.Default.Check, contentDescription = "", modifier.scale(0.8F))
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = "",
+                                    modifier.scale(0.8F)
+                                )
                             }
                         }
-                        Text(text= task.description, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                        Text(
+                            text = task.description,
+                            color = Color.Gray,
+                            textDecoration = if(task.isCheck) TextDecoration.LineThrough else TextDecoration.None,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
                     }
                 }
             }
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = modifier.fillMaxWidth()
+                modifier = modifier.fillMaxWidth().padding(vertical = 10.dp, horizontal = 16.dp)
             ) {
-                Icon(imageVector = Icons.Default.DateRange, contentDescription = "")
                 habit.habit.dateReminder?.getReminderDay()?.let { Text(it) }
             }
         }
@@ -101,11 +137,14 @@ fun CardNoteBasic(
 
 @Preview
 @Composable
-fun CardNoteBasicPreview(){
+fun CardNoteBasicPreview() {
     Scaffold { innerPadding ->
-        Row (modifier = Modifier.padding(innerPadding)){
+        Row(modifier = Modifier.padding(innerPadding)) {
             CardNoteBasic(
-                habit = HabitWithTasks(habit = HabitEntity(dateUpdate = 0, dateCreate = 0), task =  listOf())
+                habit = HabitWithTasks(
+                    habit = HabitEntity(dateUpdate = 0, dateCreate = 0),
+                    task = listOf()
+                )
             )
         }
     }

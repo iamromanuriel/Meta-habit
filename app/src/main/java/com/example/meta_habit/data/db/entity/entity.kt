@@ -31,6 +31,7 @@ data class HabitEntity(
             entity = HabitEntity::class,
             parentColumns = ["id"],
             childColumns = ["habitId"],
+            onDelete = ForeignKey.CASCADE
         )],
     indices = [Index("habitId")]
 )

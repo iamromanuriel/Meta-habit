@@ -30,10 +30,10 @@ interface DaoHabit{
 
     @Transaction
     @Query("SELECT * FROM habit WHERE id = :idHabit")
-    fun getHabitWithTask(idHabit: Long): Flow<HabitWithTasks>
+    fun getHabitWithTask(idHabit: Long): Flow<HabitWithTasks?>
 
     @Delete
-    suspend fun deleteHabit(habitEntity: HabitEntity): Int
+    suspend fun deleteHabit(habitEntity: HabitEntity)
 
     @Update
     suspend fun updateHabit(habitEntity: HabitEntity): Int

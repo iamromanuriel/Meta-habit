@@ -122,7 +122,7 @@ class HabitRepository(
         }
     }
 
-    fun getHabitWithTask(): Flow<HabitWithTasks>{
+    fun getHabitWithTask(): Flow<HabitWithTasks?>{
         return appDatabase.habitDao().getHabitWithTask(selectedHabit.value?.id ?: 0)
     }
 

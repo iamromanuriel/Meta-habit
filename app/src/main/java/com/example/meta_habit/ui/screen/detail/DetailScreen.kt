@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -88,11 +89,13 @@ fun DetailScreen(
     var isShowDialogEdit by remember { mutableStateOf(false) }
     var isShowDialogOptionRepeat by remember { mutableStateOf(false) }
     var isShowDialogOptionLabel by remember { mutableStateOf(false) }
+    var isShowDialogDelete by remember { mutableStateOf(false) }
     var taskDescription by remember { mutableStateOf("") }
 
     val snackBarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val stateAction by viewModel.stateAction.collectAsStateWithLifecycle()
+    val stateDelete by viewModel.stateDelete.collectAsStateWithLifecycle()
 
     val selectColor by viewModel.selectedColor.collectAsStateWithLifecycle()
     val enableReminder by viewModel.enableReminder.collectAsStateWithLifecycle()
@@ -111,6 +114,16 @@ fun DetailScreen(
         }
     }
 
+    LaunchedEffect(stateDelete) {
+        stateDelete?.let {
+            if (it.isSuccess) {
+                onBack()
+            } else {
+                snackBarHostState.showSnackbar(it.exceptionOrNull()?.message ?: "Error")
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -122,9 +135,7 @@ fun DetailScreen(
                 actions = {
 
                     IconButton(onClick = {
-                        coroutineScope.launch {
-                            snackBarHostState.showSnackbar("Deleted")
-                        }
+                        isShowDialogDelete = true
                     }) {
                         Icon(imageVector = Icons.Default.Delete, contentDescription = "")
                     }
@@ -294,6 +305,24 @@ fun DetailScreen(
                 )
             }
 
+        )
+    }
+
+    if(isShowDialogDelete){
+        AlertDialog(
+            title = { Text(text = "Eliminar") },
+            text = { Text(text = "Estas seguro que deseas eliminar?") },
+            onDismissRequest = { isShowDialogDelete = false },
+            confirmButton = {
+                Button(onClick = viewModel::onDeleteHabit){
+                    Text("Eliminar")
+                }
+            },
+            dismissButton = {
+                OutlinedButton (onClick = { isShowDialogDelete = false }) {
+                    Text("Cancelar")
+                }
+            }
         )
     }
 

@@ -51,6 +51,9 @@ class DetailViewModel(
     private val _savedChangeHabit = MutableStateFlow<Result<Unit>?>(null)
     val stateAction = _savedChangeHabit.asStateFlow()
 
+    private val _deleteHabit = MutableStateFlow<Result<Unit>?>(null)
+    val stateDelete = _deleteHabit.asStateFlow()
+
 
     private val _state = MutableStateFlow(HabitScreenState())
     val state: StateFlow<HabitScreenState>
@@ -61,29 +64,33 @@ class DetailViewModel(
             launch {
                 habitRepository.getHabitWithTask()
                     .collect { habitWithTask ->
-                        _selectedColor.value =
-                            (habitWithTask.habit.color ?: 0).getColorToOrdinalEnum()
-                        _enableReminder.value = habitWithTask.habit.hasReminder ?: false
-                        _selectedRepeat.value = getRepeatType(
-                            (habitWithTask.habit.repetition ?: RepeatType.DAILY.ordinal)
-                        )
-                        val listDaysChecked = emptyList<DayIsChecked>().toMutableList()
-                        getCurrentWeekDays().forEach { day ->
-                            habitWithTask.task.find {
-                                it.dateCheck?.toDate()?.getLocalDate() == day.getLocalDate()
-                            }.also {
-                                if (it != null && it.isCheck) {
-                                    listDaysChecked += DayIsChecked(day, true)
-                                } else {
-                                    listDaysChecked += DayIsChecked(day, false)
+
+                        if(habitWithTask != null){
+
+                            _selectedColor.value =
+                                (habitWithTask.habit.color ?: 0).getColorToOrdinalEnum()
+                            _enableReminder.value = habitWithTask.habit.hasReminder ?: false
+                            _selectedRepeat.value = getRepeatType(
+                                (habitWithTask.habit.repetition ?: RepeatType.DAILY.ordinal)
+                            )
+                            val listDaysChecked = emptyList<DayIsChecked>().toMutableList()
+                            getCurrentWeekDays().forEach { day ->
+                                habitWithTask.task.find {
+                                    it.dateCheck?.toDate()?.getLocalDate() == day.getLocalDate()
+                                }.also {
+                                    if (it != null && it.isCheck) {
+                                        listDaysChecked += DayIsChecked(day, true)
+                                    } else {
+                                        listDaysChecked += DayIsChecked(day, false)
+                                    }
                                 }
                             }
-                        }
 
-                        _state.value = HabitScreenState(
-                            habit = habitWithTask,
-                            listDaysChecked = listDaysChecked.toList()
-                        )
+                            _state.value = HabitScreenState(
+                                habit = habitWithTask,
+                                listDaysChecked = listDaysChecked.toList()
+                            )
+                        }
                     }
             }
 
@@ -167,7 +174,7 @@ class DetailViewModel(
             val deleteHabitDeferred = async(Dispatchers.IO) { habitRepository.deleteHabit() }
             val resultHabitDelete = deleteHabitDeferred.await()
 
-            Log.d("ON-DELETE", resultHabitDelete.toString())
+            _deleteHabit.value = resultHabitDelete
         }
     }
 

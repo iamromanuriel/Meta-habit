@@ -83,6 +83,7 @@ fun LayoutCreateDetailNote(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LayoutCreateCheckList(
+            modifier = modifier,
             onCreateNewTask = onCreatedNewTask,
             onEditTask = onEditTask,
             listTask = listTask,
@@ -95,7 +96,7 @@ fun LayoutCreateDetailNote(
                     Icon(
                         imageVector = Icons.TwoTone.MailOutline,
                         contentDescription = "",
-                        modifier = modifier.size(60.dp),
+                        modifier = Modifier.size(60.dp),
                         tint = Color.Black.copy(alpha = 0.8F)
                     )
                     Spacer(modifier = Modifier.height(30.dp))
@@ -110,7 +111,7 @@ fun LayoutCreateDetailNote(
 
                     TextButton (
                         onClick = { onShowDialogPicker() },
-                        modifier = modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                         colors = ButtonColors(
                             containerColor = Color.Transparent,
                             contentColor = Color.Black,
@@ -119,7 +120,7 @@ fun LayoutCreateDetailNote(
                         )
                     ) {
                         Row(
-                            modifier = modifier
+                            modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(6.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -129,14 +130,14 @@ fun LayoutCreateDetailNote(
 
                                 Text(
                                     "Fecha: ",
-                                    modifier = modifier.padding(horizontal = 6.dp),
+                                    modifier = Modifier.padding(horizontal = 6.dp),
                                     color = Color.Gray,
                                 )
 
                                 dateReminder.selectedDateMillis?.getReminderDay()?.let {
                                     Text(
                                         it,
-                                        modifier = modifier.padding(horizontal = 6.dp)
+                                        modifier = Modifier.padding(horizontal = 6.dp)
                                     )
                                 }
                             }
@@ -152,7 +153,7 @@ fun LayoutCreateDetailNote(
 
                     TextButton(
                         onClick = { onShowDialogRepeat() },
-                        modifier = modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                         colors = ButtonColors(
                             containerColor = Color.Transparent,
                             contentColor = Color.Black,
@@ -161,7 +162,7 @@ fun LayoutCreateDetailNote(
                         )
                     ) {
                         Row(
-                            modifier = modifier
+                            modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(6.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -171,10 +172,10 @@ fun LayoutCreateDetailNote(
 
                                 Text(
                                     "Repetir:",
-                                    modifier = modifier.padding(horizontal = 6.dp),
+                                    modifier = Modifier.padding(horizontal = 6.dp),
                                     color = Color.Gray
                                 )
-                                Text(stateRepeat.value, modifier = modifier.padding(horizontal = 6.dp))
+                                Text(stateRepeat.value, modifier = Modifier.padding(horizontal = 6.dp))
                             }
                             Row {
 
@@ -188,7 +189,7 @@ fun LayoutCreateDetailNote(
 
                     TextButton(
                         onClick = {},
-                        modifier = modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                         colors = ButtonColors(
                             containerColor = Color.Transparent,
                             contentColor = Color.Black,
@@ -197,7 +198,7 @@ fun LayoutCreateDetailNote(
                         )
                     ) {
                         Row(
-                            modifier = modifier
+                            modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(6.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -207,7 +208,7 @@ fun LayoutCreateDetailNote(
 
                                 Text(
                                     "Recordar con notificaciòn: ",
-                                    modifier = modifier.padding(horizontal = 6.dp),
+                                    modifier = Modifier.padding(horizontal = 6.dp),
                                     color = Color.Gray
                                 )
                             }
@@ -227,7 +228,7 @@ fun LayoutCreateDetailNote(
                         onClick = {
                             onShowDialogLabel()
                         },
-                        modifier = modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                         colors = ButtonColors(
                             containerColor = Color.Transparent,
                             contentColor = Color.Black,
@@ -236,7 +237,7 @@ fun LayoutCreateDetailNote(
                         )
                     ) {
                         Row(
-                            modifier = modifier
+                            modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(6.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -246,13 +247,13 @@ fun LayoutCreateDetailNote(
 
                                 Text(
                                     "Etiqueta",
-                                    modifier = modifier.padding(horizontal = 6.dp),
+                                    modifier = Modifier.padding(horizontal = 6.dp),
                                     color = Color.Gray
                                 )
 
                                 Text(
                                     stateLabel.value,
-                                    modifier = modifier.padding(horizontal = 6.dp)
+                                    modifier = Modifier.padding(horizontal = 6.dp)
                                 )
                             }
                             Row {

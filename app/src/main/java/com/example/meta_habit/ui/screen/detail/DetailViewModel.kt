@@ -36,6 +36,7 @@ class DetailViewModel(
 
     private val _isLoading = MutableStateFlow(false)
     private val _errorMessage = MutableStateFlow(null)
+    val errorMessage = _errorMessage.asStateFlow()
 
     private val _selectedDay = MutableStateFlow<Date?>(null)
     val selectedDay = _selectedDay.asStateFlow()
@@ -137,10 +138,18 @@ class DetailViewModel(
     }
 
     fun onAddNewTaskToList(newTask: String) {
-        viewModelScope.launch {
-            val addTaskDeferred = async(Dispatchers.IO) { habitRepository.addTaskToHabit(newTask) }
-            val resultAddTask = addTaskDeferred.await()
+        if(newTask.isNotEmpty()){
+
+            viewModelScope.launch {
+                val addTaskDeferred = async(Dispatchers.IO) { habitRepository.addTaskToHabit(newTask) }
+                val resultAddTask = addTaskDeferred.await()
+            }
+        }else{
+            _state.value = _state.value.copy(
+                errorMessage = "Tarea vacia"
+            )
         }
+
     }
 
     fun onEnableReminder(isCheck: Boolean) {

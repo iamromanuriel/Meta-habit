@@ -3,13 +3,19 @@ package com.example.meta_habit.ui.screen.create
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,7 +43,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun CreateScreen(
     modifier: Modifier = Modifier,
-    sheetState: SheetState,
     viewModel: CreateViewModel,
     onDismiss: () -> Unit = {}
 ) {
@@ -69,7 +74,68 @@ fun CreateScreen(
         }
     }
 
-    DialogFullScreen(
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = onDismiss) {
+                        Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "")
+                    }
+                },
+                title = { Text("Crear habito") },
+                actions ={
+                    TextButton(
+                        onClick = {
+                            viewModel.onSaveNote(
+                                title = stateTitle,
+                                enableReminder = enableRemember,
+                                millisDate = datePickerState.selectedDateMillis ?: 0,
+                                description = stateDescription
+                            )}
+                    ) {  Text("Crear") }
+                }
+            )
+        }
+    ) {
+        LayoutCreateDetailNote(
+            stateIsRepeat = enableRemember,
+            colorSelected = selectedColor,
+            listTask = stateListTask,
+            stateTitle = stateTitle,
+            stateDescription = stateDescription,
+            dateReminder = datePickerState,
+            stateLabel = selectedLabel,
+            stateRepeat = selectedRepeat,
+            onChangeTitle = { title -> stateTitle = title },
+            onShowDialogRepeat = {
+                showDialogOptionRepeat.value = true
+            },
+            onShowDialogPicker = {
+                showDialogPicker.value = true
+            },
+            onShowDialogLabel = {
+                showDialogOptionLabel.value = true
+            },
+            onSelectedColor = { color ->
+                viewModel.onSelectedColor(color)
+            },
+            onCreatedNewTask = { task ->
+                viewModel.onAddNewTaskToList(task)
+            },
+            onChangeDescription = { text -> stateDescription = text },
+            onEditTask = { item, index ->
+                viewModel.onEditTask(item, index)
+            },
+            onRemoveTask = { index ->
+                viewModel.onRemoveItemTask(index)
+            },
+            onChangeRepeat = {},
+            modifier = Modifier.padding(it)
+        )
+    }
+
+
+    /*DialogFullScreen(
         onDismiss = {
             onDismiss()
         },
@@ -178,6 +244,13 @@ fun CreateScreen(
                 }
             }
         },
-    )
+    )*/
+
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun CreateScreen() {
 
 }

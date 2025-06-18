@@ -1,15 +1,9 @@
 package com.example.meta_habit.ui.screen.detail
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,9 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
@@ -51,31 +43,21 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.meta_habit.ui.components.CustomCircularCheckbox
 import com.example.meta_habit.ui.components.DialogBasic
-import com.example.meta_habit.ui.components.ItemLazyCheck
-import com.example.meta_habit.ui.components.ItemListCheckEditable
 import com.example.meta_habit.ui.components.LayoutCreateDetailNote
 import com.example.meta_habit.ui.components.LayoutOptionRepeat
 import com.example.meta_habit.ui.components.ListWeekDays
 import com.example.meta_habit.ui.components.TaskEditable
-import com.example.meta_habit.ui.components.TextFieldBasic
 import com.example.meta_habit.ui.components.TopBarDialogBasic
 import com.example.meta_habit.ui.utils.ColorType
 import com.example.meta_habit.ui.utils.LabelTypes
 import com.example.meta_habit.ui.utils.RepeatType
-import com.example.meta_habit.ui.utils.getColorToOrdinalEnum
-import com.example.meta_habit.ui.utils.getDayNameFromDate
-import com.example.meta_habit.ui.utils.getLabelType
 import com.example.meta_habit.ui.utils.getReminderDay
-import com.example.meta_habit.ui.utils.getRepeatType
 import com.example.meta_habit.ui.utils.rememberRestrictedDatePickerState
-import com.example.meta_habit.ui.utils.toDate
-import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -86,6 +68,7 @@ fun DetailScreen(
     viewModel: DetailViewModel = koinViewModel<DetailViewModel>()
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
     var isShowDialogEdit by remember { mutableStateOf(false) }
     var isShowDialogOptionRepeat by remember { mutableStateOf(false) }
     var isShowDialogOptionLabel by remember { mutableStateOf(false) }
@@ -124,12 +107,18 @@ fun DetailScreen(
         }
     }
 
+    LaunchedEffect(state.errorMessage){
+        state.errorMessage?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(imageVector = Icons.Default.KeyboardArrowLeft, contentDescription = "")
+                        Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "")
                     }
                 },
                 actions = {

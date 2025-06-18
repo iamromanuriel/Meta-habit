@@ -6,6 +6,8 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -41,114 +43,123 @@ object Create
 object Detail
 @Serializable
 object Notification
+const val TRANSFORM_KEY = "ANIMATE"
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation(){
     val navController = rememberNavController()
-    NavHost(
-        navController = navController, startDestination = Home,
-        enterTransition = { EnterTransition.None },
-        exitTransition = { ExitTransition.None }
+
+    SharedTransitionLayout {
+        NavHost(
+            navController = navController,
+            startDestination = Home,
         ){
 
-        composable<Home>(
+            composable<Home>(
 
-        ) { backStackEntry ->
-            HomeScreen(
-                onNavigateToDetail = {
-                    navigateToDetail(backStackEntry){
-                        navController.navigate(Detail)
+            ) { backStackEntry ->
+                HomeScreen(
+                    animatedVisibilityScope = this,
+                    onNavigateToDetail = {
+                        navigateToDetail(backStackEntry){
+                            navController.navigate(Detail)
+                        }
+                    },
+                    onNavigateToCreate = {
+                        navigateToDetail(backStackEntry){
+                            navController.navigate(Create)
+                        }
+                    },
+                    onNavigateToNotification = {
+                        navigateToDetail(backStackEntry){
+                            navController.navigate(Notification)
+                        }
                     }
-                },
-                onNavigateToCreate = {
-                    navigateToDetail(backStackEntry){
-                        navController.navigate(Create)
-                    }
-                },
-                onNavigateToNotification = {
-                    navigateToDetail(backStackEntry){
-                        navController.navigate(Notification)
-                    }
-                }
-            )
-        }
-
-        composable<Create>() { backStackEntry ->
-            val viewModel: CreateViewModel = koinViewModel()
-            CreateScreen(
-                viewModel = viewModel,
-                sheetState = rememberModalBottomSheetState(),
-                onDismiss = {
-                    navController.popBackStack()
-                }
-            )
-        }
-        composable<Detail>(
-            enterTransition = {
-                fadeIn(
-                    animationSpec = tween(
-                        300, easing = LinearEasing
-                    )
-                ) + slideIntoContainer(
-                    animationSpec = tween(300, easing = EaseIn),
-                    towards = AnimatedContentTransitionScope.SlideDirection.Start
-                )
-            },
-            popExitTransition = {
-                fadeOut(
-                    animationSpec = tween(
-                        300, easing = LinearEasing
-                    )
-                ) + slideOutOfContainer(
-                    animationSpec = tween(300, easing = EaseIn),
-                    towards = AnimatedContentTransitionScope.SlideDirection.End
                 )
             }
-        ) { backStackEntry ->
-            DetailScreen(
-                onBack = {
-                    navController.popBackStack()
-                }
-            )
-        }
 
-        composable<Notification>(
-            enterTransition = {
-                fadeIn(
-                    animationSpec = tween(
-                        300, easing = LinearEasing
-                    )
-                ) + slideIntoContainer(
-                    animationSpec = tween(300, easing = EaseIn),
-                    towards = AnimatedContentTransitionScope.SlideDirection.Start
-                )
-            },
-            popExitTransition = {
-                fadeOut(
-                    animationSpec = tween(
-                        300, easing = LinearEasing
-                    )
-                ) + slideOutOfContainer(
-                    animationSpec = tween(300, easing = EaseIn),
-                    towards = AnimatedContentTransitionScope.SlideDirection.End
+            composable<Create>() { backStackEntry ->
+                val viewModel: CreateViewModel = koinViewModel()
+                CreateScreen(
+                    modifier = Modifier.sharedBounds(
+                        animatedVisibilityScope = this,
+                        sharedContentState = rememberSharedContentState(TRANSFORM_KEY)
+                    ),
+                    viewModel = viewModel,
+                    onDismiss = {
+                        navController.popBackStack()
+                    }
+
                 )
             }
-        ){ backStackEntry ->
-            NotificationScreen(
-                onBack = {
-                    navController.popBackStack()
+            composable<Detail>(
+                enterTransition = {
+                    fadeIn(
+                        animationSpec = tween(
+                            300, easing = LinearEasing
+                        )
+                    ) + slideIntoContainer(
+                        animationSpec = tween(300, easing = EaseIn),
+                        towards = AnimatedContentTransitionScope.SlideDirection.Start
+                    )
                 },
-                onOpenNotification = {
-                    navigateToDetail(backStackEntry){
-                        navController.navigate(Detail)
-                    }
+                popExitTransition = {
+                    fadeOut(
+                        animationSpec = tween(
+                            300, easing = LinearEasing
+                        )
+                    ) + slideOutOfContainer(
+                        animationSpec = tween(300, easing = EaseIn),
+                        towards = AnimatedContentTransitionScope.SlideDirection.End
+                    )
                 }
-            )
+            ) { backStackEntry ->
+                DetailScreen(
+                    onBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
+            composable<Notification>(
+                enterTransition = {
+                    fadeIn(
+                        animationSpec = tween(
+                            300, easing = LinearEasing
+                        )
+                    ) + slideIntoContainer(
+                        animationSpec = tween(300, easing = EaseIn),
+                        towards = AnimatedContentTransitionScope.SlideDirection.Start
+                    )
+                },
+                popExitTransition = {
+                    fadeOut(
+                        animationSpec = tween(
+                            300, easing = LinearEasing
+                        )
+                    ) + slideOutOfContainer(
+                        animationSpec = tween(300, easing = EaseIn),
+                        towards = AnimatedContentTransitionScope.SlideDirection.End
+                    )
+                }
+            ){ backStackEntry ->
+                NotificationScreen(
+                    onBack = {
+                        navController.popBackStack()
+                    },
+                    onOpenNotification = {
+                        navigateToDetail(backStackEntry){
+                            navController.navigate(Detail)
+                        }
+                    }
+                )
+            }
         }
     }
+
 }
 
 fun navigateToDetail(from: NavBackStackEntry, onNav: () -> Unit){

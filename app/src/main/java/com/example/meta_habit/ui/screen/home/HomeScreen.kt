@@ -3,6 +3,9 @@ package com.example.meta_habit.ui.screen.home
 import android.graphics.drawable.AnimatedImageDrawable
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -51,14 +54,16 @@ import com.example.meta_habit.ui.components.DialogBasic
 import com.example.meta_habit.ui.components.DropdownSelectDate
 import com.example.meta_habit.ui.components.LayoutOptionRepeat
 import com.example.meta_habit.ui.components.LayoutOptions
+import com.example.meta_habit.ui.nav.TRANSFORM_KEY
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun HomeScreen(
+fun SharedTransitionScope.HomeScreen(
     viewModel: HomeViewModel = koinViewModel<HomeViewModel>(),
+    animatedVisibilityScope: AnimatedContentScope,
     onNavigateToDetail: () -> Unit = {},
     onNavigateToCreate: () -> Unit = {},
     onNavigateToNotification: () -> Unit = {}
@@ -67,12 +72,14 @@ fun HomeScreen(
     val sheetState = rememberModalBottomSheetState()
 
     var showButtonSheet by remember { mutableStateOf(false) }
-    var showDialogCreateNote by remember { mutableStateOf(false) }
     val listHabit = viewModel.listOfHabit.collectAsStateWithLifecycle()
     val selectedFilter by viewModel.selectedFilter.collectAsStateWithLifecycle()
 
 
     Scaffold(
+        modifier = Modifier.
+        nestedScroll(TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()).nestedScrollConnection)
+        ,
         topBar = {
             TopAppBar(
                 title = {
@@ -93,9 +100,11 @@ fun HomeScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    showDialogCreateNote = true
-                }
+                modifier = Modifier.sharedBounds(
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    sharedContentState = rememberSharedContentState(TRANSFORM_KEY)
+                ),
+                onClick = onNavigateToCreate
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "")
             }
@@ -139,9 +148,7 @@ fun HomeScreen(
             }
         }
 
-        if (showDialogCreateNote) {
-            onNavigateToCreate()
-        }
+
     }
 }
 
@@ -154,5 +161,4 @@ fun AnimateVectorDrawable() {
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen()
 }

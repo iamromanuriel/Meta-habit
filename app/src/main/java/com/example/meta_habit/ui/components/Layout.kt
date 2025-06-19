@@ -1,5 +1,7 @@
 package com.example.meta_habit.ui.components
 
+
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -69,6 +71,8 @@ fun LayoutCreateDetailNote(
     onShowDialogPicker: () -> Unit,
     onShowDialogLabel: () -> Unit,
     onSelectedColor: (ColorType) -> Unit,
+    onSelectedLabel: (LabelTypes) -> Unit,
+    onSelectedRepeat: (RepeatType) -> Unit,
     onCreatedNewTask: (String) -> Unit,
     onChangeTitle: (String) -> Unit,
     onChangeDescription: (String) -> Unit,
@@ -78,12 +82,14 @@ fun LayoutCreateDetailNote(
 ) {
 
     var isCheck by remember { mutableStateOf(stateIsRepeat) }
+    var optionsRepeat by remember { mutableStateOf(false) }
+    var optionsLabel by remember { mutableStateOf(false) }
 
     Column(
+        modifier = Modifier.padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LayoutCreateCheckList(
-            modifier = modifier,
             onCreateNewTask = onCreatedNewTask,
             onEditTask = onEditTask,
             listTask = listTask,
@@ -152,7 +158,7 @@ fun LayoutCreateDetailNote(
                     }
 
                     TextButton(
-                        onClick = { onShowDialogRepeat() },
+                        onClick = { optionsRepeat = optionsRepeat.not() },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonColors(
                             containerColor = Color.Transparent,
@@ -185,6 +191,21 @@ fun LayoutCreateDetailNote(
                                 )
                             }
                         }
+                    }
+                    AnimatedVisibility(optionsRepeat) {
+                        LayoutOptionRepeat<RepeatType>(
+                            modifier = Modifier.padding(start = 16.dp),
+                            title = "Repetir",
+                            options = RepeatType.entries.toTypedArray(),
+                            selected = stateRepeat,
+                            onSelected = {
+                                //showDialogOptionRepeat.value = false
+                                //viewModel.onSelectedRepeat(it)
+                                onSelectedRepeat(it)
+                                optionsRepeat = false
+                            },
+                            itemToString = { it.value },
+                        )
                     }
 
                     TextButton(
@@ -224,9 +245,11 @@ fun LayoutCreateDetailNote(
                         }
                     }
 
+
+
                     TextButton(
                         onClick = {
-                            onShowDialogLabel()
+                            optionsLabel = optionsLabel.not()
                         },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonColors(
@@ -264,6 +287,20 @@ fun LayoutCreateDetailNote(
                                 )
                             }
                         }
+                    }
+
+                    AnimatedVisibility(optionsLabel) {
+                        LayoutOptionRepeat(
+                            title = "Etiquetas",
+                            options = LabelTypes.entries.toTypedArray(),
+                            selected = stateLabel,
+                            modifier = Modifier.padding(start = 16.dp),
+                            onSelected = {
+                                onSelectedLabel(it)
+                                optionsLabel = false
+                            },
+                            itemToString = { it.value }
+                        )
                     }
 
                     TextFieldBasic(
@@ -351,36 +388,24 @@ fun <T> LayoutOptionRepeat(
 ) {
     val selectedState = remember { mutableStateOf(selected) }
 
-    Card {
-        Column(
-            modifier = modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold,
-                modifier = modifier.fillMaxWidth().padding(10.dp)
-            )
-            LazyColumn(
-                modifier = modifier.padding(horizontal = 10.dp)
-            ) {
-                items(options) { item ->
-                    Row(
-                        modifier = modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = itemToString(item), fontWeight = FontWeight.Medium)
-                        RadioButton(
-                            selected = selectedState.value == item,
-                            onClick = { onSelected(item) }
-                        )
-                    }
-                }
-            }
+    Column(
+        modifier = modifier.fillMaxWidth()
+    ) {
 
+        options.forEach { item ->
+            Row(
+                modifier = modifier.fillMaxWidth().padding(horizontal = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = itemToString(item))
+                RadioButton(
+                    selected = selectedState.value == item,
+                    onClick = { onSelected(item) }
+                )
+            }
         }
+
     }
 }
 
@@ -425,7 +450,9 @@ fun LayoutCreateDetailNotePreview() {
 
             },
             onRemoveTask = {},
-            onChangeRepeat = {}
+            onChangeRepeat = {},
+            onSelectedLabel = {},
+            onSelectedRepeat = {},
         )
     }
 }

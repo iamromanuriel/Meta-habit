@@ -130,7 +130,9 @@ fun CreateScreen(
                 viewModel.onRemoveItemTask(index)
             },
             onChangeRepeat = {},
-            modifier = Modifier.padding(it)
+            onSelectedLabel = { viewModel.onSelectedLabel(it) },
+            onSelectedRepeat = { viewModel.onSelectedRepeat(it) },
+            modifier = Modifier.padding(it),
         )
     }
 

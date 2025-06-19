@@ -230,10 +230,8 @@ fun DetailScreen(
                         stateIsRepeat = enableReminder,
                         colorSelected = selectColor ?: ColorType.PURPLE,
                         stateTitle = titleState,
-                        stateLabel = selectedLabel
-                            ?: LabelTypes.WORK, //getLabelType(state.habit?.habit?.tag?:0)?: LabelTypes.WORK,
-                        stateRepeat = selectedRepeat
-                            ?: RepeatType.DAILY, //getRepeatType(state.habit?.habit?.repetition?:0)?: RepeatType.DAILY,
+                        stateLabel = selectedLabel ?: LabelTypes.WORK,
+                        stateRepeat = selectedRepeat ?: RepeatType.DAILY,
                         stateDescription = "",
                         onShowDialogRepeat = { isShowDialogOptionRepeat = true },
                         onShowDialogPicker = {},
@@ -247,7 +245,9 @@ fun DetailScreen(
                         dateReminder = rememberRestrictedDatePickerState(),
                         onEditTask = { _, _ -> },
                         onRemoveTask = {},
-                        onChangeRepeat = viewModel::onEnableReminder
+                        onChangeRepeat = viewModel::onEnableReminder,
+                        onSelectedLabel = {},
+                        onSelectedRepeat = {}
                     )
                 }
             }

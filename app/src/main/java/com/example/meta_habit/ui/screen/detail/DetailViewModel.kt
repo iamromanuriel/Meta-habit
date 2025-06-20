@@ -138,18 +138,10 @@ class DetailViewModel(
     }
 
     fun onAddNewTaskToList(newTask: String) {
-        if(newTask.isNotEmpty()){
-
-            viewModelScope.launch {
-                val addTaskDeferred = async(Dispatchers.IO) { habitRepository.addTaskToHabit(newTask) }
-                val resultAddTask = addTaskDeferred.await()
-            }
-        }else{
-            _state.value = _state.value.copy(
-                errorMessage = "Tarea vacia"
-            )
+        viewModelScope.launch {
+            val addTaskDeferred = async(Dispatchers.IO) { habitRepository.addTaskToHabit(newTask) }
+            val resultAddTask = addTaskDeferred.await()
         }
-
     }
 
     fun onEnableReminder(isCheck: Boolean) {

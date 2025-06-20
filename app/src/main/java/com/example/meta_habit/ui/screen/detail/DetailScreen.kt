@@ -19,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -44,15 +43,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.meta_habit.ui.components.DialogBasic
-import com.example.meta_habit.ui.components.LayoutCreateDetailNote
 import com.example.meta_habit.ui.components.LayoutOptionRepeat
 import com.example.meta_habit.ui.components.ListWeekDays
 import com.example.meta_habit.ui.components.TaskEditable
 import com.example.meta_habit.ui.components.TopBarDialogBasic
+import com.example.meta_habit.ui.screen.create.LayoutCreateDetailNote
 import com.example.meta_habit.ui.utils.ColorType
 import com.example.meta_habit.ui.utils.LabelTypes
 import com.example.meta_habit.ui.utils.RepeatType
@@ -164,6 +164,36 @@ fun DetailScreen(
                 Spacer(modifier = Modifier
                     .fillMaxWidth()
                     .height(10.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                ) {
+                    val managerFocus = LocalFocusManager.current
+                    TextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = taskDescription,
+                        label = { Text("Tareas") },
+                        onValueChange = { text -> taskDescription = text },
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(onDone = {
+                            if(taskDescription.isEmpty()){
+                                managerFocus.clearFocus()
+                            }else{
+                                viewModel.onAddNewTaskToList(taskDescription)
+                                taskDescription = ""
+                            }
+                        }), shape = RoundedCornerShape(12.dp),
+                        colors = TextFieldDefaults.textFieldColors(
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            disabledIndicatorColor = Color.Transparent
+                        )
+                    )
+
+                }
+
             }
 
             items(state.habit?.task ?: emptyList()) { task ->
@@ -176,33 +206,7 @@ fun DetailScreen(
 
             }
 
-            item {
-                Spacer(modifier = Modifier.height(10.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                ) {
-                    TextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = taskDescription,
-                        label = { Text("Tareas") },
-                        onValueChange = { text -> taskDescription = text },
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                        keyboardActions = KeyboardActions(onDone = {
-                            viewModel.onAddNewTaskToList(taskDescription)
-                            taskDescription = ""
-                        }), shape = RoundedCornerShape(12.dp),
-                        colors = TextFieldDefaults.textFieldColors(
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            disabledIndicatorColor = Color.Transparent
-                        )
-                    )
 
-                }
-
-            }
         }
     }
 
@@ -222,9 +226,7 @@ fun DetailScreen(
                 ) {
                     TopBarDialogBasic(
                         onClose = { isShowDialogEdit = false },
-                        onDone = {
-                            viewModel.onConfirmSaveEdit(titleState)
-                        }
+                        onDone = { viewModel.onConfirmSaveEdit(titleState) }
                     )
                     LayoutCreateDetailNote(
                         stateIsRepeat = enableReminder,
@@ -233,12 +235,8 @@ fun DetailScreen(
                         stateLabel = selectedLabel ?: LabelTypes.WORK,
                         stateRepeat = selectedRepeat ?: RepeatType.DAILY,
                         stateDescription = "",
-                        onShowDialogRepeat = { isShowDialogOptionRepeat = true },
                         onShowDialogPicker = {},
-                        onShowDialogLabel = { isShowDialogOptionLabel = true },
-                        onSelectedColor = {
-                            viewModel.onSelectedColor(it)
-                        },
+                        onSelectedColor = viewModel::onSelectedColor,
                         onCreatedNewTask = {},
                         onChangeTitle = { titleState = it },
                         onChangeDescription = {},
@@ -246,8 +244,8 @@ fun DetailScreen(
                         onEditTask = { _, _ -> },
                         onRemoveTask = {},
                         onChangeRepeat = viewModel::onEnableReminder,
-                        onSelectedLabel = {},
-                        onSelectedRepeat = {}
+                        onSelectedLabel = viewModel::onSelectedLabel,
+                        onSelectedRepeat = viewModel::onSelectedRepeat
                     )
                 }
             }

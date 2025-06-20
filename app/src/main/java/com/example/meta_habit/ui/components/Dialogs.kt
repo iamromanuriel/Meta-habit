@@ -1,5 +1,6 @@
 package com.example.meta_habit.ui.components
 
+import android.text.Layout
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
@@ -17,6 +18,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -45,32 +49,19 @@ fun LayoutOptions(
     onNavDetail: () -> Unit = {}
 ){
     Column {
-        Row(
-            modifier = modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            Text(
-                text = "Action to note",
-                fontWeight = FontWeight.Medium,
-                modifier = modifier.padding(vertical = 8.dp)
-                )
-        }
 
-        TextButton(onClick = {
-            onDelete()
-        }) {
+        TextButton(onClick = onDelete) {
+            Icon(imageVector = Icons.Default.Delete, contentDescription = "", modifier = modifier.padding(end = 10.dp))
             Text(text = "Eliminar", modifier = modifier.fillMaxWidth().padding(vertical = 10.dp))
         }
 
-        TextButton(onClick = {
-            onNavDetail()
-        }) {
+        TextButton(onClick = onNavDetail) {
+            Icon(imageVector = Icons.Default.Info, contentDescription = "", modifier = modifier.padding(end = 10.dp))
             Text(text = "Detalle", modifier = modifier.fillMaxWidth().padding(vertical = 10.dp))
         }
 
-        TextButton(onClick = {
-            onPin()
-        }) {
+        TextButton(onClick = onPin) {
+            Icon(imageVector = Icons.Default.Favorite, contentDescription = "", modifier = modifier.padding(end = 10.dp))
             Text(text = "Anclar", modifier = modifier.fillMaxWidth().padding(vertical = 10.dp))
         }
     }
@@ -169,8 +160,18 @@ fun DialogBasic(
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun LayoutOptionsActionPreview(){
+    LayoutOptions(
+        onDelete = {},
+        onPin = {},
+        onNavDetail = {}
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun LayoutOptionsPreview(){
     MaterialTheme {

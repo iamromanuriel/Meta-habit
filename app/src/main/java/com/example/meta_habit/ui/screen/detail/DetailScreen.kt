@@ -19,6 +19,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -44,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -126,10 +130,10 @@ fun DetailScreen(
                     IconButton(onClick = {
                         isShowDialogDelete = true
                     }) {
-                        Icon(imageVector = Icons.Default.Delete, contentDescription = "")
+                        Icon(imageVector = Icons.Outlined.Delete, contentDescription = "", tint = Color.Gray)
                     }
                     IconButton(onClick = { isShowDialogEdit = true }) {
-                        Icon(imageVector = Icons.Default.Edit, contentDescription = "")
+                        Icon(imageVector = Icons.Outlined.Edit, contentDescription = "", tint = Color.Gray)
                     }
                 },
                 title = { Text(text = state.habit?.habit?.title ?: "Detalle", maxLines = 1) }
@@ -143,21 +147,7 @@ fun DetailScreen(
             modifier = Modifier.padding(innerPadding)
         ) {
             item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp, vertical = 5.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    state.habit?.habit?.dateCreate?.getReminderDay().let {
-                        Text(text = "Creacion: ${it}")
-                    }
 
-                    state.habit?.habit?.dateUpdate?.getReminderDay().let {
-                        Text(text = "Ultima modificacion: ${it}")
-                    }
-
-                }
                 ListWeekDays(
                     listDaysChecked = state.listDaysChecked,
                 )
@@ -165,6 +155,17 @@ fun DetailScreen(
                     .fillMaxWidth()
                     .height(10.dp))
 
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp, vertical = 5.dp),
+                ) {
+                    state.habit?.habit?.dateUpdate?.getReminderDay().let {
+                        Text(text = "Ultima modificacion:", fontWeight = FontWeight.Bold)
+                        Text(text = "${it}")
+                    }
+
+                }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

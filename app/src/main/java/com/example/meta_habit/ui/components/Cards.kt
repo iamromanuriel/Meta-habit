@@ -1,5 +1,7 @@
 package com.example.meta_habit.ui.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -47,8 +49,10 @@ import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitWithTasks
 import com.example.meta_habit.ui.utils.getColorToOrdinalEnum
 import com.example.meta_habit.ui.utils.getReminderDay
+import com.example.meta_habit.ui.utils.getReminderDayLocal
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CardNoteBasic(
     modifier: Modifier = Modifier,
@@ -131,7 +135,7 @@ fun CardNoteBasic(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = modifier.fillMaxWidth().padding(vertical = 10.dp, horizontal = 16.dp)
             ) {
-                habit.habit.dateReminder?.getReminderDay()?.let { Text(it) }
+                habit.habit.dateReminder?.getReminderDayLocal()?.let { Text(it) }
             }
         }
     }

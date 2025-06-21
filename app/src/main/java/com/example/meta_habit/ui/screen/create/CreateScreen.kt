@@ -1,7 +1,9 @@
 package com.example.meta_habit.ui.screen.create
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -49,8 +51,17 @@ import com.example.meta_habit.ui.utils.ColorType
 import com.example.meta_habit.ui.utils.LabelTypes
 import com.example.meta_habit.ui.utils.RepeatType
 import com.example.meta_habit.ui.utils.getReminderDay
+import com.example.meta_habit.ui.utils.getReminderDayLocal
 import com.example.meta_habit.ui.utils.rememberRestrictedDatePickerState
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,10 +88,8 @@ fun CreateScreen(
     LaunchedEffect(stateResult.value) {
         stateResult.value?.let {
             if (it.isSuccess) {
-                Log.d("TAG", "CreateScreen: ${it.getOrNull()}")
                 onDismiss()
             } else {
-                Log.d("TAG", "CreateScreen: ${it.getOrNull()}")
             }
         }
     }
@@ -167,6 +176,7 @@ fun CreateScreen(
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LayoutCreateDetailNote(
@@ -250,11 +260,15 @@ fun LayoutCreateDetailNote(
                                     color = Color.Gray,
                                 )
 
-                                dateReminder.selectedDateMillis?.getReminderDay()?.let {
+                                dateReminder.selectedDateMillis?.let { millis ->
+
+                                    val formatter = DateTimeFormatter.ofPattern("dd MMM")
+                                        .withZone(ZoneId.of("UTC"))
                                     Text(
-                                        it,
+                                        text = formatter.format(Instant.ofEpochMilli(millis)),
                                         modifier = Modifier.padding(horizontal = 6.dp)
                                     )
+
                                 }
                             }
                             Row {

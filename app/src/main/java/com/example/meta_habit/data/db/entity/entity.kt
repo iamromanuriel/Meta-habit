@@ -68,7 +68,8 @@ data class HabitWithTasks(
     @Embedded val habit: HabitEntity,
     @Relation(
         parentColumn = "id",
-        entityColumn = "habitId"
+        entityColumn = "habitId",
+
     )
     val task: List<HabitTaskEntity>
 )

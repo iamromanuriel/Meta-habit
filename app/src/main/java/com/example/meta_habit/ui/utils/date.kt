@@ -5,9 +5,11 @@ import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import java.time.DayOfWeek
+import java.time.Instant
 import java.time.LocalDate
 import java.time.Month
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Calendar
 import java.util.Date
@@ -56,6 +58,14 @@ fun Long.getReminderDay(): String {
     val months = listOf("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic")
 
     return "${dateZoneLocal.dayOfMonth} ${months[dateZoneLocal.monthValue -1]}"
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun Long.getReminderDayLocal(): String {
+    val formatter = DateTimeFormatter.ofPattern("d MMM", Locale("es"))
+        .withZone(ZoneId.of("UTC"))
+
+    return formatter.format(Instant.ofEpochMilli(this))
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -203,9 +213,10 @@ fun isValidateDateThreeDaysReminder(date: LocalDate, type: RepeatType?): Boolean
 @RequiresApi(Build.VERSION_CODES.O)
 fun main() {
 
-    val date = 1749232534809L
+    val date = 1750464000000
 
     println(date.getReminderDay())
+    println(Date(date))
 
 
 }

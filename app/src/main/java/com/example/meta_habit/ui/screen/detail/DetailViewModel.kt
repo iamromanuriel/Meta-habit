@@ -65,11 +65,8 @@ class DetailViewModel(
             launch {
                 habitRepository.getHabitWithTask()
                     .collect { habitWithTask ->
-
-                        if(habitWithTask != null){
-
-                            _selectedColor.value =
-                                (habitWithTask.habit.color ?: 0).getColorToOrdinalEnum()
+                        habitWithTask?.let {
+                            _selectedColor.value = (habitWithTask.habit.color ?: 0).getColorToOrdinalEnum()
                             _enableReminder.value = habitWithTask.habit.hasReminder ?: false
                             _selectedRepeat.value = getRepeatType(
                                 (habitWithTask.habit.repetition ?: RepeatType.DAILY.ordinal)
@@ -86,9 +83,12 @@ class DetailViewModel(
                                     }
                                 }
                             }
+                            val habitTaskSorted = habitWithTask.copy(
+                                task = habitWithTask.task.sortedByDescending { it.isCheck }
+                            )
 
                             _state.value = HabitScreenState(
-                                habit = habitWithTask,
+                                habit = habitTaskSorted,
                                 listDaysChecked = listDaysChecked.toList()
                             )
                         }

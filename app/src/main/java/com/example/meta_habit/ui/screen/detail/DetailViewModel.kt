@@ -20,6 +20,7 @@ import com.example.meta_habit.ui.utils.getRepeatType
 import com.example.meta_habit.ui.utils.toDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -64,33 +65,13 @@ class DetailViewModel(
         viewModelScope.launch {
             launch {
                 habitRepository.getHabitWithTask()
-                    .collect { habitWithTask ->
-                        habitWithTask?.let {
-                            _selectedColor.value = (habitWithTask.habit.color ?: 0).getColorToOrdinalEnum()
-                            _enableReminder.value = habitWithTask.habit.hasReminder ?: false
-                            _selectedRepeat.value = getRepeatType(
-                                (habitWithTask.habit.repetition ?: RepeatType.DAILY.ordinal)
-                            )
-                            val listDaysChecked = emptyList<DayIsChecked>().toMutableList()
-                            getCurrentWeekDays().forEach { day ->
-                                habitWithTask.task.find {
-                                    it.dateCheck?.toDate()?.getLocalDate() == day.getLocalDate()
-                                }.also {
-                                    if (it != null && it.isCheck) {
-                                        listDaysChecked += DayIsChecked(day, true)
-                                    } else {
-                                        listDaysChecked += DayIsChecked(day, false)
-                                    }
-                                }
-                            }
-                            val habitTaskSorted = habitWithTask.copy(
-                                task = habitWithTask.task.sortedByDescending { it.isCheck }
-                            )
-
-                            _state.value = HabitScreenState(
-                                habit = habitTaskSorted,
-                                listDaysChecked = listDaysChecked.toList()
-                            )
+                    .prepareDateForUI()
+                    .collect { data ->
+                        data?.let {
+                            _state.value = it.first
+                            _selectedColor.value = it.second.first
+                            _enableReminder.value = it.second.second
+                            _selectedRepeat.value = it.second.third
                         }
                     }
             }
@@ -176,6 +157,33 @@ class DetailViewModel(
             val resultHabitDelete = deleteHabitDeferred.await()
 
             _deleteHabit.value = resultHabitDelete
+        }
+    }
+
+
+    private fun Flow<HabitWithTasks?>.prepareDateForUI(): Flow<Pair<HabitScreenState, Triple<ColorType?, Boolean, RepeatType?>>?> {
+         return this.map { habitWithTask ->
+             habitWithTask?.let {
+                val color  = (habitWithTask.habit.color ?: 0).getColorToOrdinalEnum()
+                val reminder = habitWithTask.habit.hasReminder ?: false
+                val repeat = getRepeatType(
+                    (habitWithTask.habit.repetition ?: RepeatType.DAILY.ordinal)
+                )
+                val listDaysChecked = getCurrentWeekDays().map { day ->
+                    val isChecked = it.task.any { task ->
+                        task.dateCheck?.toDate()?.getLocalDate() == day.getLocalDate() && task.isCheck
+                    }
+                    DayIsChecked(day, isChecked)
+                }
+
+                Pair(
+                    HabitScreenState(
+                        habit = it,
+                        listDaysChecked = listDaysChecked
+                    ),
+                    Triple(color, reminder, repeat)
+                )
+            }
         }
     }
 

@@ -62,7 +62,7 @@ fun rememberRestrictedDatePickerState(
         initialSelectedDateMillis = initialSelectedDateMillis,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= minDateMillis
+                return utcTimeMillis > minDateMillis
             }
         }
     )

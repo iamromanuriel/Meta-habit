@@ -77,9 +77,7 @@ fun SharedTransitionScope.HomeScreen(
 
 
     Scaffold(
-        modifier = Modifier.
-        nestedScroll(TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()).nestedScrollConnection)
-        ,
+        modifier = Modifier,
         topBar = {
             TopAppBar(
                 title = {

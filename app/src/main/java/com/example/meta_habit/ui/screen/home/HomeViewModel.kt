@@ -12,6 +12,8 @@ import com.example.meta_habit.ui.utils.getLocalDate
 import com.example.meta_habit.ui.utils.getDayOfWeekDayMonthMontNameSimple
 import com.example.meta_habit.ui.utils.getRepeatType
 import com.example.meta_habit.ui.utils.isValidateDateThreeDaysReminder
+import com.example.meta_habit.ui.utils.isValidateDateTodayReminder
+import com.example.meta_habit.ui.utils.isValidateDateWeekReminder
 import com.example.meta_habit.ui.utils.toLocalDate
 import com.example.meta_habit.ui.utils.toLocalDateTime
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +40,7 @@ class HomeViewModel(
     private val _listFilterOfHabit = MutableStateFlow<List<HabitWithTasks>>(emptyList())
     val listOfHabit = _listFilterOfHabit.asStateFlow()
 
-    private val _selectedFilter = MutableStateFlow(FilterTypeAndLabel(filterType = FilterType.TODAY))
+    private val _selectedFilter = MutableStateFlow(FilterTypeAndLabel(filterType = FilterType.ALL))
     val selectedFilter = _selectedFilter.asStateFlow()
 
     init {
@@ -77,10 +79,23 @@ class HomeViewModel(
     fun onSelectFilter(filterType: FilterType){
         val label: String = when(filterType){
             FilterType.TODAY -> {
-                _listFilterOfHabit.value = _listOfHabit.value
+                val listFilter = _listOfHabit.value.filter { currentHabit ->
+                    isValidateDateTodayReminder(
+                        baseDate = (currentHabit.habit.dateReminder?:0).toLocalDate(),
+                        type = getRepeatType(currentHabit.habit.repetition?:0)
+                    )
+                }
+                _listFilterOfHabit.value = listFilter
                 Date().getDayOfWeekDayMonthMontNameSimple()
             }
             FilterType.WEEK -> {
+                val listFilter = _listOfHabit.value.filter { currentHabit ->
+                    isValidateDateWeekReminder(
+                        date = (currentHabit.habit.dateReminder?:0).toLocalDate(),
+                        type = getRepeatType(currentHabit.habit.repetition?:0)
+                    )
+                }
+                _listFilterOfHabit.value = listFilter
                 "Semanal"
             }
             FilterType.TREE_DAYS -> {
@@ -92,6 +107,11 @@ class HomeViewModel(
                 }
                 _listFilterOfHabit.value = listFilter
                 "Proximos 3 dias"
+            }
+
+            FilterType.ALL ->{
+                _listFilterOfHabit.value = _listOfHabit.value
+                "Todas"
             }
         }
 

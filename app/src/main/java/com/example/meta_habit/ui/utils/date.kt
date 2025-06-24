@@ -3,6 +3,7 @@ package com.example.meta_habit.ui.utils
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import java.time.DayOfWeek
 import java.time.Instant
@@ -217,11 +218,11 @@ fun isValidateDateThreeDaysReminder(date: LocalDate, type: RepeatType?): Boolean
     if (date == today) return true
 
 
-
     val dateNext = when (type) {
         RepeatType.THREE_DAYS -> getNextThreeDayReminderDate(date)
         RepeatType.ONLY_ONE -> date
         RepeatType.WEEKLY -> getNextAWeek(date)
+        RepeatType.MONTHLY -> nextDayMonth(date)
 
         else -> null
     }
@@ -229,8 +230,53 @@ fun isValidateDateThreeDaysReminder(date: LocalDate, type: RepeatType?): Boolean
 
     return (1 until 4).map {
         today.plusDays(it.toLong())
+    }.contains(dateNext)
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun nextDayMonth(baseDate: LocalDate): LocalDate{
+    val today = LocalDate.now()
+
+    val dayBetween = today.toEpochDay() - baseDate.toEpochDay()
+    if(dayBetween < 0) return baseDate
+
+    return today.withMonth(today.monthValue +  1)
+}
+
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun isValidateDateWeekReminder(date: LocalDate, type: RepeatType?): Boolean {
+    if(type == RepeatType.DAILY) return true
+    val today = LocalDate.now()
+
+    if (date == today) return true
+
+    val dateNext = when (type) {
+        RepeatType.MONTHLY -> nextDayMonth(date)
+        RepeatType.THREE_DAYS -> getNextThreeDayReminderDate(date)
+        else -> null
     }
-        .contains(dateNext)
+
+    return getCurrentWeekDays().map {
+        it.toInstant()
+            .atZone(ZoneOffset.UTC)
+            .toLocalDate()
+    }.contains(dateNext)
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun isValidateDateTodayReminder(baseDate: LocalDate, type: RepeatType?): Boolean{
+    if(type == RepeatType.DAILY) return true
+    val  today = LocalDate.now()
+    if(baseDate == today) return true
+
+    val dateNext = when(type){
+        RepeatType.MONTHLY -> nextDayMonth(baseDate)
+        RepeatType.THREE_DAYS -> getNextThreeDayReminderDate(baseDate)
+        else -> null
+    }
+
+    return today == dateNext
 }
 
 
@@ -240,10 +286,9 @@ fun main() {
     val today = LocalDate.now()
     val milis = 1752019200000
     val localDate = milis.toLocalDate()
-    val nextDayWeek = getNextAWeek(localDate)
+    val nextDayMonth = nextDayMonth(baseDate = localDate)
 
-
-
+    println(nextDayMonth)
 
 
 }

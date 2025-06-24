@@ -87,6 +87,7 @@ fun DropdownSelectDate(
             onDismissRequest = { isExpanded = !isExpanded },
         ) {
 
+
             DropdownMenuItem(
                 text = { Text(text = "Hoy") },
                 onClick = {
@@ -107,6 +108,14 @@ fun DropdownSelectDate(
                 text = { Text(text = "Semana") },
                 onClick = {
                     onSelected(FilterType.WEEK)
+                    isExpanded = !isExpanded
+                },
+            )
+
+            DropdownMenuItem(
+                text = { Text(text = "Todas") },
+                onClick = {
+                    onSelected(FilterType.ALL)
                     isExpanded = !isExpanded
                 },
             )

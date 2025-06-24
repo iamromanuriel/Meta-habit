@@ -9,7 +9,7 @@ import com.example.meta_habit.ui.theme.Purple80
 import com.example.meta_habit.ui.theme.RedLight
 
 enum class FilterType {
-    TODAY, WEEK, TREE_DAYS
+    TODAY, WEEK, TREE_DAYS, ALL
 }
 
 enum class NoteType{
@@ -17,11 +17,17 @@ enum class NoteType{
 }
 
 enum class RepeatType (var value: String){
-    ONLY_ONE("Una vez"), DAILY("Diario"), WEEKLY("Semanal"), MONTHLY("Mensual"), THREE_DAYS("3 dias")
+    ONLY_ONE("Una vez"),
+    DAILY("Diario"),
+    WEEKLY("Semanal"),
+    MONTHLY("Mensual"),
+    THREE_DAYS("3 dias")
 }
 
 enum class LabelTypes(var value: String){
-    LECTURE("Clase"), WORK("Trabajo"), STUDY("Estudio")
+    LECTURE("Clase"),
+    WORK("Trabajo"),
+    STUDY("Estudio")
 }
 
 enum class NotificationTypes(var value: String){

@@ -12,6 +12,8 @@ import com.example.meta_habit.ui.utils.getLocalDate
 import com.example.meta_habit.ui.utils.getDayOfWeekDayMonthMontNameSimple
 import com.example.meta_habit.ui.utils.getRepeatType
 import com.example.meta_habit.ui.utils.isValidateDateThreeDaysReminder
+import com.example.meta_habit.ui.utils.toLocalDate
+import com.example.meta_habit.ui.utils.toLocalDateTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -84,9 +86,7 @@ class HomeViewModel(
             FilterType.TREE_DAYS -> {
                 val listFilter = _listOfHabit.value.filter { currentHabits ->
                     isValidateDateThreeDaysReminder(
-                        date = Date(
-                            currentHabits.habit.dateReminder ?: 0
-                        ).getLocalDate(),
+                        date = (currentHabits.habit.dateReminder?:0).toLocalDate(),
                         type = getRepeatType(currentHabits.habit.repetition?:0)
                     )
                 }

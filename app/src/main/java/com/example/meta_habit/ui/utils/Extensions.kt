@@ -1,7 +1,10 @@
 package com.example.meta_habit.ui.utils
 
+import android.os.Build
+import android.provider.CalendarContract.Instances
 import android.util.Log
 import android.widget.DatePicker
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -69,7 +72,6 @@ fun rememberRestrictedDatePickerState(
 fun main() {
 
     val calendar = Calendar.getInstance().apply {
-        add(Calendar.DATE, -1)
         set(Calendar.HOUR_OF_DAY, 0)
         set(Calendar.MINUTE, 0)
         set(Calendar.SECOND, 0)

@@ -7,14 +7,33 @@ import androidx.annotation.RequiresApi
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.Month
 import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
+
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun Long.toLocalDateTime(): LocalDateTime {
+    return this.toDate()
+        .toInstant()
+        .atZone(ZoneOffset.UTC)
+        .toLocalDateTime()
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun Long.toLocalDate(): LocalDate {
+    return this.toDate()
+        .toInstant()
+        .atZone(ZoneOffset.UTC)
+        .toLocalDate()
+}
 
 /**
  * get list date with actual days of week
@@ -152,7 +171,7 @@ fun isThreeDaysLater(date: LocalDate, today: LocalDate): Boolean {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun isValidateDateThreeDays(date: LocalDate): Boolean {
+fun isValidateDateThreeDays(date: LocalDate, threeDays: RepeatType): Boolean {
     val today = LocalDate.now()
     if (date == today) return true
     return isThreeDaysLater(date, today)
@@ -178,27 +197,32 @@ fun getNextThreeDayReminderDate(baseDate: LocalDate): LocalDate {
 @RequiresApi(Build.VERSION_CODES.O)
 fun getNextAWeek(baseDate: LocalDate): LocalDate {
     val today = LocalDate.now()
+
     val dayBetween = today.toEpochDay() - baseDate.toEpochDay()
-    val offset = if (dayBetween >= 0) {
-        val remainder = dayBetween % 7
-        val daysUntilNext = if (remainder == 0L) 7 else 7 - remainder
-        daysUntilNext
-    } else {
-        abs(dayBetween) % 7
-    }
-    return today.plusDays(offset)
+    if(dayBetween < 0) return baseDate
+
+    val remainder = dayBetween % 7
+    val daysUntilNext = if (remainder == 0L) 7 else 7 - remainder
+
+    return today.plusDays(daysUntilNext)
 }
+
+
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun isValidateDateThreeDaysReminder(date: LocalDate, type: RepeatType?): Boolean {
+    if(type == RepeatType.DAILY) return true
     val today = LocalDate.now()
     if (date == today) return true
 
 
+
     val dateNext = when (type) {
         RepeatType.THREE_DAYS -> getNextThreeDayReminderDate(date)
+        RepeatType.ONLY_ONE -> date
         RepeatType.WEEKLY -> getNextAWeek(date)
+
         else -> null
     }
 
@@ -213,10 +237,13 @@ fun isValidateDateThreeDaysReminder(date: LocalDate, type: RepeatType?): Boolean
 @RequiresApi(Build.VERSION_CODES.O)
 fun main() {
 
-    val date = 1750464000000
+    val today = LocalDate.now()
+    val milis = 1752019200000
+    val localDate = milis.toLocalDate()
+    val nextDayWeek = getNextAWeek(localDate)
 
-    println(date.getReminderDay())
-    println(Date(date))
+
+
 
 
 }

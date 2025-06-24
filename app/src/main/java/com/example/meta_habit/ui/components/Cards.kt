@@ -63,6 +63,13 @@ fun CardNoteBasic(
     Card(
         modifier = modifier.fillMaxWidth(),
         onClick = onClick,
+        colors = CardColors(
+            contentColor = Color.Black,
+            containerColor = ((habit.habit.color?:0).getColorToOrdinalEnum()?.value?: Color.White).copy(alpha = 0.5f),
+            disabledContentColor = Color.Gray,
+            disabledContainerColor = Color.Gray
+
+        )
     ) {
         Column(modifier = modifier) {
 

@@ -5,17 +5,16 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.meta_habit.data.data_store.PreferencesDataStoreImp
 import com.example.meta_habit.data.db.entity.HabitWithTasks
 import com.example.meta_habit.data.repository.HabitRepository
 import com.example.meta_habit.ui.utils.FilterType
-import com.example.meta_habit.ui.utils.getLocalDate
 import com.example.meta_habit.ui.utils.getDayOfWeekDayMonthMontNameSimple
 import com.example.meta_habit.ui.utils.getRepeatType
 import com.example.meta_habit.ui.utils.isValidateDateThreeDaysReminder
 import com.example.meta_habit.ui.utils.isValidateDateTodayReminder
 import com.example.meta_habit.ui.utils.isValidateDateWeekReminder
 import com.example.meta_habit.ui.utils.toLocalDate
-import com.example.meta_habit.ui.utils.toLocalDateTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,7 +29,8 @@ data class FilterTypeAndLabel(
 
 @RequiresApi(Build.VERSION_CODES.O)
 class HomeViewModel(
-    private val habitRepository: HabitRepository
+    private val habitRepository: HabitRepository,
+    private val preferencesDataStore: PreferencesDataStoreImp
 ): ViewModel() {
 
     private val _selectedHabit =  MutableStateFlow<HabitWithTasks?>(null)
@@ -40,13 +40,55 @@ class HomeViewModel(
     private val _listFilterOfHabit = MutableStateFlow<List<HabitWithTasks>>(emptyList())
     val listOfHabit = _listFilterOfHabit.asStateFlow()
 
-    private val _selectedFilter = MutableStateFlow(FilterTypeAndLabel(filterType = FilterType.ALL))
+    private val _selectedFilter = MutableStateFlow(FilterTypeAndLabel(filterType = FilterType.TODAY))
     val selectedFilter = _selectedFilter.asStateFlow()
 
     init {
-        println("onInitViewModelHome ::")
+
         viewModelScope.launch {
+
+            preferencesDataStore.save(FilterType.TODAY.ordinal)
             launch {
+
+                preferencesDataStore.getInt().collect{
+                    Log.d("PREFERENCE_FILTER", "filterType :: $it")
+                    onSelectFilter(FilterType.entries[it?:0])
+
+                    when(FilterType.entries[it?:0]){
+                        FilterType.TODAY -> {
+                            val listFilter = _listOfHabit.value.filter { currentHabit ->
+                                isValidateDateTodayReminder(
+                                    baseDate = (currentHabit.habit.dateReminder?:0).toLocalDate(),
+                                    type = getRepeatType(currentHabit.habit.repetition?:0)
+                                )
+                            }
+                            _listFilterOfHabit.value = listFilter
+                        }
+                        FilterType.WEEK -> {
+                            val listFilter = _listOfHabit.value.filter { currentHabit ->
+                                isValidateDateWeekReminder(
+                                    date = (currentHabit.habit.dateReminder?:0).toLocalDate(),
+                                    type = getRepeatType(currentHabit.habit.repetition?:0)
+                                )
+                            }
+                            _listFilterOfHabit.value = listFilter
+                        }
+                        FilterType.TREE_DAYS -> {
+                            val listFilter = _listOfHabit.value.filter { currentHabits ->
+                                isValidateDateThreeDaysReminder(
+                                    date = (currentHabits.habit.dateReminder?:0).toLocalDate(),
+                                    type = getRepeatType(currentHabits.habit.repetition?:0)
+                                )
+                            }
+                            _listFilterOfHabit.value = listFilter
+                        }
+
+                        FilterType.ALL ->{
+                            _listFilterOfHabit.value = _listOfHabit.value
+                        }
+                    }
+                }
+
                 val updateFilterLabel = _selectedFilter.value.copy(
                     label = Date().getDayOfWeekDayMonthMontNameSimple()
                 )
@@ -77,40 +119,22 @@ class HomeViewModel(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun onSelectFilter(filterType: FilterType){
+        viewModelScope.launch {
+            preferencesDataStore.save(filterType.ordinal)
+        }
+
         val label: String = when(filterType){
             FilterType.TODAY -> {
-                val listFilter = _listOfHabit.value.filter { currentHabit ->
-                    isValidateDateTodayReminder(
-                        baseDate = (currentHabit.habit.dateReminder?:0).toLocalDate(),
-                        type = getRepeatType(currentHabit.habit.repetition?:0)
-                    )
-                }
-                _listFilterOfHabit.value = listFilter
                 Date().getDayOfWeekDayMonthMontNameSimple()
             }
             FilterType.WEEK -> {
-                val listFilter = _listOfHabit.value.filter { currentHabit ->
-                    isValidateDateWeekReminder(
-                        date = (currentHabit.habit.dateReminder?:0).toLocalDate(),
-                        type = getRepeatType(currentHabit.habit.repetition?:0)
-                    )
-                }
-                _listFilterOfHabit.value = listFilter
                 "Semanal"
             }
             FilterType.TREE_DAYS -> {
-                val listFilter = _listOfHabit.value.filter { currentHabits ->
-                    isValidateDateThreeDaysReminder(
-                        date = (currentHabits.habit.dateReminder?:0).toLocalDate(),
-                        type = getRepeatType(currentHabits.habit.repetition?:0)
-                    )
-                }
-                _listFilterOfHabit.value = listFilter
                 "Proximos 3 dias"
             }
 
             FilterType.ALL ->{
-                _listFilterOfHabit.value = _listOfHabit.value
                 "Todas"
             }
         }

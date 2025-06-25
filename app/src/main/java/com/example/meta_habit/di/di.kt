@@ -2,6 +2,8 @@ package com.example.meta_habit.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.meta_habit.data.data_store.PREFERENCES_NAME
+import com.example.meta_habit.data.data_store.PreferencesDataStoreImp
 import com.example.meta_habit.data.db.AppDatabase
 import com.example.meta_habit.data.db.databaseName
 import com.example.meta_habit.data.repository.HabitRepository
@@ -19,6 +21,10 @@ val viewModelModule = module {
     viewModelOf(::HomeViewModel)
     viewModelOf(::CreateViewModel)
     viewModelOf(::DetailViewModel)
+}
+
+val preferencesModule = module {
+    single{ PreferencesDataStoreImp(androidContext()) }
 }
 
 val databaseModule = module {
@@ -48,6 +54,6 @@ fun initKoin(config: KoinAppDeclaration ? = null, context: Context){
     startKoin{
         androidContext(context)
         config?.invoke(this)
-        modules(viewModelModule, databaseModule, repositoryModule)
+        modules(viewModelModule, databaseModule, repositoryModule, preferencesModule)
     }
 }

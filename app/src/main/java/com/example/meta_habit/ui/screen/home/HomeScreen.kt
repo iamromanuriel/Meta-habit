@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DisplayMode
@@ -91,7 +92,7 @@ fun SharedTransitionScope.HomeScreen(
                         onClick = {
                             onNavigateToNotification()
                         }) {
-                        Icon(imageVector = Icons.Default.Notifications, contentDescription = "")
+                        Icon(imageVector = Icons.Outlined.Notifications, contentDescription = "")
                     }
                 }
             )

@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.example.meta_habit.data.db.entity.HabitEntity
+import com.example.meta_habit.data.db.entity.HabitLogEntity
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
 import com.example.meta_habit.data.db.entity.HabitWithTasks
 import com.example.meta_habit.data.db.entity.NotificationEntity
@@ -52,4 +53,10 @@ interface DaoHabitTask{
 interface DaoNotification{
     @Query("SELECT * FROM notifications")
     fun getListNotification(): Flow<List<NotificationEntity>>
+}
+
+@Dao
+interface DaoHabitTaskLogger{
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertHabitLog(habitLogEntity: HabitLogEntity)
 }

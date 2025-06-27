@@ -69,7 +69,6 @@ data class HabitWithTasks(
     @Relation(
         parentColumn = "id",
         entityColumn = "habitId",
-
     )
     val task: List<HabitTaskEntity>
 )
@@ -77,14 +76,19 @@ data class HabitWithTasks(
 @Entity(
     tableName = "habit_log",
     foreignKeys = [
-        ForeignKey(entity = HabitEntity::class, parentColumns = ["id"], childColumns = ["habitId"])
+        ForeignKey(
+            entity = HabitTaskEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["habitTaskId"],
+            onDelete = ForeignKey.CASCADE
+        )
     ],
-    indices = [Index("habitId")]
+    indices = [Index("habitTaskId")]
 )
 data class HabitLogEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val habitId: Long,
-    val date: Long,
+    val habitTaskId: Long,
+    val date: Long ? = null,
     val isCompleted: Boolean = false
 )

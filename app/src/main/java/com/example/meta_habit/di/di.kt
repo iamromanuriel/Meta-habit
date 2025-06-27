@@ -40,6 +40,7 @@ val databaseModule = module {
         get<AppDatabase>().habitDao()
         get<AppDatabase>().habitTaskDao()
         get<AppDatabase>().habitNotification()
+        get<AppDatabase>().habitTaskLogger()
     }
 }
 

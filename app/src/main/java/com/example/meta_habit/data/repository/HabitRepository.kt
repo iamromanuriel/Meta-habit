@@ -1,6 +1,5 @@
 package com.example.meta_habit.data.repository
 
-import androidx.room.util.appendPlaceholders
 import com.example.meta_habit.data.db.AppDatabase
 import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
@@ -75,7 +74,7 @@ class HabitRepository(
     }
 
     fun getListOfHabitWithTasks(): Flow<List<HabitWithTasks>>{
-        return appDatabase.habitDao().getListOfHabitWithTasks()
+        return appDatabase.habitDao().getListOfHabitWithTasksFlow()
     }
 
     suspend fun deleteHabit(habit: HabitEntity): Result<Unit>{

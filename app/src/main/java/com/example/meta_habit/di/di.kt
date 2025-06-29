@@ -37,7 +37,7 @@ val preferencesModule = module {
 
 val workManagerModule = module {
     single{ MyRepository() }
-    worker { DailyValidationTaskWorker(get(), get()) }
+    worker { DailyValidationTaskWorker(get(), get(), get()) }
 }
 
 val databaseModule = module {

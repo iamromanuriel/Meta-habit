@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.meta_habit.data.task.WorkScheduler
 import com.example.meta_habit.ui.nav.Navigation
 import com.example.meta_habit.ui.theme.MetaHabitTheme
 
@@ -19,6 +20,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        WorkScheduler.saveTaskLogger(this)
         setContent {
             MetaHabitTheme {
                 Navigation()

@@ -23,8 +23,11 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -47,6 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitWithTasks
+import com.example.meta_habit.ui.theme.bluePrimary
 import com.example.meta_habit.ui.utils.getColorToOrdinalEnum
 import com.example.meta_habit.ui.utils.getReminderDay
 import com.example.meta_habit.ui.utils.getReminderDayLocal
@@ -63,9 +67,11 @@ fun CardNoteBasic(
     Card(
         modifier = modifier.fillMaxWidth(),
         onClick = onClick,
+        border = BorderStroke(1.dp, Color.LightGray),
         colors = CardColors(
             contentColor = Color.Black,
-            containerColor = ((habit.habit.color?:0).getColorToOrdinalEnum()?.value?: Color.White).copy(alpha = 0.5f),
+            containerColor = ((habit.habit.color ?: 0).getColorToOrdinalEnum()?.value
+                ?: Color.White).copy(alpha = 0.3f),
             disabledContentColor = Color.Gray,
             disabledContainerColor = Color.Gray
 
@@ -75,7 +81,7 @@ fun CardNoteBasic(
 
             Box(
                 modifier = Modifier,
-                contentAlignment = Alignment.TopEnd
+                contentAlignment = Alignment.TopEnd,
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -93,8 +99,8 @@ fun CardNoteBasic(
 
                     Text(
                         text = habit.habit.title ?: "Title",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Normal,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -102,48 +108,63 @@ fun CardNoteBasic(
 
                 }
                 if (habit.habit.isPinned == true) {
-                    Icon(Icons.Default.Favorite, contentDescription = "", modifier = Modifier.padding(8.dp))
+                    Icon(
+                        Icons.Outlined.FavoriteBorder,
+                        contentDescription = "",
+                        tint = Color.Gray,
+                        modifier = Modifier.padding(8.dp)
+                    )
                 }
             }
 
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                habit.habit.dateReminder?.getReminderDayLocal()
+                    ?.let { Text(it, color = Color.Gray, style = MaterialTheme.typography.bodySmall) }
+            }
 
-            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp))   {
                 habit.task.take(3).forEach { task ->
                     Row(
-                        modifier = modifier.padding(vertical = 4.dp),
+                        modifier = Modifier.padding(vertical = 6.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically
+
                     ) {
-                        if (task.isCheck) {
-                            Box(
-                                modifier = Modifier
-                                    .size(16.dp)
-                                    .border(1.dp, Color.Gray, RoundedCornerShape(4.dp)),
-                                contentAlignment = Alignment.Center
-                            ) {
+
+
+                        Box(
+                            modifier = Modifier
+                                .size(16.dp)
+                                .background(bluePrimary),
+                            contentAlignment = Alignment.Center
+                        ) {
+
+                            if (task.isCheck) {
                                 Icon(
                                     imageVector = Icons.Default.Check,
                                     contentDescription = "",
-                                    modifier.scale(0.8F)
+                                    tint = Color.White,
+                                    modifier = modifier.scale(0.9F)
                                 )
                             }
                         }
                         Text(
                             text = task.description,
                             color = Color.Gray,
-                            textDecoration = if(task.isCheck) TextDecoration.LineThrough else TextDecoration.None,
+                            style = MaterialTheme.typography.bodyMedium,
+                            textDecoration = if (task.isCheck) TextDecoration.LineThrough else TextDecoration.None,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
                     }
                 }
             }
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = modifier.fillMaxWidth().padding(vertical = 10.dp, horizontal = 16.dp)
-            ) {
-                habit.habit.dateReminder?.getReminderDayLocal()?.let { Text(it) }
-            }
+
         }
     }
 }

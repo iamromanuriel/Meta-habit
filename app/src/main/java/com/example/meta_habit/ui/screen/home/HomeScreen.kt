@@ -27,6 +27,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -56,6 +57,7 @@ import com.example.meta_habit.ui.components.DropdownSelectDate
 import com.example.meta_habit.ui.components.LayoutOptionRepeat
 import com.example.meta_habit.ui.components.LayoutOptions
 import com.example.meta_habit.ui.nav.TRANSFORM_KEY
+import com.example.meta_habit.ui.theme.bluePrimary
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -103,6 +105,8 @@ fun SharedTransitionScope.HomeScreen(
                     animatedVisibilityScope = animatedVisibilityScope,
                     sharedContentState = rememberSharedContentState(TRANSFORM_KEY)
                 ),
+                containerColor = bluePrimary,
+                contentColor = MaterialTheme.colorScheme.background,
                 onClick = onNavigateToCreate
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "")
@@ -112,7 +116,7 @@ fun SharedTransitionScope.HomeScreen(
 
         LazyColumn (
             contentPadding = innerPadding,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.padding(horizontal = 10.dp)
         ) {
 

@@ -26,6 +26,9 @@ val RedLight = Color(0xFFF6A9A7)
 
 val Gray50 = Color(0xFFD7D8DE)
 
+
+val bluePrimary = Color(0xFF0084FD)
+
 @Composable
 fun getColorsTextField(
     baseColor: Color

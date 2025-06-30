@@ -19,9 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -40,9 +37,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -50,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitWithTasks
+import com.example.meta_habit.ui.theme.GrayLight20
 import com.example.meta_habit.ui.theme.bluePrimary
 import com.example.meta_habit.ui.utils.getColorToOrdinalEnum
 import com.example.meta_habit.ui.utils.getReminderDay
@@ -67,7 +62,8 @@ fun CardNoteBasic(
     Card(
         modifier = modifier.fillMaxWidth(),
         onClick = onClick,
-        border = BorderStroke(1.dp, Color.LightGray),
+        border = BorderStroke(1.dp, GrayLight20),
+        shape = RoundedCornerShape(20.dp),
         colors = CardColors(
             contentColor = Color.Black,
             containerColor = ((habit.habit.color ?: 0).getColorToOrdinalEnum()?.value
@@ -136,11 +132,12 @@ fun CardNoteBasic(
 
                     ) {
 
-
                         Box(
                             modifier = Modifier
                                 .size(16.dp)
-                                .background(bluePrimary),
+                                .clip(RoundedCornerShape(4.dp))
+                                .border(1.dp, Color.Blue.copy(alpha = 0.6F), RoundedCornerShape(4.dp))
+                                .background(if (task.isCheck) bluePrimary else Color.Transparent),
                             contentAlignment = Alignment.Center
                         ) {
 

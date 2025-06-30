@@ -28,6 +28,9 @@ val Gray50 = Color(0xFFD7D8DE)
 
 
 val bluePrimary = Color(0xFF0084FD)
+val GrayLight20 = Color(0xFFDADADA)
+
+val containerTextField = Color(0xFFE8ECF3)
 
 @Composable
 fun getColorsTextField(

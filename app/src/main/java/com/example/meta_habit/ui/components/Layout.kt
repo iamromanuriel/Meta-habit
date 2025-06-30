@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.meta_habit.ui.theme.containerTextField
 import com.example.meta_habit.ui.utils.LabelTypes
 
 
@@ -71,6 +72,7 @@ fun LayoutCreateCheckList(
 
                     }), shape = RoundedCornerShape(12.dp),
                     colors = TextFieldDefaults.textFieldColors(
+                        containerColor = containerTextField,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent

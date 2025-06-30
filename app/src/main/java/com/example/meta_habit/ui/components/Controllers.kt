@@ -15,9 +15,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -38,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.ui.screen.home.FilterTypeAndLabel
+import com.example.meta_habit.ui.theme.containerTextField
 import com.example.meta_habit.ui.utils.ColorType
 import com.example.meta_habit.ui.utils.FilterType
 
@@ -133,9 +137,9 @@ fun ItemColorSelection(
     Box(
         modifier = modifier
             .clip(CircleShape)
-            .size(50.dp)
-            .background(color.value)
-            .border(width = if(stateColorSelected == color) 2.dp else 1.dp, color = if(stateColorSelected == color) Color.Gray else color.value, shape = CircleShape)
+            .size(45.dp)
+            .background(color.value.copy(alpha = 0.6F))
+            .border(width = if(stateColorSelected == color) 2.dp else 1.dp, color = if(stateColorSelected == color) Color.LightGray else color.value, shape = CircleShape)
             .clickable {
                 onSelected(color)
             }
@@ -160,6 +164,7 @@ fun TextFieldBasic(
         shape = RoundedCornerShape(12.dp),
         onValueChange = onValueChange,
         colors = TextFieldDefaults.textFieldColors(
+            containerColor = containerTextField,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent

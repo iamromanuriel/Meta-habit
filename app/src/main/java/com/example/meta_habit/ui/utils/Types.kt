@@ -38,6 +38,7 @@ enum class NotificationTypes(var value: String){
 
 
 enum class ColorType(val value: Color){
+    WHITE(Color.White),
     RED(RedLight),
     ORANGE(OrangeLight),
     GREEN(GreenLight),

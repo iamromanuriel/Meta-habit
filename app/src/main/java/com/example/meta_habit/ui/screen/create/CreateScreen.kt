@@ -29,6 +29,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchColors
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -50,6 +52,7 @@ import com.example.meta_habit.ui.components.LayoutCreateCheckList
 import com.example.meta_habit.ui.components.LayoutOptionRepeat
 import com.example.meta_habit.ui.components.SelectionColor
 import com.example.meta_habit.ui.components.TextFieldBasic
+import com.example.meta_habit.ui.theme.bluePrimary
 import com.example.meta_habit.ui.utils.ColorType
 import com.example.meta_habit.ui.utils.LabelTypes
 import com.example.meta_habit.ui.utils.RepeatType
@@ -114,7 +117,13 @@ fun CreateScreen(
                                 enableReminder = enableRemember,
                                 millisDate = datePickerState.selectedDateMillis ?: 0,
                                 description = stateDescription
-                            )}
+                            )},
+                        colors = ButtonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = bluePrimary,
+                            disabledContentColor = Color.Gray,
+                            disabledContainerColor = Color.Transparent
+                        )
                     ) {  Text("Crear") }
                 }
             )
@@ -366,7 +375,13 @@ fun LayoutCreateDetailNote(
                                     onCheckedChange = {
                                         isCheck = it
                                         onChangeRepeat(it)
-                                    }
+                                    },
+                                    colors = SwitchDefaults.colors(
+                                        checkedThumbColor = Color.White,
+                                        checkedTrackColor = bluePrimary,
+                                        uncheckedThumbColor = Color.Gray,
+                                        uncheckedTrackColor = Color.LightGray
+                                    )
                                 )
                             }
                         }

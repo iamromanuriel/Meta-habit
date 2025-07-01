@@ -24,6 +24,8 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxColors
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,6 +56,7 @@ import com.example.meta_habit.data.db.entity.HabitTaskEntity
 import com.example.meta_habit.ui.theme.Gray50
 import com.example.meta_habit.ui.theme.MetaHabitTheme
 import com.example.meta_habit.ui.theme.RedLight
+import com.example.meta_habit.ui.theme.bluePrimary
 import com.example.meta_habit.ui.theme.getColorsTextField
 import com.example.meta_habit.ui.utils.getReminderTimeDay
 
@@ -214,62 +217,66 @@ fun TaskEditable(
     var isCheck by remember { mutableStateOf(habitTask?.isCheck?: false) }
     val colorBackground = if(isCheck) Gray50 else MaterialTheme.colorScheme.background
 
-    Card(
-        border = BorderStroke(1.dp, Color.LightGray),
-        colors = CardColors(
-            containerColor = colorBackground,
-            contentColor = Color.Blue,
-            disabledContainerColor = Color.LightGray,
-            disabledContentColor = Color.LightGray
+    ListItem(
+        headlineContent = {
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = description,
+                enabled = isCheck.not(),
+                textStyle = TextStyle(textDecoration = if(isCheck)TextDecoration.LineThrough else TextDecoration.None),
+                onValueChange = { text -> description = text },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
+                    onChangeTaskDescription(description)
+                    focusManager.clearFocus()
+                }),
+                colors = getColorsTextField(baseColor = colorBackground)
+            )
+        },
+        leadingContent = {
+            /*CustomCircularCheckbox(
+                checked = habitTask?.isCheck ?: false,
+                onCheckedChange = {
+                    isCheck = it;
+                    onChangeTaskCheck(it)
+                }
+            )*/
+
+
+            Checkbox(
+                checked = isCheck,
+                onCheckedChange = {
+                    isCheck = it;
+                    onChangeTaskCheck(it)
+                },
+                colors = CheckboxDefaults.colors(
+                    checkedColor = bluePrimary,
+                    uncheckedColor = Color.Gray,
+                    checkmarkColor = Color.White
+                )
+
+            )
+        },
+        supportingContent = {
+            AnimatedVisibility(visible = isCheck == true) {
+                habitTask?.dateCheck?.let {
+                    Text(text= it.getReminderTimeDay())
+                }
+            }
+        },
+        colors = ListItemColors(
+            containerColor = Color.Transparent,
+            headlineColor = Color.Gray,
+            leadingIconColor = Color.Black,
+            overlineColor = Color.Gray,
+            supportingTextColor = Color.Gray,
+            trailingIconColor = Color.Gray,
+            disabledHeadlineColor = Color.Gray,
+            disabledLeadingIconColor = Color.Gray,
+            disabledTrailingIconColor = Color.Gray
         ),
         modifier = modifier
-    ) {
-        ListItem(
-            headlineContent = {
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = description,
-                    enabled = isCheck.not(),
-                    textStyle = TextStyle(textDecoration = if(isCheck)TextDecoration.LineThrough else TextDecoration.None),
-                    onValueChange = { text -> description = text },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = {
-                        onChangeTaskDescription(description)
-                        focusManager.clearFocus()
-                    }),
-                    colors = getColorsTextField(baseColor = colorBackground)
-                )
-            },
-            supportingContent = {
-                AnimatedVisibility(visible = isCheck == true) {
-                    habitTask?.dateCheck?.let {
-                        Text(text= it.getReminderTimeDay())
-                    }
-                }
-            },
-            trailingContent = {
-                CustomCircularCheckbox(
-                    checked = habitTask?.isCheck ?: false,
-                    onCheckedChange = {
-                        isCheck = it;
-                        onChangeTaskCheck(it)
-                    }
-                )
-            },
-            colors = ListItemColors(
-                containerColor = colorBackground,
-                headlineColor = Color.Gray,
-                leadingIconColor = Color.Black,
-                overlineColor = Color.Gray,
-                supportingTextColor = Color.Gray,
-                trailingIconColor = Color.Gray,
-                disabledHeadlineColor = Color.Gray,
-                disabledLeadingIconColor = Color.Gray,
-                disabledTrailingIconColor = Color.Gray
-            ),
-            modifier = modifier
-        )
-    }
+    )
 }
 
 

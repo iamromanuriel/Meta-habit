@@ -19,11 +19,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -57,6 +60,7 @@ import com.example.meta_habit.ui.components.ListWeekDays
 import com.example.meta_habit.ui.components.TaskEditable
 import com.example.meta_habit.ui.components.TopBarDialogBasic
 import com.example.meta_habit.ui.screen.create.LayoutCreateDetailNote
+import com.example.meta_habit.ui.theme.bluePrimary
 import com.example.meta_habit.ui.utils.ColorType
 import com.example.meta_habit.ui.utils.LabelTypes
 import com.example.meta_habit.ui.utils.RepeatType
@@ -78,6 +82,7 @@ fun DetailScreen(
     var isShowDialogOptionLabel by remember { mutableStateOf(false) }
     var isShowDialogDelete by remember { mutableStateOf(false) }
     var taskDescription by remember { mutableStateOf("") }
+    var enableNewTask by remember { mutableStateOf(false) }
 
     val snackBarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -127,13 +132,9 @@ fun DetailScreen(
                 },
                 actions = {
 
-                    IconButton(onClick = {
-                        isShowDialogDelete = true
-                    }) {
-                        Icon(imageVector = Icons.Outlined.Delete, contentDescription = "", tint = Color.Gray)
-                    }
+
                     IconButton(onClick = { isShowDialogEdit = true }) {
-                        Icon(imageVector = Icons.Outlined.Edit, contentDescription = "", tint = Color.Gray)
+                        Icon(imageVector = Icons.Outlined.MoreVert, contentDescription = "", tint = Color.Gray)
                     }
                 },
                 title = { Text(text = state.habit?.habit?.title ?: "Detalle", maxLines = 1) }
@@ -148,12 +149,12 @@ fun DetailScreen(
         ) {
             item {
 
-                ListWeekDays(
+                /*ListWeekDays(
                     listDaysChecked = state.listDaysChecked,
                 )
                 Spacer(modifier = Modifier
                     .fillMaxWidth()
-                    .height(10.dp))
+                    .height(10.dp))*/
 
                 Row(
                     modifier = Modifier
@@ -166,32 +167,60 @@ fun DetailScreen(
                     }
 
                 }
+
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp)
                 ) {
-                    val managerFocus = LocalFocusManager.current
-                    TextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = taskDescription,
-                        label = { Text("Tareas") },
-                        onValueChange = { text -> taskDescription = text },
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                        keyboardActions = KeyboardActions(onDone = {
-                            if(taskDescription.isEmpty()){
-                                managerFocus.clearFocus()
-                            }else{
-                                viewModel.onAddNewTaskToList(taskDescription)
-                                taskDescription = ""
+                    AnimatedVisibility(!enableNewTask) {
+                        Button(
+                            onClick = {
+                                enableNewTask = enableNewTask.not()
+                            },
+                            colors = ButtonColors(
+                                containerColor = bluePrimary,
+                                contentColor = Color.White,
+                                disabledContainerColor = Color.Gray,
+                                disabledContentColor = Color.White
+                            )
+                        ) {
+                            Row {
+                                Icon(imageVector = Icons.Outlined.Add, contentDescription = "")
+                                Text(text = "Agregar")
                             }
-                        }), shape = RoundedCornerShape(12.dp),
-                        colors = TextFieldDefaults.textFieldColors(
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            disabledIndicatorColor = Color.Transparent
+
+                        }
+                    }
+
+                    AnimatedVisibility(enableNewTask) {
+                        val managerFocus = LocalFocusManager.current
+                        TextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            value = taskDescription,
+                            label = { Text("Tareas") },
+                            onValueChange = { text -> taskDescription = text },
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                            keyboardActions = KeyboardActions(onDone = {
+
+                                if(taskDescription.isEmpty()){
+                                    managerFocus.clearFocus()
+                                    enableNewTask = enableNewTask.not()
+                                }else{
+                                    viewModel.onAddNewTaskToList(taskDescription)
+                                    taskDescription = ""
+                                    enableNewTask = enableNewTask.not()
+                                }
+                            }), shape = RoundedCornerShape(12.dp),
+                            colors = TextFieldDefaults.textFieldColors(
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent,
+                                disabledIndicatorColor = Color.Transparent
+                            )
                         )
-                    )
+                    }
+
 
                 }
 
@@ -199,7 +228,6 @@ fun DetailScreen(
 
             items(state.habit?.task ?: emptyList()) { task ->
                 TaskEditable(
-                    modifier = Modifier.padding(6.dp),
                     habitTask = task,
                     onChangeTaskCheck = { viewModel.onCheckTask(task, it) },
                     onChangeTaskDescription = { viewModel.onEditDescriptionTask(task, it) },

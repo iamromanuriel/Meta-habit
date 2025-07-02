@@ -99,6 +99,24 @@ class DetailViewModel(
         }
     }
 
+    fun onEditTitle(title: String){
+        viewModelScope.launch {
+            val editTitleHabitDeferred = async(Dispatchers.IO) {
+                habitRepository.editTitleHabit(title)
+            }
+            val resultEditTitleHabit = editTitleHabitDeferred.await()
+        }
+    }
+
+    fun onEditDescription(description: String){
+        viewModelScope.launch {
+            val editDescriptionHabitDeferred = async(Dispatchers.IO) {
+                habitRepository.editDescriptionHabit(description)
+            }
+            val resultEditDescriptionHabit = editDescriptionHabitDeferred.await()
+        }
+    }
+
 
     fun onSelectedRepeat(repeatType: RepeatType?) {
         _selectedRepeat.value = repeatType
@@ -109,8 +127,11 @@ class DetailViewModel(
     }
 
     fun onSelectedColor(color: ColorType) {
-        _selectedColor.value = color
-        Log.d("ON-EDIT-COLOR", color.toString())
+        viewModelScope.launch {
+            val selectColorDeferred = async(Dispatchers.IO) { habitRepository.selectColor(color) }
+            val resultSelectColor = selectColorDeferred.await()
+            _selectedColor.value = resultSelectColor.getOrNull()
+        }
     }
 
     fun selectDateMillis(dateMillis: Long?) {

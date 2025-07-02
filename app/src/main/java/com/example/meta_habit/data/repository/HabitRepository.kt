@@ -60,8 +60,7 @@ class HabitRepository(
             listTask.forEach { descriptionTask ->
                 val habitTaskEntity = HabitTaskEntity(
                     habitId = idHabit,
-                    description = descriptionTask,
-                    dateCheck = 1
+                    description = descriptionTask
                 )
                 appDatabase.habitTaskDao().insertGetId(habitTaskEntity)
             }
@@ -164,6 +163,38 @@ class HabitRepository(
             labelType?.ordinal.let { selectedHabit.value?.tag = it }
             selectedHabit.value?.let { appDatabase.habitDao().updateHabit(it) }
             Result.success(Unit)
+        }catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
+    suspend fun editTitleHabit(title: String): Result<Unit>{
+        return try {
+            selectedHabit.value?.title = title
+            selectedHabit.value?.let { appDatabase.habitDao().updateHabit(it) }
+            Result.success(Unit)
+        }catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
+    suspend fun editDescriptionHabit(description: String): Result<Unit>{
+        return try {
+            selectedHabit.value?.description = description
+            selectedHabit.value?.let { appDatabase.habitDao().updateHabit(it) }
+            Result.success(Unit)
+        }catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
+    suspend fun selectColor(
+        color: ColorType
+    ): Result<ColorType>{
+        return  try {
+            selectedHabit.value?.color = color.ordinal
+            selectedHabit.value?.let { appDatabase.habitDao().updateHabit(it) }
+            Result.success(color)
         }catch (e: Exception){
             Result.failure(e)
         }

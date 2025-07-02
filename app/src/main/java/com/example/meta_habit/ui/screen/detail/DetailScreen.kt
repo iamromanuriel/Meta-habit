@@ -67,6 +67,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.meta_habit.ui.components.DialogBasic
 import com.example.meta_habit.ui.components.LayoutOptionRepeat
 import com.example.meta_habit.ui.components.ListWeekDays
+import com.example.meta_habit.ui.components.SelectionColor
 import com.example.meta_habit.ui.components.TaskEditable
 import com.example.meta_habit.ui.components.TextFieldSimple
 import com.example.meta_habit.ui.components.TopBarDialogBasic
@@ -88,6 +89,7 @@ fun DetailScreen(
     viewModel: DetailViewModel = koinViewModel<DetailViewModel>()
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val managerFocus = LocalFocusManager.current
     val context = LocalContext.current
     var isShowDialogEdit by remember { mutableStateOf(false) }
     var isShowDialogOptionRepeat by remember { mutableStateOf(false) }
@@ -163,13 +165,6 @@ fun DetailScreen(
         ) {
             item {
 
-                /*ListWeekDays(
-                    listDaysChecked = state.listDaysChecked,
-                )
-                Spacer(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(10.dp))*/
-
                 Column (
                     modifier = Modifier.padding(horizontal = 10.dp)
                 ){
@@ -178,6 +173,11 @@ fun DetailScreen(
                         textStyle = MaterialTheme.typography.titleLarge,
                         onValueChange = {
                             titleState = it
+                        },
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        onDone = {
+                            viewModel.onEditTitle(titleState)
+                            managerFocus.clearFocus()
                         }
                     )
 
@@ -196,6 +196,11 @@ fun DetailScreen(
                         value = descriptionState,
                         onValueChange = {
                             descriptionState = it
+                        },
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        onDone = {
+                            viewModel.onEditDescription(descriptionState)
+                            managerFocus.clearFocus()
                         }
                     )
                     Row(
@@ -205,7 +210,7 @@ fun DetailScreen(
                     ) {
                         AnimatedVisibility(!enableNewTask) {
                             Button(
-                                modifier = Modifier.padding(),
+                                modifier = Modifier.padding(horizontal = 10.dp),
                                 onClick = {
                                     enableNewTask = enableNewTask.not()
                                 },
@@ -227,7 +232,7 @@ fun DetailScreen(
                         }
 
                         AnimatedVisibility(enableNewTask) {
-                            val managerFocus = LocalFocusManager.current
+
                             TextField(
                                 modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                                 value = taskDescription,
@@ -295,6 +300,11 @@ fun DetailScreen(
 
 
                 ListWeekDays(listDaysChecked = state.listDaysChecked)
+
+                SelectionColor(
+                    stateColorSelected = selectColor?:ColorType.PURPLE,
+                    onSelected = viewModel::onSelectedColor
+                )
 
                 OutlinedButton (
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),

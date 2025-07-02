@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -174,7 +176,9 @@ fun TextFieldSimple(
     value: String,
     onValueChange: (String) -> Unit,
     textStyle: TextStyle = LocalTextStyle.current,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     label: String? = null,
+    onDone: () -> Unit = {},
     modifier: Modifier = Modifier,
 ){
 
@@ -183,6 +187,12 @@ fun TextFieldSimple(
         value = value,
         textStyle = textStyle,
         onValueChange = onValueChange,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = KeyboardActions(
+            onDone = {
+                onDone()
+            }
+        ),
         colors = TextFieldDefaults.textFieldColors(
             containerColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,

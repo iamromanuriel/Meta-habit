@@ -119,11 +119,21 @@ class DetailViewModel(
 
 
     fun onSelectedRepeat(repeatType: RepeatType?) {
-        _selectedRepeat.value = repeatType
+        viewModelScope.launch {
+            val selectRepeatDeferred = async(Dispatchers.IO) { habitRepository.editRepeatHabit(repeatType?: RepeatType.DAILY) }
+            val resultSelectRepeat = selectRepeatDeferred.await()
+            Log.d("onSuccess repeatEdit", resultSelectRepeat.toString())
+            _selectedRepeat.value = resultSelectRepeat.getOrNull()
+        }
+
     }
 
-    fun onSelectedLabel(labelType: LabelTypes) {
-        _selectedLabel.value = labelType
+    fun onSelectedLabel(labelType: LabelTypes?) {
+        viewModelScope.launch {
+            val selectLabelDeferred = async(Dispatchers.IO) { habitRepository.editLabelHabit(labelType?: LabelTypes.WORK) }
+            val resultSelectLabel = selectLabelDeferred.await()
+            _selectedLabel.value = resultSelectLabel.getOrNull()
+        }
     }
 
     fun onSelectedColor(color: ColorType) {

@@ -188,6 +188,27 @@ class HabitRepository(
         }
     }
 
+
+    suspend fun editRepeatHabit(repeatType: RepeatType): Result<RepeatType>{
+        return try {
+            selectedHabit.value?.repetition = repeatType.ordinal
+            selectedHabit.value?.let { appDatabase.habitDao().updateHabit(it) }
+            Result.success(repeatType)
+            }catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
+    suspend fun editLabelHabit(labelType: LabelTypes): Result<LabelTypes>{
+        return try {
+            selectedHabit.value?.tag = labelType.ordinal
+            selectedHabit.value?.let { appDatabase.habitDao().updateHabit(it) }
+            Result.success(labelType)
+            }catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
     suspend fun selectColor(
         color: ColorType
     ): Result<ColorType>{

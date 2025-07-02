@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Delete
@@ -42,6 +43,8 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -76,7 +79,9 @@ import com.example.meta_habit.ui.theme.bluePrimary
 import com.example.meta_habit.ui.utils.ColorType
 import com.example.meta_habit.ui.utils.LabelTypes
 import com.example.meta_habit.ui.utils.RepeatType
+import com.example.meta_habit.ui.utils.getLabelType
 import com.example.meta_habit.ui.utils.getReminderDay
+import com.example.meta_habit.ui.utils.getRepeatType
 import com.example.meta_habit.ui.utils.rememberRestrictedDatePickerState
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -104,7 +109,7 @@ fun DetailScreen(
     val stateDelete by viewModel.stateDelete.collectAsStateWithLifecycle()
 
     val selectColor by viewModel.selectedColor.collectAsStateWithLifecycle()
-    val enableReminder by viewModel.enableReminder.collectAsStateWithLifecycle()
+    var enableReminder by mutableStateOf(state.habit?.habit?.hasReminder?: false)
     val selectedRepeat by viewModel.selectedRepeat.collectAsStateWithLifecycle()
     val selectedLabel by viewModel.selectedLabel.collectAsStateWithLifecycle()
 
@@ -283,23 +288,126 @@ fun DetailScreen(
             sheetState = rememberModalBottomSheetState()
         ) {
             Column {
-                Row(
-                    modifier = Modifier.padding(horizontal = 10.dp),
-                    horizontalArrangement = Arrangement.End
+
+                ListWeekDays(listDaysChecked = state.listDaysChecked)
+
+                TextButton(
+                    onClick = { isShowDialogOptionRepeat = isShowDialogOptionRepeat.not() },
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)
                 ) {
 
-                    Spacer(modifier = Modifier.weight(1f))
-                    IconButton(
-                        onClick = {
-                            isShowDialogEdit = false
-                        }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(6.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(imageVector = Icons.Outlined.Close, contentDescription = "")
+                        Row {
+
+                            Text(
+                                "Repetir:",
+                                modifier = Modifier.padding(horizontal = 6.dp),
+                                color = Color.Gray
+                            )
+                            Text(getRepeatType(state.habit?.habit?.repetition?:0)?.value?:"",  modifier = Modifier.padding(horizontal = 6.dp))
+                        }
+                        Row {
+                            Icon(
+                                imageVector = Icons.Default.KeyboardArrowRight,
+                                contentDescription = ""
+                            )
+                        }
                     }
                 }
 
+                AnimatedVisibility(isShowDialogOptionRepeat) {
+                    LayoutOptionRepeat(
+                        title = "Repetir",
+                        options = RepeatType.entries.toTypedArray(),
+                        selected = getRepeatType(state.habit?.habit?.repetition ?: 0),
+                        onSelected = {
+                            viewModel.onSelectedRepeat(it)
+                            isShowDialogOptionRepeat = false
+                        },
+                        itemToString = { it?.value?: "" }
+                    )
+                }
 
-                ListWeekDays(listDaysChecked = state.listDaysChecked)
+                TextButton(
+                    onClick = { isShowDialogOptionLabel = isShowDialogOptionLabel.not() },
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)
+                ) {
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(6.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row {
+
+                            Text(
+                                "Etiqueta:",
+                                modifier = Modifier.padding(horizontal = 6.dp),
+                                color = Color.Gray
+                            )
+                            Text(getLabelType(state.habit?.habit?.tag?:0)?.value?:"",  modifier = Modifier.padding(horizontal = 6.dp))
+                        }
+                        Row {
+                            Icon(
+                                imageVector = Icons.Default.KeyboardArrowRight,
+                                contentDescription = ""
+                            )
+                        }
+                    }
+                }
+
+                AnimatedVisibility(isShowDialogOptionLabel) {
+                    LayoutOptionRepeat(
+                        title = "Repetir",
+                        options = LabelTypes.entries.toTypedArray(),
+                        selected = getLabelType(state.habit?.habit?.tag ?: 0),
+                        onSelected = {
+                            viewModel.onSelectedLabel(it)
+                            isShowDialogOptionLabel = false
+                        },
+                        itemToString = { it?.value?: "" }
+                    )
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row {
+
+                        Text(
+                            "Recordar con notificaciòn: ",
+                            modifier = Modifier.padding(horizontal = 6.dp),
+                            color = Color.Gray
+                        )
+                    }
+                    Row {
+                        Switch(
+                            checked = enableReminder,
+                            onCheckedChange = {
+                                enableReminder = it
+                                //onChangeRepeat(it)
+                            },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = Color.White,
+                                checkedTrackColor = bluePrimary,
+                                uncheckedThumbColor = Color.Gray,
+                                uncheckedTrackColor = Color.LightGray
+                            )
+                        )
+                    }
+                }
 
                 SelectionColor(
                     stateColorSelected = selectColor?:ColorType.PURPLE,

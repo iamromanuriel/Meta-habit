@@ -2,6 +2,7 @@ package com.example.meta_habit.ui.components
 
 import android.content.ClipData.Item
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,8 +15,12 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,7 +47,14 @@ fun ItemDay(
         modifier = Modifier
             .width(75.dp)
             .height(80.dp)
-            .padding(horizontal = 6.dp)
+            .padding(horizontal = 6.dp),
+        border = BorderStroke(1.dp, color = Color.LightGray),
+        colors = CardColors(
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = Color.Black,
+            disabledContainerColor = Color.White,
+            disabledContentColor = Color.Black
+        )
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
@@ -50,7 +62,7 @@ fun ItemDay(
             modifier = Modifier.fillMaxWidth().fillMaxHeight()
         ) {
             Text(text = day.date.getDayNumMonthFromDate().toString(), color = if(isToday) Color.Black else Color.Gray, fontWeight = FontWeight.Bold)
-            if(day.isChecked){ Icon(imageVector = Icons.Default.Favorite, contentDescription = "", tint = Color.Red) }
+            if(day.isChecked){ Icon(imageVector = Icons.Outlined.FavoriteBorder, contentDescription = "", tint = Color.Red) }
             Text(text = day.date.getDayNameFromDate().substring(0, 3), fontWeight = FontWeight.Bold, color = if(isToday) Color.Black else Color.Gray)
         }
     }

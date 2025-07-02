@@ -2,6 +2,7 @@ package com.example.meta_habit.ui.screen.detail
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
@@ -23,6 +24,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.MoreVert
@@ -35,14 +37,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -267,90 +272,42 @@ fun DetailScreen(
         }
     }
 
-    AnimatedVisibility(
-        visible = isShowDialogEdit,
-    ) {
-        DialogBasic(
-            modifier = Modifier.fillMaxWidth(),
-            onDismiss = {
-                isShowDialogEdit = false
-            },
-            content = {
-                var titleState by remember { mutableStateOf(state.habit?.habit?.title?:"") }
-                Card(
-                    shape = RoundedCornerShape(24.dp),
-                    modifier = Modifier.fillMaxWidth().padding(10.dp)
+    if(isShowDialogEdit){
+        ModalBottomSheet(
+            onDismissRequest = { isShowDialogEdit = false },
+            sheetState = rememberModalBottomSheetState()
+        ) {
+            Column {
+                Row(
+                    modifier = Modifier.padding(horizontal = 10.dp),
+                    horizontalArrangement = Arrangement.End
                 ) {
-                    TopBarDialogBasic(
-                        onClose = { isShowDialogEdit = false },
-                        onDone = { viewModel.onConfirmSaveEdit(titleState) }
-                    )
-                    LayoutCreateDetailNote(
-                        stateIsRepeat = enableReminder,
-                        colorSelected = selectColor ?: ColorType.PURPLE,
-                        stateTitle = titleState,
-                        stateLabel = selectedLabel ?: LabelTypes.WORK,
-                        stateRepeat = selectedRepeat ?: RepeatType.DAILY,
-                        stateDescription = "",
-                        onShowDialogPicker = {},
-                        onSelectedColor = viewModel::onSelectedColor,
-                        onCreatedNewTask = {},
-                        onChangeTitle = { titleState = it },
-                        onChangeDescription = {},
-                        dateReminder = rememberRestrictedDatePickerState(),
-                        onEditTask = { _, _ -> },
-                        onRemoveTask = {},
-                        onChangeRepeat = viewModel::onEnableReminder,
-                        onSelectedLabel = viewModel::onSelectedLabel,
-                        onSelectedRepeat = viewModel::onSelectedRepeat
-                    )
+
+                    Spacer(modifier = Modifier.weight(1f))
+                    IconButton(
+                        onClick = {
+                            isShowDialogEdit = false
+                        }
+                    ) {
+                        Icon(imageVector = Icons.Outlined.Close, contentDescription = "")
+                    }
+                }
+
+
+                ListWeekDays(listDaysChecked = state.listDaysChecked)
+
+                OutlinedButton (
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+                    onClick = { isShowDialogDelete = true },
+
+                ) {
+                    Text(text = "Eliminar")
                 }
             }
-        )
+        }
+
     }
 
-    if (isShowDialogOptionRepeat) {
-        DialogBasic(
-            onDismiss = {
-                isShowDialogOptionRepeat = false
-            },
-            content = {
-                LayoutOptionRepeat(
-                    title = "Repetir",
-                    options = RepeatType.entries.toTypedArray(),
-                    selected = selectedRepeat,
-                    onSelected = {
-                        viewModel.onSelectedRepeat(it)
-                        isShowDialogOptionRepeat = false
-                    },
-                    itemToString = { it?.value ?: "" }
-                )
-            }
-        )
-    }
-
-    if (isShowDialogOptionLabel) {
-        DialogBasic(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
-            onDismiss = {
-                isShowDialogOptionLabel = false
-            },
-            content = {
-                LayoutOptionRepeat<LabelTypes>(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
-                    title = "Etiqueta",
-                    options = LabelTypes.entries.toTypedArray(),
-                    selected = selectedLabel ?: LabelTypes.WORK,
-                    onSelected = {
-                        viewModel.onSelectedLabel(it)
-                        isShowDialogOptionLabel = false
-                    },
-                    itemToString = { it.value }
-                )
-            }
-
-        )
-    }
 
     if(isShowDialogDelete){
         AlertDialog(

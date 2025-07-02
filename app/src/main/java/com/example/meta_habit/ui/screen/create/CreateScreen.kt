@@ -2,7 +2,6 @@ package com.example.meta_habit.ui.screen.create
 
 import android.annotation.SuppressLint
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
@@ -29,11 +28,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,28 +41,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.meta_habit.ui.components.LayoutCreateCheckList
 import com.example.meta_habit.ui.components.LayoutOptionRepeat
 import com.example.meta_habit.ui.components.SelectionColor
-import com.example.meta_habit.ui.components.TextFieldBasic
+import com.example.meta_habit.ui.components.TextFieldBorderRounded
 import com.example.meta_habit.ui.theme.bluePrimary
 import com.example.meta_habit.ui.utils.ColorType
 import com.example.meta_habit.ui.utils.LabelTypes
 import com.example.meta_habit.ui.utils.RepeatType
-import com.example.meta_habit.ui.utils.getReminderDay
-import com.example.meta_habit.ui.utils.getReminderDayLocal
 import com.example.meta_habit.ui.utils.rememberRestrictedDatePickerState
-import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -239,7 +229,7 @@ fun LayoutCreateDetailNote(
                     )
                     Spacer(modifier = Modifier.height(30.dp))
 
-                    TextFieldBasic(
+                    TextFieldBorderRounded(
                         value = stateTitle,
                         onValueChange = onChangeTitle,
                         isCenterText = true
@@ -445,7 +435,7 @@ fun LayoutCreateDetailNote(
                         )
                     }
 
-                    TextFieldBasic(
+                    TextFieldBorderRounded(
                         value = stateDescription,
                         onValueChange = onChangeDescription,
                         label = "Descripcion"

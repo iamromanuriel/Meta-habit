@@ -70,6 +70,7 @@ class CreateViewModel(
                     repetition = _selectedStateRepeat.value.ordinal,
                     hasReminder = enableReminder,
                     dateReminder = millisDate,
+                    description = description,
                     tag = _selectedLabel.value.ordinal,
                     color = _selectedColor.value.ordinal
                 )

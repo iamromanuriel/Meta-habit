@@ -29,7 +29,8 @@ class HabitRepository(
     suspend fun onSaveHabit(
         title: String,
         repetition: Int,
-        hasReminder: Boolean,   
+        hasReminder: Boolean,
+        description: String,
         dateReminder: Long,
         tag: Int,
         color: Int
@@ -41,6 +42,7 @@ class HabitRepository(
                 repetition = repetition,
                 hasReminder = false,
                 dateReminder = dateReminder,
+                description = description,
                 tag = tag,
                 color = color,
                 dateCreate = Date().time,

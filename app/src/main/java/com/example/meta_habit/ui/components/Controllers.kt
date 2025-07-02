@@ -15,12 +15,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,7 +25,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -148,7 +144,7 @@ fun ItemColorSelection(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TextFieldBasic(
+fun TextFieldBorderRounded(
     value: String,
     onValueChange: (String) -> Unit,
     isCenterText: Boolean = false,
@@ -171,6 +167,31 @@ fun TextFieldBasic(
         )
     )
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TextFieldSimple(
+    value: String,
+    onValueChange: (String) -> Unit,
+    textStyle: TextStyle = LocalTextStyle.current,
+    label: String? = null,
+    modifier: Modifier = Modifier,
+){
+
+    TextField(
+        modifier = modifier.fillMaxWidth(),
+        value = value,
+        textStyle = textStyle,
+        onValueChange = onValueChange,
+        colors = TextFieldDefaults.textFieldColors(
+            containerColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
+        )
+    )
+}
+
 
 @Preview
 @Composable

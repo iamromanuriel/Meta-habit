@@ -1,10 +1,13 @@
 package com.example.meta_habit.ui.screen.detail
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +34,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -46,6 +50,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -58,6 +63,7 @@ import com.example.meta_habit.ui.components.DialogBasic
 import com.example.meta_habit.ui.components.LayoutOptionRepeat
 import com.example.meta_habit.ui.components.ListWeekDays
 import com.example.meta_habit.ui.components.TaskEditable
+import com.example.meta_habit.ui.components.TextFieldSimple
 import com.example.meta_habit.ui.components.TopBarDialogBasic
 import com.example.meta_habit.ui.screen.create.LayoutCreateDetailNote
 import com.example.meta_habit.ui.theme.bluePrimary
@@ -68,6 +74,7 @@ import com.example.meta_habit.ui.utils.getReminderDay
 import com.example.meta_habit.ui.utils.rememberRestrictedDatePickerState
 import org.koin.compose.viewmodel.koinViewModel
 
+@SuppressLint("UnrememberedMutableState")
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,6 +101,8 @@ fun DetailScreen(
     val selectedRepeat by viewModel.selectedRepeat.collectAsStateWithLifecycle()
     val selectedLabel by viewModel.selectedLabel.collectAsStateWithLifecycle()
 
+    var titleState by  mutableStateOf(state.habit?.habit?.title?:"")
+    var descriptionState by mutableStateOf(state.habit?.habit?.description?:"")
 
 
     LaunchedEffect(stateAction) {
@@ -137,7 +146,7 @@ fun DetailScreen(
                         Icon(imageVector = Icons.Outlined.MoreVert, contentDescription = "", tint = Color.Gray)
                     }
                 },
-                title = { Text(text = state.habit?.habit?.title ?: "Detalle", maxLines = 1) }
+                title = { Text(text = "", maxLines = 1) }
             )
         },
         snackbarHost = {
@@ -156,71 +165,90 @@ fun DetailScreen(
                     .fillMaxWidth()
                     .height(10.dp))*/
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp, vertical = 5.dp),
-                ) {
-                    state.habit?.habit?.dateUpdate?.getReminderDay().let {
-                        Text(text = "Ultima modificacion:", fontWeight = FontWeight.Bold)
-                        Text(text = "${it}")
-                    }
-
-                }
-
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                ) {
-                    AnimatedVisibility(!enableNewTask) {
-                        Button(
-                            onClick = {
-                                enableNewTask = enableNewTask.not()
-                            },
-                            colors = ButtonColors(
-                                containerColor = bluePrimary,
-                                contentColor = Color.White,
-                                disabledContainerColor = Color.Gray,
-                                disabledContentColor = Color.White
-                            )
-                        ) {
-                            Row {
-                                Icon(imageVector = Icons.Outlined.Add, contentDescription = "")
-                                Text(text = "Agregar")
-                            }
-
+                Column (
+                    modifier = Modifier.padding(horizontal = 10.dp)
+                ){
+                    TextFieldSimple(
+                        value = titleState,
+                        textStyle = MaterialTheme.typography.titleLarge,
+                        onValueChange = {
+                            titleState = it
                         }
+                    )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp, vertical = 5.dp),
+                    ) {
+                        state.habit?.habit?.dateUpdate?.getReminderDay().let {
+                            Text(text = "${it}")
+                        }
+
                     }
 
-                    AnimatedVisibility(enableNewTask) {
-                        val managerFocus = LocalFocusManager.current
-                        TextField(
-                            modifier = Modifier.fillMaxWidth(),
-                            value = taskDescription,
-                            label = { Text("Tareas") },
-                            onValueChange = { text -> taskDescription = text },
-                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                            keyboardActions = KeyboardActions(onDone = {
-
-                                if(taskDescription.isEmpty()){
-                                    managerFocus.clearFocus()
+                    TextFieldSimple(
+                        value = descriptionState,
+                        onValueChange = {
+                            descriptionState = it
+                        }
+                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                    ) {
+                        AnimatedVisibility(!enableNewTask) {
+                            Button(
+                                modifier = Modifier.padding(),
+                                onClick = {
                                     enableNewTask = enableNewTask.not()
-                                }else{
-                                    viewModel.onAddNewTaskToList(taskDescription)
-                                    taskDescription = ""
-                                    enableNewTask = enableNewTask.not()
+                                },
+                                colors = ButtonColors(
+                                    containerColor = bluePrimary,
+                                    contentColor = Color.White,
+                                    disabledContainerColor = Color.Gray,
+                                    disabledContentColor = Color.White
+                                )
+                            ) {
+                                Row (
+                                    verticalAlignment = Alignment.CenterVertically
+                                ){
+                                    Icon(imageVector = Icons.Outlined.Add, contentDescription = "", modifier = Modifier.padding(horizontal = 5.dp))
+                                    Text(text = "Agregar")
                                 }
-                            }), shape = RoundedCornerShape(12.dp),
-                            colors = TextFieldDefaults.textFieldColors(
-                                focusedIndicatorColor = Color.Transparent,
-                                unfocusedIndicatorColor = Color.Transparent,
-                                disabledIndicatorColor = Color.Transparent
-                            )
-                        )
-                    }
 
+                            }
+                        }
+
+                        AnimatedVisibility(enableNewTask) {
+                            val managerFocus = LocalFocusManager.current
+                            TextField(
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                                value = taskDescription,
+                                label = { Text("Tareas") },
+                                onValueChange = { text -> taskDescription = text },
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                keyboardActions = KeyboardActions(onDone = {
+                                    if(taskDescription.isEmpty()){
+                                        managerFocus.clearFocus()
+                                        enableNewTask = enableNewTask.not()
+                                    }else{
+                                        viewModel.onAddNewTaskToList(taskDescription)
+                                        taskDescription = ""
+                                        enableNewTask = enableNewTask.not()
+                                    }
+                                }), shape = RoundedCornerShape(12.dp),
+                                colors = TextFieldDefaults.textFieldColors(
+                                    focusedIndicatorColor = Color.Transparent,
+                                    unfocusedIndicatorColor = Color.Transparent,
+                                    disabledIndicatorColor = Color.Transparent
+                                )
+                            )
+                        }
+
+
+                    }
 
                 }
 

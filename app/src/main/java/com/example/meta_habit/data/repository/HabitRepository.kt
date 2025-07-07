@@ -3,6 +3,7 @@ package com.example.meta_habit.data.repository
 import com.example.meta_habit.data.db.AppDatabase
 import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
+import com.example.meta_habit.data.db.entity.HabitWithTaskAndLog
 import com.example.meta_habit.data.db.entity.HabitWithTasks
 import com.example.meta_habit.ui.utils.ColorType
 import com.example.meta_habit.ui.utils.LabelTypes
@@ -126,6 +127,10 @@ class HabitRepository(
         return appDatabase.habitDao().getHabitWithTask(selectedHabit.value?.id ?: 0)
     }
 
+    fun getHabitWithTaskAndLogs(): Flow<HabitWithTaskAndLog?>{
+        return appDatabase.habitDao().getHabitWithTaskAndLog(selectedHabit.value?.id?:0)
+    }
+
     suspend fun updateHabitTaskCheck(taskEntity: HabitTaskEntity, isChecked: Boolean): Result<Unit>{
         return try {
             taskEntity.isCheck = isChecked
@@ -209,12 +214,12 @@ class HabitRepository(
         }
     }
 
-    suspend fun enableReminderWitNotification(enable: Boolean): Result<Unit>{
+    suspend fun enableReminderWitNotification(enable: Boolean): Result<Boolean>{
         return try {
             selectedHabit.value?.hasReminder = enable
             selectedHabit.value?.let { appDatabase.habitDao().updateHabit(habitEntity = it) }
 
-            Result.success(Unit)
+            Result.success(enable)
         }catch (e: Exception){
             Result.failure(e)
         }

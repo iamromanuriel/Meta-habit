@@ -92,3 +92,23 @@ data class HabitLogEntity(
     val date: Long ? = null,
     val isCompleted: Boolean = false
 )
+
+data class HabitTaskWithLogs(
+    @Embedded val task: HabitTaskEntity,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "habitTaskId"
+    )
+
+    val logs : List<HabitLogEntity>
+)
+
+data class HabitWithTaskAndLog(
+    @Embedded val habit: HabitEntity,
+    @Relation(
+        entity = HabitTaskEntity::class,
+        parentColumn = "id",
+        entityColumn = "habitId"
+    )
+    val task: List<HabitTaskWithLogs>
+)

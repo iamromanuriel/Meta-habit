@@ -397,7 +397,7 @@ fun DetailScreen(
                             checked = enableReminder,
                             onCheckedChange = {
                                 enableReminder = it
-                                //onChangeRepeat(it)
+                                viewModel.onEnableReminder(it)
                             },
                             colors = SwitchDefaults.colors(
                                 checkedThumbColor = Color.White,
@@ -414,10 +414,15 @@ fun DetailScreen(
                     onSelected = viewModel::onSelectedColor
                 )
 
-                OutlinedButton (
+                TextButton (
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
                     onClick = { isShowDialogDelete = true },
-
+                    colors = ButtonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.Red,
+                        disabledContainerColor = Color.Gray,
+                        disabledContentColor = Color.White
+                    )
                 ) {
                     Text(text = "Eliminar")
                 }

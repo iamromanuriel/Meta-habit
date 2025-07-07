@@ -9,7 +9,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.meta_habit.data.task.WorkScheduler
 import com.example.meta_habit.ui.nav.Navigation
@@ -43,4 +42,10 @@ fun GreetingPreview() {
     MetaHabitTheme {
         Greeting("Android")
     }
+}
+
+fun main(){
+    val one = true
+    val two = true
+    println(one || two)
 }

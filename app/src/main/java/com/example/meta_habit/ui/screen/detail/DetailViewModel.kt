@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
+import com.example.meta_habit.data.db.entity.HabitWithTaskAndLog
 import com.example.meta_habit.data.db.entity.HabitWithTasks
 import com.example.meta_habit.data.repository.HabitRepository
 import com.example.meta_habit.ui.state.DayIsChecked
@@ -26,7 +27,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.serialization.builtins.serializer
 import java.util.Date
+import kotlin.math.log
 
 @RequiresApi(Build.VERSION_CODES.O)
 class DetailViewModel(
@@ -60,9 +63,10 @@ class DetailViewModel(
         get() = _state
 
     init {
+
         viewModelScope.launch {
             launch {
-                habitRepository.getHabitWithTask()
+                habitRepository.getHabitWithTaskAndLogs()
                     .prepareDateForUI()
                     .collect { data ->
                         data?.let {
@@ -155,7 +159,11 @@ class DetailViewModel(
     }
 
     fun onEnableReminder(isCheck: Boolean) {
-        _enableReminder.value = isCheck
+        viewModelScope.launch {
+            val enableReminderDeferred = async(Dispatchers.IO) { habitRepository.enableReminderWitNotification(isCheck) }
+            val resultEnableReminder = enableReminderDeferred.await()
+            _enableReminder.value = resultEnableReminder.getOrNull()?: false
+        }
     }
 
     fun onCheckTask(task: HabitTaskEntity, isChecked: Boolean) {
@@ -190,7 +198,7 @@ class DetailViewModel(
     }
 
 
-    private fun Flow<HabitWithTasks?>.prepareDateForUI(): Flow<Pair<HabitScreenState, Triple<ColorType?, Boolean, RepeatType?>>?> {
+    private fun Flow<HabitWithTaskAndLog?>.prepareDateForUI(): Flow<Pair<HabitScreenState, Triple<ColorType?, Boolean, RepeatType?>>?> {
          return this.map { habitWithTask ->
              habitWithTask?.let {
                 val color  = (habitWithTask.habit.color ?: 0).getColorToOrdinalEnum()
@@ -199,15 +207,23 @@ class DetailViewModel(
                     (habitWithTask.habit.repetition ?: RepeatType.DAILY.ordinal)
                 )
                 val listDaysChecked = getCurrentWeekDays().map { day ->
-                    val isChecked = it.task.any { task ->
-                        task.dateCheck?.toDate()?.getLocalDate() == day.getLocalDate() && task.isCheck
+
+                    val isCheckedLog = it.task.flatMap { it.logs }.any { log ->
+                        log.date?.toDate()?.getLocalDate() == day.getLocalDate() && log.isCompleted
                     }
-                    DayIsChecked(day, isChecked)
+
+                    val isChecked = it.task.any { task ->
+                        task.task.dateCheck?.toDate()?.getLocalDate() == day.getLocalDate() && task.task.isCheck
+                    }
+                    DayIsChecked(day, isChecked || isCheckedLog)
                 }
 
                 Pair(
                     HabitScreenState(
-                        habit = it,
+                        habit = HabitWithTasks(
+                            habit = habitWithTask.habit,
+                            task = habitWithTask.task.map { it.task }
+                        ),
                         listDaysChecked = listDaysChecked
                     ),
                     Triple(color, reminder, repeat)

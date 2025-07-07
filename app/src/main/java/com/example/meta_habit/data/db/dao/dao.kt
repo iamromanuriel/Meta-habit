@@ -10,6 +10,7 @@ import androidx.room.Update
 import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitLogEntity
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
+import com.example.meta_habit.data.db.entity.HabitWithTaskAndLog
 import com.example.meta_habit.data.db.entity.HabitWithTasks
 import com.example.meta_habit.data.db.entity.NotificationEntity
 import kotlinx.coroutines.flow.Flow
@@ -36,6 +37,10 @@ interface DaoHabit{
     @Transaction
     @Query("SELECT * FROM habit WHERE id = :idHabit")
     fun getHabitWithTask(idHabit: Long): Flow<HabitWithTasks?>
+
+    @Transaction
+    @Query("SELECT * FROM habit WHERE id = :idHabit")
+    fun getHabitWithTaskAndLog(idHabit: Long): Flow<HabitWithTaskAndLog?>
 
     @Delete
     suspend fun deleteHabit(habitEntity: HabitEntity)

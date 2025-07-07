@@ -46,9 +46,13 @@ import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitWithTasks
 import com.example.meta_habit.ui.theme.GrayLight20
 import com.example.meta_habit.ui.theme.bluePrimary
+import com.example.meta_habit.ui.utils.RepeatType
 import com.example.meta_habit.ui.utils.getColorToOrdinalEnum
+import com.example.meta_habit.ui.utils.getDateReminderThreeDaysString
 import com.example.meta_habit.ui.utils.getReminderDay
 import com.example.meta_habit.ui.utils.getReminderDayLocal
+import com.example.meta_habit.ui.utils.getRepeatType
+import com.example.meta_habit.ui.utils.toLocalDate
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -119,8 +123,16 @@ fun CardNoteBasic(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
             ) {
-                habit.habit.dateReminder?.getReminderDayLocal()
-                    ?.let { Text(it, color = Color.Gray, style = MaterialTheme.typography.bodySmall) }
+                val dateReminderNextDay = when(getRepeatType(ordinal = habit.habit.repetition?:0)){
+                    RepeatType.ONLY_ONE -> ""
+                    RepeatType.DAILY -> "Hoy"
+                    RepeatType.WEEKLY -> ""
+                    RepeatType.MONTHLY -> ""
+                    RepeatType.THREE_DAYS -> (habit.habit.dateReminder?:0).toLocalDate().getDateReminderThreeDaysString()
+                    null -> ""
+                }
+
+                Text(text = dateReminderNextDay)
             }
 
             Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp))   {

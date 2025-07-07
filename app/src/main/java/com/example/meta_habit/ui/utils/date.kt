@@ -279,6 +279,12 @@ fun isValidateDateTodayReminder(baseDate: LocalDate, type: RepeatType?): Boolean
     return today == dateNext
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+fun LocalDate.getDateReminderThreeDaysString(): String{
+    val now = LocalDate.now()
+    if(this == now) return "Hoy"
+    return getNextThreeDayReminderDate(baseDate = this).toString()
+}
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun main() {

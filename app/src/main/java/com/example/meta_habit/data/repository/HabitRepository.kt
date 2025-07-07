@@ -209,6 +209,17 @@ class HabitRepository(
         }
     }
 
+    suspend fun enableReminderWitNotification(enable: Boolean): Result<Unit>{
+        return try {
+            selectedHabit.value?.hasReminder = enable
+            selectedHabit.value?.let { appDatabase.habitDao().updateHabit(habitEntity = it) }
+
+            Result.success(Unit)
+        }catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
     suspend fun selectColor(
         color: ColorType
     ): Result<ColorType>{

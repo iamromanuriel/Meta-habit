@@ -183,16 +183,13 @@ fun getNextThreeDayReminderDate(baseDate: LocalDate): LocalDate {
     val today = LocalDate.now()
 
     val daysBetween = today.toEpochDay() - baseDate.toEpochDay()
-
-    val offset = if (daysBetween >= 0) {
-        val remainder = daysBetween % 3
-        val daysUntilNext = if (remainder == 0L) 3 else 3 - remainder
-        daysUntilNext
-    } else {
-        abs(daysBetween) % 3
+    if (daysBetween <= 0) {
+        return baseDate
     }
+    val remainder = daysBetween % 3
+    val daysUntilNext = if (remainder == 0L) 3 else 3 - remainder
 
-    return today.plusDays(offset)
+    return today.plusDays(daysUntilNext)
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -289,14 +286,10 @@ fun LocalDate.getDateReminderThreeDaysString(): String{
 @RequiresApi(Build.VERSION_CODES.O)
 fun main() {
 
-    val today = LocalDate.now()
-    val milis = 1752019200000
-    val localDate = milis.toLocalDate()
-    val nextDayMonth = nextDayMonth(baseDate = localDate)
+    val dayPost = LocalDate.of(2025, 7, 8)
+    val nextday = getNextThreeDayReminderDate(dayPost)
 
-    println(nextDayMonth)
-
-
+    println(nextday)
 }
 
 

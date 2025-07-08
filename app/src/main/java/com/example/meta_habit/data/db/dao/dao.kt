@@ -60,6 +60,10 @@ interface DaoHabitTask{
 
 @Dao
 interface DaoNotification{
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertGetId(notificationEntity: NotificationEntity): Long
+
     @Query("SELECT * FROM notifications")
     fun getListNotification(): Flow<List<NotificationEntity>>
 }

@@ -31,6 +31,7 @@ import com.example.meta_habit.ui.screen.create.CreateViewModel
 import com.example.meta_habit.ui.screen.detail.DetailScreen
 import com.example.meta_habit.ui.screen.home.HomeScreen
 import com.example.meta_habit.ui.screen.notification.NotificationScreen
+import com.example.meta_habit.ui.screen.notification.NotificationViewModel
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 import java.util.Objects
@@ -146,7 +147,9 @@ fun Navigation(){
                     )
                 }
             ){ backStackEntry ->
+                val viewModel: NotificationViewModel = koinViewModel()
                 NotificationScreen(
+                    viewModel = viewModel,
                     onBack = {
                         navController.popBackStack()
                     },

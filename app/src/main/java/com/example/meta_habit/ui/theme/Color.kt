@@ -32,6 +32,8 @@ val GrayLight20 = Color(0xFFDADADA)
 
 val containerTextField = Color(0xFFE8ECF3)
 
+val danger = Color(0xFFFF948F)
+
 @Composable
 fun getColorsTextField(
     baseColor: Color

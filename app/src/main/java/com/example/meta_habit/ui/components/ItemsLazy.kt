@@ -160,46 +160,36 @@ fun ItemNotification(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(30.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(Color.Blue.copy(alpha = 0.2F))
-        ) {
-            Icon(
-                imageVector = Icons.Default.Email,
-                contentDescription = "",
-                tint = Color.Blue.copy(alpha = 0.5F),
-                modifier = Modifier.padding()
-            )
-        }
-
-        Column(
-            modifier = Modifier
-                .weight(1F)
-                .padding(horizontal = 10.dp, vertical = 12.dp)
-        ) {
-            Text("Clase de ingles", fontWeight = FontWeight.Bold)
-            Text(
-                "Tu clase de ingles comienza en 4 horas",
-                style = TextStyle(fontWeight = FontWeight.Light)
-            )
-        }
-
-        Box(
-            modifier = Modifier
-                .size(10.dp)
+    ListItem(
+        leadingContent = {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(35 .dp)
+                    .clip(CircleShape)
+                    .background(Color.Blue.copy(alpha = 0.2F))
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Email,
+                    contentDescription = "",
+                    tint = Color.Blue.copy(alpha = 0.5F),
+                    modifier = Modifier.padding()
+                )
+            }
+        },
+        headlineContent = {
+            Text(text = "Clase de ingles")
+        },
+        supportingContent = {
+            Text(text = "10:00 AM")
+        },
+        trailingContent = {
+            Box(modifier = Modifier
                 .clip(CircleShape)
-                .background(Color.Blue)
-        )
-    }
+                .size(5.dp)
+                .background(color = Color.Blue.copy(alpha = 0.4F)).clickable { onClick() })
+        }
+    )
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -337,3 +327,8 @@ private fun ItemLazyCheckPreview() {
 
 }
 
+@Preview (showBackground = true)
+@Composable
+private fun ItemLazyNotificationPreview(){
+    ItemNotification()
+}

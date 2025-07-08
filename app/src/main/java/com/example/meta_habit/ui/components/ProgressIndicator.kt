@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.ui.state.DayIsChecked
+import com.example.meta_habit.ui.theme.danger
 import com.example.meta_habit.ui.utils.getCurrentWeekDays
 import com.example.meta_habit.ui.utils.getDayNameFromDate
 import com.example.meta_habit.ui.utils.getDayNumMonthFromDate
@@ -62,7 +63,7 @@ fun ItemDay(
             modifier = Modifier.fillMaxWidth().fillMaxHeight()
         ) {
             Text(text = day.date.getDayNumMonthFromDate().toString(), color = if(isToday) Color.Black else Color.Gray, fontWeight = FontWeight.Bold)
-            if(day.isChecked){ Icon(imageVector = Icons.Outlined.FavoriteBorder, contentDescription = "", tint = Color.Red) }
+            if(day.isChecked){ Icon(imageVector = Icons.Outlined.FavoriteBorder, contentDescription = "", tint = danger) }
             Text(text = day.date.getDayNameFromDate().substring(0, 3), fontWeight = FontWeight.Bold, color = if(isToday) Color.Black else Color.Gray)
         }
     }

@@ -14,6 +14,7 @@ import com.example.meta_habit.data.task.DailyValidationTaskWorker
 import com.example.meta_habit.ui.screen.home.HomeViewModel
 import com.example.meta_habit.ui.screen.create.CreateViewModel
 import com.example.meta_habit.ui.screen.detail.DetailViewModel
+import com.example.meta_habit.ui.screen.notification.NotificationViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.workmanager.dsl.worker
 import org.koin.androidx.workmanager.factory.KoinWorkerFactory
@@ -28,6 +29,7 @@ val viewModelModule = module {
     viewModelOf(::HomeViewModel)
     viewModelOf(::CreateViewModel)
     viewModelOf(::DetailViewModel)
+    viewModelOf(::NotificationViewModel)
 }
 
 val preferencesModule = module {
@@ -58,7 +60,9 @@ val databaseModule = module {
 val repositoryModule = module {
     single{
         HabitRepository(get())
-        //NotificationRepository(get())
+    }
+    single{
+        NotificationRepository(get())
     }
 }
 

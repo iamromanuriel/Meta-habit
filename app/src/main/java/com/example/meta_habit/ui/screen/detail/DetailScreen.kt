@@ -76,6 +76,7 @@ import com.example.meta_habit.ui.components.TextFieldSimple
 import com.example.meta_habit.ui.components.TopBarDialogBasic
 import com.example.meta_habit.ui.screen.create.LayoutCreateDetailNote
 import com.example.meta_habit.ui.theme.bluePrimary
+import com.example.meta_habit.ui.theme.danger
 import com.example.meta_habit.ui.utils.ColorType
 import com.example.meta_habit.ui.utils.LabelTypes
 import com.example.meta_habit.ui.utils.RepeatType
@@ -388,7 +389,7 @@ fun DetailScreen(
 
                         Text(
                             "Recordar con notificaciòn: ",
-                            modifier = Modifier.padding(horizontal = 6.dp),
+                            modifier = Modifier.padding(start = 20.dp),
                             color = Color.Gray
                         )
                     }
@@ -419,7 +420,7 @@ fun DetailScreen(
                     onClick = { isShowDialogDelete = true },
                     colors = ButtonColors(
                         containerColor = Color.Transparent,
-                        contentColor = Color.Red,
+                        contentColor = danger,
                         disabledContainerColor = Color.Gray,
                         disabledContentColor = Color.White
                     )

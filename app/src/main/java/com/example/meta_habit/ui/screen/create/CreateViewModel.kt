@@ -23,7 +23,7 @@ class CreateViewModel(
     private val _selectedLabel = MutableStateFlow(LabelTypes.LECTURE)
     val selectedLabel = _selectedLabel.asStateFlow()
 
-    private val _selectedColor = MutableStateFlow(ColorType.Blue)
+    private val _selectedColor = MutableStateFlow(ColorType.WHITE)
     val selectedColor = _selectedColor.asStateFlow()
 
     private val _listTask = MutableStateFlow(listOf<String>())

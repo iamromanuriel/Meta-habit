@@ -11,6 +11,9 @@ import com.example.meta_habit.ui.theme.RedLight
 enum class FilterType {
     TODAY, WEEK, TREE_DAYS, ALL
 }
+enum class NotificationChannel(var value: String){
+    MAIN("main")
+}
 
 enum class NoteType{
     DAILY, WEEKLY, CUSTOM, SIMPLE

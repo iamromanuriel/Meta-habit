@@ -17,6 +17,7 @@ import java.time.format.TextStyle
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import kotlin.math.abs
 
 
@@ -285,11 +286,17 @@ fun LocalDate.getDateReminderThreeDaysString(): String{
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun main() {
+    val timeZone = TimeZone.getDefault()
+    val now = Calendar.getInstance(timeZone)
 
-    val dayPost = LocalDate.of(2025, 7, 8)
-    val nextday = getNextThreeDayReminderDate(dayPost)
+    val calendar = Calendar.getInstance().apply {
+        set(Calendar.MINUTE, 35)
+    }
 
-    println(nextday)
+    val initialDelay = calendar.timeInMillis - now.timeInMillis
+
+    println(calendar.time)
+    println(initialDelay)
 }
 
 

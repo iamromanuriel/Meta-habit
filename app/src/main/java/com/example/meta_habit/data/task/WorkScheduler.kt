@@ -39,4 +39,30 @@ object WorkScheduler {
         )
 
     }
+
+    fun createNotification(context: Context){
+        val timeZone = TimeZone.getDefault()
+        val now = Calendar.getInstance(timeZone)
+
+        val calendar = Calendar.getInstance().apply {
+            set(Calendar.MINUTE, 33)
+
+            if(before(now)){
+                add(Calendar.DATE, 1)
+            }
+        }
+
+        val initialDelay = calendar.timeInMillis - now.timeInMillis
+
+        val workRequest = PeriodicWorkRequestBuilder<NotificationHabitReminder>(1, TimeUnit.DAYS)
+            .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+            .build()
+
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            "notification_habit",
+            ExistingPeriodicWorkPolicy.KEEP,
+            workRequest
+        )
+
+    }
 }

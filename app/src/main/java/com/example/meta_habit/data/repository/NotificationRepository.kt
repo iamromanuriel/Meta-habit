@@ -16,4 +16,13 @@ class NotificationRepository(
     fun getListNotificationDetail(): Flow<List<NotificationDetail>>{
         return appDatabase.habitNotification().getListNotificationDetail()
     }
+
+    suspend fun makeNotificationSeen(idNotification: Long): Result<Unit>{
+        return try {
+            appDatabase.habitNotification().makeNotificationSeen(idNotification)
+            Result.success(Unit)
+        }catch (e: Exception){
+            Result.failure(e)
+        }
+    }
 }

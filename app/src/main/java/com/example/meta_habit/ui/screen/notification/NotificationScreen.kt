@@ -21,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.ImageLoader
 import coil3.compose.AsyncImage
 import coil3.svg.SvgDecoder
@@ -44,7 +46,19 @@ fun NotificationScreen(
     onBack: () -> Unit = {},
     onOpenNotification: () -> Unit = {}
 ) {
-    val state = viewModel.stateUi.collectAsState()
+    val state = viewModel.stateUi.collectAsStateWithLifecycle()
+    val openHabit = viewModel.selectedHabit.collectAsStateWithLifecycle()
+
+    LaunchedEffect(openHabit.value) {
+        when(openHabit.value){
+            is SelectedHabitState.Success -> {
+                onOpenNotification()
+
+            }
+            is SelectedHabitState.Error -> {}
+            else -> {}
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -70,7 +84,11 @@ fun NotificationScreen(
             ) {
                 items(state.value){ notification ->
                     ItemNotification(
-                        notification = notification
+                        notification = notification,
+                        onClick = {
+                            viewModel.onSelectHabit(notification.habitId)
+                            viewModel.makeNotificationSeen(notification.id)
+                        }
                     )
                 }
 

@@ -48,7 +48,7 @@ class NotificationHabitReminder(
                 }
 
                 RepeatType.DAILY -> {
-                    saveInfNotification(habit.id)
+                    //saveInfNotification(habit.id)
                     NotificationHabit.showNotification(
                         applicationContext,
                         NotificationChannel.MAIN,

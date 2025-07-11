@@ -81,6 +81,11 @@ fun Long.getReminderDay(): String {
     return "${dateZoneLocal.dayOfMonth} ${months[dateZoneLocal.monthValue -1]}"
 }
 
+fun Long.getScheduleAt(){
+    val date = this.toDate()
+
+}
+
 @RequiresApi(Build.VERSION_CODES.O)
 fun Long.getReminderDayLocal(): String {
     val formatter = DateTimeFormatter.ofPattern("d MMM", Locale("es"))

@@ -19,12 +19,21 @@ class HabitRepository(
 
     private val selectedHabit = MutableStateFlow<HabitEntity?>(null)
 
-    fun setSelectedHabit(habit: HabitEntity){
+    fun setSelectedHabit(habit: HabitEntity) {
         selectedHabit.value = habit
     }
 
-    fun getSelectedHabit(): Flow<HabitEntity?>{
+    fun getSelectedHabit(): Flow<HabitEntity?> {
         return selectedHabit.asStateFlow()
+    }
+
+    suspend fun setSelectedHabit(idHabit: Long): Result<Unit> {
+        val habit = appDatabase.habitDao().getHabitById(idHabit)
+
+        return if (habit == null) Result.failure(Exception("No se pudo iniciar el habito")) else {
+            selectedHabit.value = habit
+            Result.success(Unit)
+        }
     }
 
     suspend fun onSaveHabit(
@@ -51,12 +60,12 @@ class HabitRepository(
             )
             val idHabit = appDatabase.habitDao().insertGetId(habitEntity)
             Result.success(idHabit)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    suspend fun onSaveHabitTask(idHabit: Long, listTask: List<String>): Result<Unit>{
+    suspend fun onSaveHabitTask(idHabit: Long, listTask: List<String>): Result<Unit> {
         return try {
             listTask.forEach { descriptionTask ->
                 val habitTaskEntity = HabitTaskEntity(
@@ -66,88 +75,94 @@ class HabitRepository(
                 appDatabase.habitTaskDao().insertGetId(habitTaskEntity)
             }
             Result.success(Unit)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    fun getLIsListOfHabit(): Flow<List<HabitEntity>>{
+    fun getLIsListOfHabit(): Flow<List<HabitEntity>> {
         return appDatabase.habitDao().getListOfHabit()
     }
 
-    fun getListOfHabitWithTasks(): Flow<List<HabitWithTasks>>{
+    fun getListOfHabitWithTasks(): Flow<List<HabitWithTasks>> {
         return appDatabase.habitDao().getListOfHabitWithTasksFlow()
     }
 
-    suspend fun deleteHabit(habit: HabitEntity): Result<Unit>{
+    suspend fun deleteHabit(habit: HabitEntity): Result<Unit> {
         return try {
             appDatabase.habitDao().deleteHabit(habit)
             Result.success(Unit)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    suspend fun deleteHabit(): Result<Unit>{
+    suspend fun deleteHabit(): Result<Unit> {
         return try {
-            if(selectedHabit.value == null){
+            if (selectedHabit.value == null) {
                 Result.failure(Exception("Habit not selected"))
-            }else{
+            } else {
                 appDatabase.habitDao().deleteHabit(habitEntity = selectedHabit.value!!)
                 Result.success(Unit)
             }
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    suspend fun addTaskToHabit(task: String): Result<Unit>{
+    suspend fun addTaskToHabit(task: String): Result<Unit> {
         return try {
             val habitTaskEntity = HabitTaskEntity(
-                habitId = selectedHabit.value?.id?: 0,
+                habitId = selectedHabit.value?.id ?: 0,
                 description = task
             )
             appDatabase.habitTaskDao().insertGetId(habitTaskEntity)
             Result.success(Unit)
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    suspend fun updateHabitToPint(habit: HabitEntity): Result<Unit>{
+    suspend fun updateHabitToPint(habit: HabitEntity): Result<Unit> {
         return try {
             appDatabase.habitDao().updateHabit(habit)
             Result.success(Unit)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    fun getHabitWithTask(): Flow<HabitWithTasks?>{
+    fun getHabitWithTask(): Flow<HabitWithTasks?> {
         return appDatabase.habitDao().getHabitWithTask(selectedHabit.value?.id ?: 0)
     }
 
-    fun getHabitWithTaskAndLogs(): Flow<HabitWithTaskAndLog?>{
-        return appDatabase.habitDao().getHabitWithTaskAndLog(selectedHabit.value?.id?:0)
+    fun getHabitWithTaskAndLogs(): Flow<HabitWithTaskAndLog?> {
+        return appDatabase.habitDao().getHabitWithTaskAndLog(selectedHabit.value?.id ?: 0)
     }
 
-    suspend fun updateHabitTaskCheck(taskEntity: HabitTaskEntity, isChecked: Boolean): Result<Unit>{
+    suspend fun updateHabitTaskCheck(
+        taskEntity: HabitTaskEntity,
+        isChecked: Boolean
+    ): Result<Unit> {
         return try {
             taskEntity.isCheck = isChecked
             taskEntity.dateCheck = Date().time
             appDatabase.habitTaskDao().updateHabitTask(taskEntity)
             Result.success(Unit)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    suspend fun updateHabitTaskDescription(taskEntity: HabitTaskEntity, description: String): Result<Unit>{
+    suspend fun updateHabitTaskDescription(
+        taskEntity: HabitTaskEntity,
+        description: String
+    ): Result<Unit> {
         return try {
             taskEntity.description = description
             appDatabase.habitTaskDao().updateHabitTask(taskEntity)
             Result.success(Unit)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
@@ -159,7 +174,7 @@ class HabitRepository(
         isReminder: Boolean,
         repeatType: RepeatType?,
         labelType: LabelTypes?
-    ): Result<Unit>{
+    ): Result<Unit> {
         return try {
             selectedHabit.value?.title = title
             selectedHabit.value?.color = color.ordinal
@@ -168,71 +183,71 @@ class HabitRepository(
             labelType?.ordinal.let { selectedHabit.value?.tag = it }
             selectedHabit.value?.let { appDatabase.habitDao().updateHabit(it) }
             Result.success(Unit)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    suspend fun editTitleHabit(title: String): Result<Unit>{
+    suspend fun editTitleHabit(title: String): Result<Unit> {
         return try {
             selectedHabit.value?.title = title
             selectedHabit.value?.let { appDatabase.habitDao().updateHabit(it) }
             Result.success(Unit)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    suspend fun editDescriptionHabit(description: String): Result<Unit>{
+    suspend fun editDescriptionHabit(description: String): Result<Unit> {
         return try {
             selectedHabit.value?.description = description
             selectedHabit.value?.let { appDatabase.habitDao().updateHabit(it) }
             Result.success(Unit)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
 
-    suspend fun editRepeatHabit(repeatType: RepeatType): Result<RepeatType>{
+    suspend fun editRepeatHabit(repeatType: RepeatType): Result<RepeatType> {
         return try {
             selectedHabit.value?.repetition = repeatType.ordinal
             selectedHabit.value?.let { appDatabase.habitDao().updateHabit(it) }
             Result.success(repeatType)
-            }catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    suspend fun editLabelHabit(labelType: LabelTypes): Result<LabelTypes>{
+    suspend fun editLabelHabit(labelType: LabelTypes): Result<LabelTypes> {
         return try {
             selectedHabit.value?.tag = labelType.ordinal
             selectedHabit.value?.let { appDatabase.habitDao().updateHabit(it) }
             Result.success(labelType)
-            }catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    suspend fun enableReminderWitNotification(enable: Boolean): Result<Boolean>{
+    suspend fun enableReminderWitNotification(enable: Boolean): Result<Boolean> {
         return try {
             selectedHabit.value?.hasReminder = enable
             selectedHabit.value?.let { appDatabase.habitDao().updateHabit(habitEntity = it) }
 
             Result.success(enable)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
     suspend fun selectColor(
         color: ColorType
-    ): Result<ColorType>{
-        return  try {
+    ): Result<ColorType> {
+        return try {
             selectedHabit.value?.color = color.ordinal
             selectedHabit.value?.let { appDatabase.habitDao().updateHabit(it) }
             Result.success(color)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }

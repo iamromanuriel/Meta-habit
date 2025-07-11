@@ -45,8 +45,8 @@ object WorkScheduler {
         val now = Calendar.getInstance(timeZone)
 
         val calendar = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 8)
-            set(Calendar.MINUTE, 12)
+            //set(Calendar.HOUR_OF_DAY, 8)
+            set(Calendar.MINUTE, 46)
             set(Calendar.SECOND, 0)
 
             if(before(now)){

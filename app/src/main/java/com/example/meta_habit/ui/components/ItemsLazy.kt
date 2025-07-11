@@ -158,7 +158,6 @@ fun ItemListCheckEditable(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ItemNotification(
     modifier: Modifier = Modifier,
@@ -166,6 +165,7 @@ fun ItemNotification(
     onClick: () -> Unit = {}
 ) {
     ListItem(
+        modifier = modifier.clickable { onClick() },
         leadingContent = {
             Box(
                 contentAlignment = Alignment.Center,
@@ -189,10 +189,12 @@ fun ItemNotification(
 
         },
         trailingContent = {
-            Box(modifier = Modifier
-                .clip(CircleShape)
-                .size(5.dp)
-                .background(color = Color.Blue.copy(alpha = 0.4F)).clickable { onClick() })
+            if(notification.seen == false){
+                Box(modifier = Modifier
+                    .clip(CircleShape)
+                    .size(5.dp)
+                    .background(color = Color.Blue.copy(alpha = 0.4F)))
+            }
         }
     )
 }

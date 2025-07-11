@@ -290,7 +290,7 @@ fun main() {
     val now = Calendar.getInstance(timeZone)
 
     val calendar = Calendar.getInstance().apply {
-        set(Calendar.MINUTE, 35)
+        set(Calendar.MINUTE, 37)
     }
 
     val initialDelay = calendar.timeInMillis - now.timeInMillis

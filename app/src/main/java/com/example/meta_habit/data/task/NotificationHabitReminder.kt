@@ -2,6 +2,7 @@ package com.example.meta_habit.data.task
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -26,8 +27,9 @@ class NotificationHabitReminder(
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun doWork(): Result {
         return try {
-            //validaReminderHabitToday()
-            NotificationHabit.showNotification(applicationContext, NotificationChannel.MAIN, "Prueba notificacion", "Prueba de notificacion programada")
+            validaReminderHabitToday()
+            Log.d("Notification launch", "ACTION")
+
             Result.success()
         } catch (e: Exception) {
             Result.failure()
@@ -35,30 +37,41 @@ class NotificationHabitReminder(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun validaReminderHabitToday(){
+    suspend fun validaReminderHabitToday() {
         val habits = appDatabase.habitDao().getAllHabitRepeat()
         habits.forEach { habit ->
             val now = LocalDate.now()
 
-            when(getRepeatType(habit.repetition?:0)){
+            when (getRepeatType(habit.repetition ?: 0)) {
                 RepeatType.ONLY_ONE -> {
 
                 }
-                RepeatType.DAILY -> TODO()
-                RepeatType.WEEKLY -> TODO()
+
+                RepeatType.DAILY -> {
+                    saveInfNotification(habit.id)
+                    NotificationHabit.showNotification(
+                        applicationContext,
+                        NotificationChannel.MAIN,
+                        habit.title ?: "Recordatorio diario",
+                        habit.description?: ""
+                    )
+                }
+
+                RepeatType.WEEKLY -> {}
                 RepeatType.MONTHLY -> TODO()
                 RepeatType.THREE_DAYS -> {
-                    if(getNextThreeDayReminderDate(habit.dateReminder!!.toLocalDate()) == now){
+                    if (getNextThreeDayReminderDate(habit.dateReminder!!.toLocalDate()) == now) {
                         saveInfNotification(habit.id)
                     }
                 }
+
                 null -> {}
             }
         }
     }
 
 
-    private suspend fun saveInfNotification(habitId: Long): kotlin.Result<Unit>{
+    private suspend fun saveInfNotification(habitId: Long): kotlin.Result<Unit> {
         return try {
             val notification = NotificationEntity(
                 habitId = habitId,
@@ -69,7 +82,7 @@ class NotificationHabitReminder(
 
             appDatabase.habitNotification().insertGetId(notificationEntity = notification)
             kotlin.Result.success(Unit)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             kotlin.Result.failure(e)
         }
     }

@@ -13,6 +13,7 @@ import com.example.meta_habit.data.db.entity.HabitTaskEntity
 import com.example.meta_habit.data.db.entity.HabitWithTaskAndLog
 import com.example.meta_habit.data.db.entity.HabitWithTasks
 import com.example.meta_habit.data.db.entity.NotificationEntity
+import com.example.meta_habit.data.db.model.NotificationDetail
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -66,6 +67,9 @@ interface DaoNotification{
 
     @Query("SELECT * FROM notifications")
     fun getListNotification(): Flow<List<NotificationEntity>>
+
+    @Query("SELECT n.id as id, n.habitId as habitId, n.type as type, n.scheduledAt as scheduledAt, n.isActive as isActive, n.seen as seen, h.title as title, h.description as description FROM notifications as n JOIN habit h ON n.habitId = h.id")
+    fun getListNotificationDetail(): Flow<List<NotificationDetail>>
 }
 
 @Dao

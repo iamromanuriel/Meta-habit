@@ -11,6 +11,7 @@ import com.example.meta_habit.data.db.databaseName
 import com.example.meta_habit.data.repository.HabitRepository
 import com.example.meta_habit.data.repository.NotificationRepository
 import com.example.meta_habit.data.task.DailyValidationTaskWorker
+import com.example.meta_habit.data.task.NotificationHabitReminder
 import com.example.meta_habit.ui.screen.home.HomeViewModel
 import com.example.meta_habit.ui.screen.create.CreateViewModel
 import com.example.meta_habit.ui.screen.detail.DetailViewModel
@@ -38,6 +39,7 @@ val preferencesModule = module {
 
 val workManagerModule = module {
     worker { DailyValidationTaskWorker(get(), get(), get()) }
+    worker { NotificationHabitReminder(get(), get(), get()) }
 }
 
 val databaseModule = module {

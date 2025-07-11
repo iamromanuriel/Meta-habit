@@ -53,12 +53,15 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
+import com.example.meta_habit.data.db.entity.NotificationEntity
+import com.example.meta_habit.data.db.model.NotificationDetail
 import com.example.meta_habit.ui.theme.Gray50
 import com.example.meta_habit.ui.theme.MetaHabitTheme
 import com.example.meta_habit.ui.theme.RedLight
 import com.example.meta_habit.ui.theme.bluePrimary
 import com.example.meta_habit.ui.theme.getColorsTextField
 import com.example.meta_habit.ui.utils.getReminderTimeDay
+import com.example.meta_habit.ui.utils.toLocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -155,9 +158,11 @@ fun ItemListCheckEditable(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ItemNotification(
     modifier: Modifier = Modifier,
+    notification: NotificationDetail,
     onClick: () -> Unit = {}
 ) {
     ListItem(
@@ -178,10 +183,10 @@ fun ItemNotification(
             }
         },
         headlineContent = {
-            Text(text = "Clase de ingles")
+            Text(text = notification.title)
         },
         supportingContent = {
-            Text(text = "10:00 AM")
+
         },
         trailingContent = {
             Box(modifier = Modifier
@@ -327,8 +332,3 @@ private fun ItemLazyCheckPreview() {
 
 }
 
-@Preview (showBackground = true)
-@Composable
-private fun ItemLazyNotificationPreview(){
-    ItemNotification()
-}

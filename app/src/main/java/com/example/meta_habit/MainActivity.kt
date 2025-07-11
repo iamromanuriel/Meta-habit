@@ -25,17 +25,19 @@ import com.example.meta_habit.data.task.WorkScheduler
 import com.example.meta_habit.ui.nav.Navigation
 import com.example.meta_habit.ui.theme.MetaHabitTheme
 import com.example.meta_habit.ui.utils.NotificationHabit
+import kotlin.collections.HashMap as HashMap1
 
 class MainActivity : ComponentActivity() {
 
 
-    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-        if(isGranted){
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
 
-        } else {
-            println("Permission denied")
+            } else {
+                println("Permission denied")
+            }
         }
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,19 +47,24 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         WorkScheduler.saveTaskLogger(this)
         WorkScheduler.createNotification(this)
+
         setContent {
             MetaHabitTheme {
                 Navigation()
             }
         }
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
-            if(ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
 
             } else {
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
-        }else{
+        } else {
 
         }
     }
@@ -81,8 +88,4 @@ fun GreetingPreview() {
     }
 }
 
-fun main(){
-    val one = true
-    val two = true
-    println(one || two)
-}
+

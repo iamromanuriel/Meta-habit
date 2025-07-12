@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Meta-Habit</string>
+
+    <string name="label_create">Crear</string>
+    <string name="title_create_habit">Crear habito</string>
+    <string name="option_ok">Ok</string>
+    <string name="label_date">Fecha: </string>
+    <string name="label_repeat">Repetir: </string>
+    <string name="label_notification_remember">Recordar con notificaciòn</string>
+    <string name="label_labels">Etiqueta</string>
+    <string name="label_description">Description</string>
 </resources>

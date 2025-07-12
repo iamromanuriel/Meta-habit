@@ -102,7 +102,6 @@ val optionRepeat = listOf<String>("Diario", "Semanal", "Mensual", "3 dias")
 @Composable
 fun <T> LayoutOptionRepeat(
     modifier: Modifier = Modifier,
-    title: String,
     options: Array<T>,
     selected: T,
     onSelected: (T) -> Unit,
@@ -137,7 +136,6 @@ fun LayoutOptionRepeatPreview() {
     Scaffold { innerPadding ->
         LayoutOptionRepeat(
             modifier = Modifier.padding(innerPadding),
-            title = "Etiquetas",
             options = LabelTypes.entries.toTypedArray(),
             selected = LabelTypes.WORK,
             onSelected = {},

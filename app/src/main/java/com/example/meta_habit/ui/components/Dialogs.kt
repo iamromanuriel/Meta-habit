@@ -181,7 +181,6 @@ fun LayoutOptionsPreview(){
                 onDismiss = {},
                 content = {
                     LayoutOptionRepeat(
-                        title = "Opciones",
                         options = RepeatType.entries.toTypedArray(),
                         onSelected = {},
                         itemToString = { it.value },

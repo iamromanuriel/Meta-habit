@@ -60,6 +60,7 @@ import com.example.meta_habit.ui.theme.MetaHabitTheme
 import com.example.meta_habit.ui.theme.RedLight
 import com.example.meta_habit.ui.theme.bluePrimary
 import com.example.meta_habit.ui.theme.getColorsTextField
+import com.example.meta_habit.ui.utils.getAgoTime
 import com.example.meta_habit.ui.utils.getReminderTimeDay
 import com.example.meta_habit.ui.utils.toLocalDate
 
@@ -186,10 +187,10 @@ fun ItemNotification(
             Text(text = notification.title)
         },
         supportingContent = {
-
+            Text(notification.scheduledAt.getAgoTime())
         },
         trailingContent = {
-            if(notification.seen == false){
+            if(!notification.seen){
                 Box(modifier = Modifier
                     .clip(CircleShape)
                     .size(5.dp)

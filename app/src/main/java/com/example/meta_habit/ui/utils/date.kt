@@ -3,8 +3,10 @@ package com.example.meta_habit.ui.utils
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.text.format.DateFormat
 import android.util.Log
 import androidx.annotation.RequiresApi
+import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDate
@@ -35,6 +37,31 @@ fun Long.toLocalDate(): LocalDate {
         .toInstant()
         .atZone(ZoneOffset.UTC)
         .toLocalDate()
+}
+
+/**
+ * Get string date format past
+ */
+
+fun Long.getAgoTime(): String{
+    val date = this.toDate()
+    val now = Date()
+
+    val ago = now.day - date.day
+
+    return when(ago){
+        0 ->{
+            val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+            val time = format.format(date)
+            "Hace ${time}"
+        }
+        1 ->{
+            "Hace ${ago} dia"
+        }
+        else ->{
+            "Hace ${ago} dias"
+        }
+    }
 }
 
 /**
@@ -291,17 +318,7 @@ fun LocalDate.getDateReminderThreeDaysString(): String{
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun main() {
-    val timeZone = TimeZone.getDefault()
-    val now = Calendar.getInstance(timeZone)
 
-    val calendar = Calendar.getInstance().apply {
-        set(Calendar.MINUTE, 37)
-    }
-
-    val initialDelay = calendar.timeInMillis - now.timeInMillis
-
-    println(calendar.time)
-    println(initialDelay)
 }
 
 

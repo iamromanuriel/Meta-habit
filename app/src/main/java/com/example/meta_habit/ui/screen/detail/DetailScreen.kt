@@ -324,7 +324,6 @@ fun DetailScreen(
 
                 AnimatedVisibility(isShowDialogOptionRepeat) {
                     LayoutOptionRepeat(
-                        title = "Repetir",
                         options = RepeatType.entries.toTypedArray(),
                         selected = getRepeatType(state.habit?.habit?.repetition ?: 0),
                         onSelected = {
@@ -367,7 +366,6 @@ fun DetailScreen(
 
                 AnimatedVisibility(isShowDialogOptionLabel) {
                     LayoutOptionRepeat(
-                        title = "Repetir",
                         options = LabelTypes.entries.toTypedArray(),
                         selected = getLabelType(state.habit?.habit?.tag ?: 0),
                         onSelected = {

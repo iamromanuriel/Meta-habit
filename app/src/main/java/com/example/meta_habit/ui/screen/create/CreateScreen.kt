@@ -41,9 +41,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.meta_habit.R
 import com.example.meta_habit.ui.components.LayoutCreateCheckList
 import com.example.meta_habit.ui.components.LayoutOptionRepeat
 import com.example.meta_habit.ui.components.SelectionColor
@@ -98,7 +100,7 @@ fun CreateScreen(
                         Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "")
                     }
                 },
-                title = { Text("Crear habito", style = MaterialTheme.typography.titleMedium) },
+                title = { Text(stringResource(R.string.title_create_habit), style = MaterialTheme.typography.titleMedium) },
                 actions ={
                     TextButton(
                         onClick = {
@@ -114,7 +116,7 @@ fun CreateScreen(
                             disabledContentColor = Color.Gray,
                             disabledContainerColor = Color.Transparent
                         )
-                    ) {  Text("Crear") }
+                    ) {  Text(stringResource(R.string.label_create)) }
                 }
             )
         }
@@ -162,7 +164,7 @@ fun CreateScreen(
                         showDialogPicker.value = false
                     }
                 ) {
-                    Text("Aceptar")
+                    Text(stringResource(R.string.option_ok))
                 }
 
 
@@ -257,7 +259,7 @@ fun LayoutCreateDetailNote(
                             Row {
 
                                 Text(
-                                    "Fecha: ",
+                                    stringResource(R.string.label_date),
                                     modifier = Modifier.padding(horizontal = 6.dp),
                                     color = Color.Gray,
                                 )
@@ -321,12 +323,9 @@ fun LayoutCreateDetailNote(
                     AnimatedVisibility(optionsRepeat) {
                         LayoutOptionRepeat<RepeatType>(
                             modifier = Modifier.padding(start = 16.dp),
-                            title = "Repetir",
                             options = RepeatType.entries.toTypedArray(),
                             selected = stateRepeat,
                             onSelected = {
-                                //showDialogOptionRepeat.value = false
-                                //viewModel.onSelectedRepeat(it)
                                 onSelectedRepeat(it)
                                 optionsRepeat = false
                             },
@@ -354,7 +353,7 @@ fun LayoutCreateDetailNote(
                             Row {
 
                                 Text(
-                                    "Recordar con notificaciòn: ",
+                                    stringResource(R.string.label_notification_remember),
                                     modifier = Modifier.padding(horizontal = 6.dp),
                                     color = Color.Gray
                                 )
@@ -401,7 +400,7 @@ fun LayoutCreateDetailNote(
                             Row {
 
                                 Text(
-                                    "Etiqueta",
+                                    stringResource(R.string.label_labels),
                                     modifier = Modifier.padding(horizontal = 6.dp),
                                     color = Color.Gray
                                 )
@@ -423,7 +422,6 @@ fun LayoutCreateDetailNote(
 
                     AnimatedVisibility(optionsLabel) {
                         LayoutOptionRepeat(
-                            title = "Etiquetas",
                             options = LabelTypes.entries.toTypedArray(),
                             selected = stateLabel,
                             modifier = Modifier.padding(start = 16.dp),
@@ -438,7 +436,7 @@ fun LayoutCreateDetailNote(
                     TextFieldBorderRounded(
                         value = stateDescription,
                         onValueChange = onChangeDescription,
-                        label = "Descripcion"
+                        label = stringResource(R.string.label_description)
                     )
 
                     SelectionColor(

@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.meta_habit.data.data_store.PreferencesDataStoreImp
 import com.example.meta_habit.data.db.entity.HabitWithTasks
 import com.example.meta_habit.data.repository.HabitRepository
+import com.example.meta_habit.ui.state.ActionDeleteHabit
 import com.example.meta_habit.ui.utils.FilterType
 import com.example.meta_habit.ui.utils.getDayOfWeekDayMonthMontNameSimple
 import com.example.meta_habit.ui.utils.getRepeatType
@@ -17,9 +18,11 @@ import com.example.meta_habit.ui.utils.isValidateDateWeekReminder
 import com.example.meta_habit.ui.utils.toLocalDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.Date
 
@@ -33,6 +36,9 @@ class HomeViewModel(
     private val habitRepository: HabitRepository,
     private val preferencesDataStore: PreferencesDataStoreImp
 ) : ViewModel() {
+
+    private val _delete = Channel<ActionDeleteHabit>()
+    val delete = _delete.receiveAsFlow()
 
     private val _selectedHabit = MutableStateFlow<HabitWithTasks?>(null)
 
@@ -147,8 +153,13 @@ class HomeViewModel(
     fun onDeleteNote() {
         viewModelScope.launch {
             _selectedHabit.value?.let { habit ->
-
-
+                val deleteDeferred = async(Dispatchers.IO) { habitRepository.deleteHabit() }
+                val resultDelete = deleteDeferred.await()
+                if(resultDelete.isSuccess){
+                    _delete.send(ActionDeleteHabit.Success)
+                }else{
+                    _delete.send(ActionDeleteHabit.Fail(resultDelete.exceptionOrNull()?.message?:""))
+                }
             }
         }
     }

@@ -13,15 +13,19 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -60,6 +64,7 @@ fun SharedTransitionScope.HomeScreen(
 
     val snackBarHost = remember { SnackbarHostState() }
     var showButtonSheet by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
     val listHabit = viewModel.listOfHabit.collectAsStateWithLifecycle()
     val selectedFilter by viewModel.selectedFilter.collectAsStateWithLifecycle()
 
@@ -69,7 +74,7 @@ fun SharedTransitionScope.HomeScreen(
             when(action){
                 ActionDeleteHabit.Await -> {}
                 is ActionDeleteHabit.Fail -> { Toast.makeText(context, action.message, Toast.LENGTH_SHORT).show() }
-                ActionDeleteHabit.Success -> {}
+                ActionDeleteHabit.Success -> { showDeleteDialog = false }
             }
         }
     }
@@ -144,10 +149,28 @@ fun SharedTransitionScope.HomeScreen(
             ) {
                 LayoutOptions(
                     onNavDetail = onNavigateToDetail,
-                    onDelete = viewModel::onDeleteNote,
+                    onDelete = { showDeleteDialog = true },
                     onPin = viewModel::onPin
                 )
             }
+        }
+
+        if(showDeleteDialog){
+            AlertDialog(
+                title = { Text(text = "Eliminar") },
+                text = { Text(text = "Estas seguro que deseas eliminar?") },
+                onDismissRequest = { showDeleteDialog = false },
+                confirmButton = {
+                    Button(onClick = viewModel::onDeleteNote){
+                        Text("Eliminar")
+                    }
+                },
+                dismissButton = {
+                    OutlinedButton (onClick = { showDeleteDialog = false }) {
+                        Text("Cancelar")
+                    }
+                }
+            )
         }
 
 

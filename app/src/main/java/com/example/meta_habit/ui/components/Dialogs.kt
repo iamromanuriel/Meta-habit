@@ -62,7 +62,7 @@ fun LayoutOptions(
 
         TextButton(onClick = onPin) {
             Icon(imageVector = Icons.Default.Favorite, contentDescription = "", modifier = modifier.padding(end = 10.dp))
-            Text(text = "Anclar", modifier = modifier.fillMaxWidth().padding(vertical = 10.dp))
+            Text(text = "Favorito", modifier = modifier.fillMaxWidth().padding(vertical = 10.dp))
         }
     }
 }

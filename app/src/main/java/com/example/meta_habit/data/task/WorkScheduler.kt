@@ -46,13 +46,17 @@ object WorkScheduler {
 
         val calendar = Calendar.getInstance(timeZone).apply {
             set(Calendar.HOUR_OF_DAY, 8)
-            set(Calendar.MINUTE, 46)
+            set(Calendar.MINUTE, 12)
             set(Calendar.SECOND, 0)
 
             if(before(now)){
                 add(Calendar.DATE, 1)
             }
         }
+
+        /**
+         * Validate time launch notification (TIME-ZONE)
+         */
 
         val initialDelay = calendar.timeInMillis - now.timeInMillis
 
@@ -63,7 +67,7 @@ object WorkScheduler {
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             "notification_habit",
-            ExistingPeriodicWorkPolicy.KEEP,
+            ExistingPeriodicWorkPolicy.REPLACE,
             workRequest
         )
 

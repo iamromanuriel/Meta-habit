@@ -12,6 +12,7 @@ import com.example.meta_habit.data.db.entity.HabitLogEntity
 import com.example.meta_habit.data.db.entity.HabitWithTasks
 import com.example.meta_habit.ui.utils.RepeatType
 import com.example.meta_habit.ui.utils.getNextAWeek
+import com.example.meta_habit.ui.utils.getNextThreeDayReminderDate
 import com.example.meta_habit.ui.utils.getRepeatType
 import com.example.meta_habit.ui.utils.nextDayMonth
 import com.example.meta_habit.ui.utils.toLocalDate
@@ -41,6 +42,14 @@ class DailyValidationTaskWorker(appContext: Context, workerParams: WorkerParamet
             when(getRepeatType(habitWithTask.habit.repetition?:0)){
                 RepeatType.DAILY -> {
                     restoreHabitTask(habitWithTask)
+                }
+                RepeatType.THREE_DAYS -> {
+                    val nexDay = getNextThreeDayReminderDate((habitWithTask.habit.dateReminder?:0).toLocalDate())
+                    val now = LocalDate.now()
+
+                    if(now == nexDay){
+                        restoreHabitTask(habitWithTask)
+                    }
                 }
                 RepeatType.WEEKLY -> {
                     val nextDay = getNextAWeek((habitWithTask.habit.dateReminder?:0).toLocalDate())

@@ -41,7 +41,8 @@ data class HabitTaskEntity(
     var habitId: Long,
     var description: String,
     var isCheck: Boolean = false,
-    var dateCheck: Long? = null
+    var dateCheck: Long? = null,
+    var dateCreate: Long
 )
 
 @Entity(
@@ -61,7 +62,8 @@ data class NotificationEntity(
     var type: Int? = null,
     var scheduledAt: Long? = null,
     var isActive: Boolean = false,
-    var seen: Boolean = false
+    var seen: Boolean = false,
+    var dateCreate: Long
 )
 
 data class HabitWithTasks(
@@ -90,7 +92,8 @@ data class HabitLogEntity(
     val id: Long = 0,
     val habitTaskId: Long,
     val date: Long ? = null,
-    val isCompleted: Boolean = false
+    val isCompleted: Boolean = false,
+    var dateCreate: Long
 )
 
 data class HabitTaskWithLogs(

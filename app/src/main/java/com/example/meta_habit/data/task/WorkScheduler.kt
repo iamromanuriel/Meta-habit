@@ -44,7 +44,7 @@ object WorkScheduler {
         val timeZone = TimeZone.getDefault()
         val now = Calendar.getInstance(timeZone)
 
-        val calendar = Calendar.getInstance().apply {
+        val calendar = Calendar.getInstance(timeZone).apply {
             set(Calendar.HOUR_OF_DAY, 8)
             set(Calendar.MINUTE, 46)
             set(Calendar.SECOND, 0)
@@ -63,7 +63,7 @@ object WorkScheduler {
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             "notification_habit",
-            ExistingPeriodicWorkPolicy.REPLACE,
+            ExistingPeriodicWorkPolicy.KEEP,
             workRequest
         )
 

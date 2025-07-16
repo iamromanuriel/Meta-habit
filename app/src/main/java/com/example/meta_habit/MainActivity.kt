@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -25,6 +26,8 @@ import com.example.meta_habit.data.task.WorkScheduler
 import com.example.meta_habit.ui.nav.Navigation
 import com.example.meta_habit.ui.theme.MetaHabitTheme
 import com.example.meta_habit.ui.utils.NotificationHabit
+import java.util.Calendar
+import java.util.TimeZone
 import kotlin.collections.HashMap as HashMap1
 
 class MainActivity : ComponentActivity() {
@@ -45,6 +48,7 @@ class MainActivity : ComponentActivity() {
 
         NotificationHabit.createNotificationChannel(this, "main", "Notification for habit remember")
         enableEdgeToEdge()
+
         WorkScheduler.saveTaskLogger(this)
         WorkScheduler.createNotification(this)
 

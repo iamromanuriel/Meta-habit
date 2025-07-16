@@ -67,14 +67,14 @@ class DailyValidationTaskWorker(appContext: Context, workerParams: WorkerParamet
     }
 
     private suspend fun restoreHabitTask(habitWithTasks: HabitWithTasks): kotlin.Result<Unit> {
-        Log.d("DailyValidationTaskWorker", "restoreHabitTask: ")
         return try {
             habitWithTasks.task.forEach { habitTask ->
 
                 val habitTaskLog = HabitLogEntity(
                     habitTaskId = habitTask.id,
                     date = habitTask.dateCheck,
-                    isCompleted = habitTask.isCheck
+                    isCompleted = habitTask.isCheck,
+                    dateCreate = System.currentTimeMillis()
                 )
                 appDatabase.habitTaskLogger().insertHabitLog(habitTaskLog)
 

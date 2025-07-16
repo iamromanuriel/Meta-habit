@@ -78,6 +78,7 @@ class NotificationHabitReminder(
                 type = NotificationTypes.Remember.ordinal,
                 scheduledAt = Date().time,
                 isActive = true,
+                dateCreate = System.currentTimeMillis()
             )
 
             appDatabase.habitNotification().insertGetId(notificationEntity = notification)

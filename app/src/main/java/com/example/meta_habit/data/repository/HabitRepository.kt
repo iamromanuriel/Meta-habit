@@ -70,7 +70,8 @@ class HabitRepository(
             listTask.forEach { descriptionTask ->
                 val habitTaskEntity = HabitTaskEntity(
                     habitId = idHabit,
-                    description = descriptionTask
+                    description = descriptionTask,
+                    dateCreate = System.currentTimeMillis()
                 )
                 appDatabase.habitTaskDao().insertGetId(habitTaskEntity)
             }
@@ -114,7 +115,8 @@ class HabitRepository(
         return try {
             val habitTaskEntity = HabitTaskEntity(
                 habitId = selectedHabit.value?.id ?: 0,
-                description = task
+                description = task,
+                dateCreate = System.currentTimeMillis()
             )
             appDatabase.habitTaskDao().insertGetId(habitTaskEntity)
             Result.success(Unit)

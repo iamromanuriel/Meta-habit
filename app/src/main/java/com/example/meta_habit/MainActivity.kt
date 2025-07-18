@@ -49,8 +49,8 @@ class MainActivity : ComponentActivity() {
         NotificationHabit.createNotificationChannel(this, "main", "Notification for habit remember")
         enableEdgeToEdge()
 
-        WorkScheduler.saveTaskLogger(this)
-        WorkScheduler.createNotification(this)
+        //WorkScheduler.saveTaskLogger(this)
+        //WorkScheduler.createNotification(this)
 
         setContent {
             MetaHabitTheme {

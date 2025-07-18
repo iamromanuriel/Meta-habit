@@ -274,6 +274,8 @@ fun nextDayMonth(baseDate: LocalDate): LocalDate{
 }
 
 
+
+
 @RequiresApi(Build.VERSION_CODES.O)
 fun isValidateDateWeekReminder(date: LocalDate, type: RepeatType?): Boolean {
     if(type == RepeatType.DAILY) return true
@@ -319,7 +321,7 @@ fun LocalDate.getDateReminderThreeDaysString(): String{
 @RequiresApi(Build.VERSION_CODES.O)
 fun main() {
     val calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneOffset.UTC))
-    val date = Date(1752509940629)
+    val date = Date(1752850221047)
     val dateReminder = Date(1752451200000).toInstant().atZone(ZoneId.of("UTC")).toLocalDate()
 
     println(date)

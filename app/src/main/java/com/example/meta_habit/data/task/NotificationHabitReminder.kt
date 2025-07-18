@@ -12,8 +12,10 @@ import com.example.meta_habit.ui.utils.NotificationChannel
 import com.example.meta_habit.ui.utils.NotificationHabit
 import com.example.meta_habit.ui.utils.NotificationTypes
 import com.example.meta_habit.ui.utils.RepeatType
+import com.example.meta_habit.ui.utils.getNextAWeek
 import com.example.meta_habit.ui.utils.getNextThreeDayReminderDate
 import com.example.meta_habit.ui.utils.getRepeatType
+import com.example.meta_habit.ui.utils.nextDayMonth
 import com.example.meta_habit.ui.utils.toLocalDate
 import java.time.LocalDate
 import java.util.Date
@@ -44,7 +46,15 @@ class NotificationHabitReminder(
 
             when (getRepeatType(habit.repetition ?: 0)) {
                 RepeatType.ONLY_ONE -> {
-
+                    if((habit.dateReminder)?.toLocalDate() == now){
+                        saveInfNotification(habit.id)
+                        NotificationHabit.showNotification(
+                            applicationContext,
+                            NotificationChannel.MAIN,
+                            habit.title ?: "Recordatorio diario",
+                            habit.description?: ""
+                        )
+                    }
                 }
 
                 RepeatType.DAILY -> {
@@ -57,8 +67,28 @@ class NotificationHabitReminder(
                     )
                 }
 
-                RepeatType.WEEKLY -> {}
-                RepeatType.MONTHLY -> TODO()
+                RepeatType.WEEKLY -> {
+                    if(getNextAWeek(habit.dateReminder!!.toLocalDate()) == now){
+                        saveInfNotification(habit.id)
+                        NotificationHabit.showNotification(
+                            applicationContext,
+                            NotificationChannel.MAIN,
+                            habit.title ?: "Recordatorio semanal",
+                            habit.description?: ""
+                        )
+                    }
+                }
+                RepeatType.MONTHLY -> {
+                    if(nextDayMonth(habit.dateReminder!!.toLocalDate()) == now){
+                        saveInfNotification(habit.id)
+                        NotificationHabit.showNotification(
+                            applicationContext,
+                            NotificationChannel.MAIN,
+                            habit.title ?: "Recordatorio mensual",
+                            habit.description?: ""
+                        )
+                    }
+                }
                 RepeatType.THREE_DAYS -> {
                     if (getNextThreeDayReminderDate(habit.dateReminder!!.toLocalDate()) == now) {
                         saveInfNotification(habit.id)

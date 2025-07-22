@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()
-
+        NotificationHabit.createNotificationChannel(this, "main", "Notification for habit remember")
         setContent {
             MetaHabitTheme {
                 Navigation()

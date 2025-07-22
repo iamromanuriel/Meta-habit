@@ -53,7 +53,7 @@ fun Long.getAgoTime(): String{
         0 ->{
             val format = SimpleDateFormat("HH:mm", Locale.getDefault())
             val time = format.format(date)
-            "Hace ${time}"
+            time
         }
         1 ->{
             "Hace ${ago} dia"

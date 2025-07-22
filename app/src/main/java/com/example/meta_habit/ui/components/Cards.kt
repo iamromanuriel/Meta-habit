@@ -70,7 +70,6 @@ fun CardNoteBasic(
                 ?: Color.White).copy(alpha = 0.3f),
             disabledContentColor = Color.Gray,
             disabledContainerColor = Color.Gray
-
         )
     ) {
         Column(modifier = modifier) {

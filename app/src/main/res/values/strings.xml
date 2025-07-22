@@ -9,4 +9,11 @@
     <string name="label_notification_remember">Recordar con notificaciòn</string>
     <string name="label_labels">Etiqueta</string>
     <string name="label_description">Description</string>
+    <string name="label_delete">Eliminar</string>">
+    <string name="label_cancel">Cancel</string>
+    <string name="label_add">Agregar</string>
+    <string name="label_task">Tareas</string>
+
+    <string name="quest_confirm_delete">¿Estas seguro que deseas eliminar?</string>
+
 </resources>

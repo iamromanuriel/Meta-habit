@@ -84,25 +84,6 @@ class DetailViewModel(
         }
     }
 
-    fun onConfirmSaveEdit(title: String) {
-        viewModelScope.launch {
-            val editHabitDeferred = async(Dispatchers.IO) {
-                habitRepository.updateHabit(
-                    title = title,
-                    color = _selectedColor.value ?: ColorType.PURPLE,
-                    isReminder = _enableReminder.value,
-                    repeatType = _selectedRepeat.value,
-                    labelType = _selectedLabel.value,
-                )
-            }
-            val resultEditHabit = editHabitDeferred.await()
-
-            _savedChangeHabit.value = resultEditHabit
-
-            Log.d("ON-EDIT-HABIT", resultEditHabit.toString())
-        }
-    }
-
     fun onEditTitle(title: String){
         viewModelScope.launch {
             val editTitleHabitDeferred = async(Dispatchers.IO) {
@@ -146,9 +127,6 @@ class DetailViewModel(
             val resultSelectColor = selectColorDeferred.await()
             _selectedColor.value = resultSelectColor.getOrNull()
         }
-    }
-
-    fun selectDateMillis(dateMillis: Long?) {
     }
 
     fun onAddNewTaskToList(newTask: String) {

@@ -1,5 +1,6 @@
 package com.example.meta_habit.ui.components
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
@@ -10,11 +11,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -49,8 +47,6 @@ import com.example.meta_habit.ui.theme.bluePrimary
 import com.example.meta_habit.ui.utils.RepeatType
 import com.example.meta_habit.ui.utils.getColorToOrdinalEnum
 import com.example.meta_habit.ui.utils.getDateReminderThreeDaysString
-import com.example.meta_habit.ui.utils.getReminderDay
-import com.example.meta_habit.ui.utils.getReminderDayLocal
 import com.example.meta_habit.ui.utils.getRepeatType
 import com.example.meta_habit.ui.utils.toLocalDate
 
@@ -178,6 +174,7 @@ fun CardNoteBasic(
     }
 }
 
+@SuppressLint("NewApi")
 @Preview
 @Composable
 fun CardNoteBasicPreview() {

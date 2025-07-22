@@ -21,19 +21,12 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -63,10 +56,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.meta_habit.R
 import com.example.meta_habit.ui.components.DialogBasic
 import com.example.meta_habit.ui.components.LayoutOptionRepeat
 import com.example.meta_habit.ui.components.ListWeekDays
@@ -231,7 +226,7 @@ fun DetailScreen(
                                     verticalAlignment = Alignment.CenterVertically
                                 ){
                                     Icon(imageVector = Icons.Outlined.Add, contentDescription = "", modifier = Modifier.padding(horizontal = 5.dp))
-                                    Text(text = "Agregar")
+                                    Text(text = stringResource(R.string.label_add))
                                 }
 
                             }
@@ -242,7 +237,7 @@ fun DetailScreen(
                             TextField(
                                 modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                                 value = taskDescription,
-                                label = { Text("Tareas") },
+                                label = { Text(stringResource(R.string.label_task)) },
                                 onValueChange = { text -> taskDescription = text },
                                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                                 keyboardActions = KeyboardActions(onDone = {
@@ -307,7 +302,7 @@ fun DetailScreen(
                         Row {
 
                             Text(
-                                "Repetir:",
+                                stringResource(R.string.label_repeat),
                                 modifier = Modifier.padding(horizontal = 6.dp),
                                 color = Color.Gray
                             )
@@ -349,7 +344,7 @@ fun DetailScreen(
                         Row {
 
                             Text(
-                                "Etiqueta:",
+                                stringResource(R.string.label_labels),
                                 modifier = Modifier.padding(horizontal = 6.dp),
                                 color = Color.Gray
                             )
@@ -386,7 +381,7 @@ fun DetailScreen(
                     Row {
 
                         Text(
-                            "Recordar con notificaciòn: ",
+                            stringResource(R.string.label_notification_remember),
                             modifier = Modifier.padding(start = 20.dp),
                             color = Color.Gray
                         )
@@ -433,17 +428,17 @@ fun DetailScreen(
 
     if(isShowDialogDelete){
         AlertDialog(
-            title = { Text(text = "Eliminar") },
-            text = { Text(text = "Estas seguro que deseas eliminar?") },
+            title = { Text(text = stringResource(R.string.label_delete)) },
+            text = { Text(text = stringResource(R.string.quest_confirm_delete)) },
             onDismissRequest = { isShowDialogDelete = false },
             confirmButton = {
                 Button(onClick = viewModel::onDeleteHabit){
-                    Text("Eliminar")
+                    Text(stringResource(R.string.option_ok))
                 }
             },
             dismissButton = {
                 OutlinedButton (onClick = { isShowDialogDelete = false }) {
-                    Text("Cancelar")
+                    Text(stringResource(R.string.label_cancel))
                 }
             }
         )

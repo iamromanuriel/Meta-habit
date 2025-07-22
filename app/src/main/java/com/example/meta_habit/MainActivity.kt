@@ -1,14 +1,9 @@
 package com.example.meta_habit
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.app.NotificationChannel
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -18,17 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import com.example.meta_habit.data.task.WorkScheduler
 import com.example.meta_habit.ui.nav.Navigation
 import com.example.meta_habit.ui.theme.MetaHabitTheme
 import com.example.meta_habit.ui.utils.NotificationHabit
-import java.util.Calendar
-import java.util.TimeZone
-import kotlin.collections.HashMap as HashMap1
 
 class MainActivity : ComponentActivity() {
 
@@ -46,11 +34,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        NotificationHabit.createNotificationChannel(this, "main", "Notification for habit remember")
         enableEdgeToEdge()
-
-        //WorkScheduler.saveTaskLogger(this)
-        //WorkScheduler.createNotification(this)
 
         setContent {
             MetaHabitTheme {

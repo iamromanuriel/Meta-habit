@@ -37,9 +37,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.meta_habit.R
 import com.example.meta_habit.ui.components.CardNoteBasic
 import com.example.meta_habit.ui.components.DropdownSelectDate
 import com.example.meta_habit.ui.components.LayoutOptions
@@ -142,7 +144,6 @@ fun SharedTransitionScope.HomeScreen(
         if (showButtonSheet) {
             ModalBottomSheet(
                 onDismissRequest = {
-                    println("onDismissRequest bottomSheet")
                     showButtonSheet = false
                 },
                 sheetState = sheetState
@@ -157,17 +158,17 @@ fun SharedTransitionScope.HomeScreen(
 
         if(showDeleteDialog){
             AlertDialog(
-                title = { Text(text = "Eliminar") },
-                text = { Text(text = "Estas seguro que deseas eliminar?") },
+                title = { Text(text = stringResource(R.string.label_delete)) },
+                text = { Text(text = stringResource(R.string.quest_confirm_delete)) },
                 onDismissRequest = { showDeleteDialog = false },
                 confirmButton = {
                     Button(onClick = viewModel::onDeleteNote){
-                        Text("Eliminar")
+                        Text(stringResource(R.string.option_ok))
                     }
                 },
                 dismissButton = {
                     OutlinedButton (onClick = { showDeleteDialog = false }) {
-                        Text("Cancelar")
+                        Text(stringResource(R.string.label_cancel))
                     }
                 }
             )

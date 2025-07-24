@@ -111,7 +111,7 @@ class HomeViewModel(
                             habits
                         }
                     }.collect { filterType ->
-                        _listOfHabit.value = filterType.invoke()
+                        _listOfHabit.value = filterType.invoke().sortedByDescending { it.habit.isPinned == true }
                     }
 
             }
@@ -166,7 +166,7 @@ class HomeViewModel(
 
     fun onConfirmDeleteHabit() {}
 
-    fun onRevertedDeleteHabit() {}
+    fun onRevertDeleteHabit() {}
 
     fun onPin() {
         viewModelScope.launch {

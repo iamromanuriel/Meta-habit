@@ -5,15 +5,22 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import java.time.Duration
-import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZonedDateTime
 import java.util.concurrent.TimeUnit
 
 object WorkScheduler {
 
     fun saveTaskLogger(context: Context){
-        val now = LocalDateTime.now()
-        val nextMidnight = now.withHour(23).withMinute(59).withSecond(59)
-        val delay = Duration.between(now, nextMidnight).toMillis()
+        val now = ZonedDateTime.now()
+
+        val desiredTime = LocalTime.of(23, 59, 0)
+        var nextExecutionDateTime = now.with(desiredTime)
+
+        if(nextExecutionDateTime.isBefore(now)){
+            nextExecutionDateTime = nextExecutionDateTime.plusDays(1)
+        }
+        val delay = Duration.between(now, nextExecutionDateTime).toMillis()
 
         val workRequest = PeriodicWorkRequestBuilder<DailyValidationTaskWorker>(1, TimeUnit.DAYS)
             .setInitialDelay(delay, TimeUnit.MILLISECONDS)
@@ -29,9 +36,15 @@ object WorkScheduler {
     }
 
     fun createNotification(context: Context){
-        val now = LocalDateTime.now()
-        val nextMidnight = now.withHour(8).withMinute(12).withSecond(0)
-        val delay = Duration.between(now, nextMidnight).toMillis()
+        val now = ZonedDateTime.now()
+
+        val desiredTime = LocalTime.of(12, 16, 10)
+        var nextExecutionDateTime = now.with(desiredTime)
+
+        if(nextExecutionDateTime.isBefore(now)){
+            nextExecutionDateTime = nextExecutionDateTime.plusDays(1)
+        }
+        val delay = Duration.between(now, nextExecutionDateTime).toMillis()
 
         val workRequest = PeriodicWorkRequestBuilder<NotificationHabitReminder>(1, TimeUnit.DAYS)
             .setInitialDelay(delay, TimeUnit.MILLISECONDS)
@@ -40,7 +53,7 @@ object WorkScheduler {
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             "notification_habit",
-            ExistingPeriodicWorkPolicy.KEEP,
+            ExistingPeriodicWorkPolicy.REPLACE,
             workRequest
         )
 

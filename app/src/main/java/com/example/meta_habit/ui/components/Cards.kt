@@ -46,12 +46,12 @@ import com.example.meta_habit.ui.theme.GrayLight20
 import com.example.meta_habit.ui.theme.bluePrimary
 import com.example.meta_habit.ui.utils.RepeatType
 import com.example.meta_habit.ui.utils.getColorToOrdinalEnum
+import com.example.meta_habit.ui.utils.getDateDDMMYYYY
 import com.example.meta_habit.ui.utils.getDateReminderThreeDaysString
 import com.example.meta_habit.ui.utils.getRepeatType
 import com.example.meta_habit.ui.utils.toLocalDate
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CardNoteBasic(
     modifier: Modifier = Modifier,
@@ -119,11 +119,11 @@ fun CardNoteBasic(
                     .padding(horizontal = 16.dp)
             ) {
                 val dateReminderNextDay = when(getRepeatType(ordinal = habit.habit.repetition?:0)){
-                    RepeatType.ONLY_ONE -> ""
+                    RepeatType.ONLY_ONE -> (habit.habit.dateReminder?:0).getDateDDMMYYYY()
                     RepeatType.DAILY -> "Hoy"
-                    RepeatType.WEEKLY -> ""
+                    RepeatType.WEEKLY -> (habit.habit.dateReminder?:0).toString()
                     RepeatType.MONTHLY -> ""
-                    RepeatType.THREE_DAYS -> (habit.habit.dateReminder?:0).toLocalDate().getDateReminderThreeDaysString()
+                    RepeatType.THREE_DAYS -> (habit.habit.dateReminder?:0).getDateDDMMYYYY()
                     null -> ""
                 }
 

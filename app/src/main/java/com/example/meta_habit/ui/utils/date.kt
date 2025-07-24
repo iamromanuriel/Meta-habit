@@ -64,6 +64,12 @@ fun Long.getAgoTime(): String{
     }
 }
 
+fun Long.getDateDDMMYYYY(): String{
+    val date = this.toDate()
+    val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    return format.format(date)
+}
+
 /**
  * get list date with actual days of week
  *
@@ -320,11 +326,8 @@ fun LocalDate.getDateReminderThreeDaysString(): String{
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun main() {
-    val calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneOffset.UTC))
-    val date = Date(1752796331843)
-    val dateReminder = Date(1752451200000).toInstant().atZone(ZoneId.of("UTC")).toLocalDate()
+    val now = Date().toInstant()
 
-    println(date)
 }
 
 

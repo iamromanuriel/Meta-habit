@@ -76,7 +76,7 @@ fun SharedTransitionScope.HomeScreen(
             when(action){
                 ActionDeleteHabit.Await -> {}
                 is ActionDeleteHabit.Fail -> { Toast.makeText(context, action.message, Toast.LENGTH_SHORT).show() }
-                ActionDeleteHabit.Success -> { showDeleteDialog = false }
+                ActionDeleteHabit.Success -> { showDeleteDialog = false; showButtonSheet = false }
             }
         }
     }

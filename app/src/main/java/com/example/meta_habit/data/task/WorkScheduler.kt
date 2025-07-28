@@ -38,7 +38,7 @@ object WorkScheduler {
     fun createNotification(context: Context){
         val now = ZonedDateTime.now()
 
-        val desiredTime = LocalTime.of(12, 16, 10)
+        val desiredTime = LocalTime.of(10, 18, 10)
         var nextExecutionDateTime = now.with(desiredTime)
 
         if(nextExecutionDateTime.isBefore(now)){

@@ -20,7 +20,9 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
+import java.util.concurrent.TimeUnit
 import kotlin.math.abs
+import kotlin.time.Duration.Companion.days
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -37,6 +39,90 @@ fun Long.toLocalDate(): LocalDate {
         .toInstant()
         .atZone(ZoneOffset.UTC)
         .toLocalDate()
+}
+
+fun Long.getNextReminderWeek(): String{
+    val calendar = Calendar.getInstance()
+    calendar.time = this.toDate()
+    calendar.set(Calendar.HOUR_OF_DAY, 0)
+    calendar.set(Calendar.MINUTE, 0)
+    calendar.set(Calendar.SECOND, 0)
+    calendar.set(Calendar.MILLISECOND, 0)
+    val normalizedBaseDateMillis = calendar.timeInMillis
+
+
+    val now = Date()
+    calendar.time = now
+    calendar.set(Calendar.HOUR_OF_DAY, 0)
+    calendar.set(Calendar.MINUTE, 0)
+    calendar.set(Calendar.SECOND, 0)
+    calendar.set(Calendar.MILLISECOND, 0)
+    val normalizedNowMillis = calendar.timeInMillis
+
+    val diffMillis = normalizedNowMillis - normalizedBaseDateMillis
+
+    val ONE_DAY_IN_MILLIS = TimeUnit.DAYS.toMillis(1)
+    val daysBetween = diffMillis / ONE_DAY_IN_MILLIS
+
+    val format = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+
+    if(daysBetween <= 7){
+        calendar.time = this.toDate()
+        return format.format(calendar.time)
+    }
+
+    val remainder = daysBetween % 3
+    val daysUntilNext = if(remainder == 0L){
+        0L
+    } else {
+        3L
+    }
+
+    calendar.time = now
+    calendar.add(Calendar.DAY_OF_YEAR, daysUntilNext.toInt())
+    return format.format(calendar.time)
+}
+
+fun Long.getNextReminderThreeDays(): String{
+    val calendar = Calendar.getInstance()
+    calendar.time = this.toDate()
+    calendar.set(Calendar.HOUR_OF_DAY, 0)
+    calendar.set(Calendar.MINUTE, 0)
+    calendar.set(Calendar.SECOND, 0)
+    calendar.set(Calendar.MILLISECOND, 0)
+    val normalizedBaseDateMillis = calendar.timeInMillis
+
+
+    val now = Date()
+    calendar.time = now
+    calendar.set(Calendar.HOUR_OF_DAY, 0)
+    calendar.set(Calendar.MINUTE, 0)
+    calendar.set(Calendar.SECOND, 0)
+    calendar.set(Calendar.MILLISECOND, 0)
+    val normalizedNowMillis = calendar.timeInMillis
+
+    val diffMillis = normalizedNowMillis - normalizedBaseDateMillis
+
+    val ONE_DAY_IN_MILLIS = TimeUnit.DAYS.toMillis(1)
+    val daysBetween = diffMillis / ONE_DAY_IN_MILLIS
+
+    val format = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+
+    if(daysBetween <= 0){
+        calendar.time = this.toDate()
+        return format.format(calendar.time)
+    }
+
+    val remainder = daysBetween % 3
+    val daysUntilNext = if(remainder == 0L){
+        0L
+    } else {
+        3L
+    }
+
+    calendar.time = now
+    calendar.add(Calendar.DAY_OF_YEAR, daysUntilNext.toInt())
+    return format.format(calendar.time)
 }
 
 /**
@@ -66,7 +152,7 @@ fun Long.getAgoTime(): String{
 
 fun Long.getDateDDMMYYYY(): String{
     val date = this.toDate()
-    val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    val format = SimpleDateFormat("yyyy/dd/MM/", Locale.getDefault())
     return format.format(date)
 }
 
@@ -326,7 +412,17 @@ fun LocalDate.getDateReminderThreeDaysString(): String{
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun main() {
-    val now = Date().toInstant()
+
+    val calendar = Calendar.getInstance()
+    calendar.time = Date()
+    calendar.set(Calendar.DAY_OF_MONTH, 26)
+
+    val now = System.currentTimeMillis()
+
+    println(calendar.time)
+
+    val nextDay = calendar.timeInMillis.getNextReminderThreeDays()
+    println(nextDay)
 
 }
 

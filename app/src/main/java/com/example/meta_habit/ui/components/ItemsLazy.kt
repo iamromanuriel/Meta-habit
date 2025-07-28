@@ -173,7 +173,7 @@ fun ItemNotification(
                 modifier = Modifier
                     .size(35 .dp)
                     .clip(CircleShape)
-                    .background(Color.Blue.copy(alpha = 0.2F))
+                    .background(if(notification.seen) Color.Transparent else Color.Blue.copy(alpha = 0.2F))
             ) {
                 Icon(
                     imageVector = Icons.Default.Email,

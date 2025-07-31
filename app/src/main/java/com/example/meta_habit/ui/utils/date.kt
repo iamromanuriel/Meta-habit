@@ -129,23 +129,25 @@ fun Long.getNextReminderThreeDays(): String{
  * Get string date format past
  */
 
-fun Long.getAgoTime(): String{
-    val date = this.toDate()
+fun Long.getAgoTime(): String {
+    val date = Date(this)
     val now = Date()
 
-    val ago = now.day - date.day
+    val diffInMillis = now.time - date.time
 
-    return when(ago){
-        0 ->{
-            val format = SimpleDateFormat("HH:mm", Locale.getDefault())
-            val time = format.format(date)
-            time
+    return when {
+        diffInMillis < TimeUnit.MINUTES.toMillis(1) -> "Justo ahora"
+        diffInMillis < TimeUnit.HOURS.toMillis(1) -> {
+            val minutes = TimeUnit.MILLISECONDS.toMinutes(diffInMillis)
+            "Hace $minutes minuto${if (minutes > 1) "s" else ""}"
         }
-        1 ->{
-            "Hace ${ago} dia"
+        diffInMillis < TimeUnit.DAYS.toMillis(1) -> {
+            val hours = TimeUnit.MILLISECONDS.toHours(diffInMillis)
+            "Hace $hours hora${if (hours > 1) "s" else ""}"
         }
-        else ->{
-            "Hace ${ago} dias"
+        else -> {
+            val days = TimeUnit.MILLISECONDS.toDays(diffInMillis)
+            "Hace $days día${if (days > 1) "s" else ""}"
         }
     }
 }
@@ -413,17 +415,10 @@ fun LocalDate.getDateReminderThreeDaysString(): String{
 @RequiresApi(Build.VERSION_CODES.O)
 fun main() {
 
-    val calendar = Calendar.getInstance()
-    calendar.time = Date()
-    calendar.set(Calendar.DAY_OF_MONTH, 26)
-
-    val now = System.currentTimeMillis()
-
-    println(calendar.time)
-
-    val nextDay = calendar.timeInMillis.getNextReminderThreeDays()
-    println(nextDay)
-
+    val date = Date(1753915726664)
+    val agoTime = date.time.getAgoTime()
+    println(date)
+    println(agoTime)
 }
 
 

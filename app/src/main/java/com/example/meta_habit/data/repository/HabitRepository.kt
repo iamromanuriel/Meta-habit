@@ -50,7 +50,7 @@ class HabitRepository(
             val habitEntity = HabitEntity(
                 title = title,
                 repetition = repetition,
-                hasReminder = false,
+                hasReminder = hasReminder,
                 dateReminder = dateReminder,
                 description = description,
                 tag = tag,

@@ -38,28 +38,27 @@ object WorkScheduler {
 
     fun createNotification(context: Context){
         val now = Calendar.getInstance()
-        val scheduledTime = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 8)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
+        val targetTime = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 16)
+            set(Calendar.MINUTE, 19)
+            set(Calendar.SECOND, 10)
             set(Calendar.MILLISECOND, 0)
 
-            if(before(now)){
+            if (before(now)) {
                 add(Calendar.DAY_OF_MONTH, 1)
             }
         }
 
-        val delayInMillis = scheduledTime.timeInMillis - now.timeInMillis
-        val delayInMinutes = TimeUnit.MILLISECONDS.toMinutes(delayInMillis)
+        val delayMillis = targetTime.timeInMillis - now.timeInMillis
 
-        val workRequest = PeriodicWorkRequestBuilder<NotificationHabitReminder>(24, TimeUnit.HOURS)
-            .setInitialDelay(delayInMinutes, TimeUnit.MINUTES)
-            .addTag("Notification_scheduler")
+        val workRequest = PeriodicWorkRequestBuilder<NotificationHabitReminder>(1, TimeUnit.DAYS)
+            .setInitialDelay(delayMillis, TimeUnit.MILLISECONDS)
+            .addTag("CreateNotification")
             .build()
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             "notification_habit",
-            ExistingPeriodicWorkPolicy.KEEP,
+            ExistingPeriodicWorkPolicy.REPLACE,
             workRequest
         )
 

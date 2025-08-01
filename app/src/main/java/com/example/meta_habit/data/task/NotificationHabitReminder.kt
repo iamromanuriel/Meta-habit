@@ -30,7 +30,7 @@ class NotificationHabitReminder(
     override suspend fun doWork(): Result {
         return try {
             validaReminderHabitToday()
-            Log.d("Notification launch", "ACTION")
+            Log.d("CreateNotification", "ACTION")
 
             Result.success()
         } catch (e: Exception) {
@@ -41,8 +41,10 @@ class NotificationHabitReminder(
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun validaReminderHabitToday() {
         val habits = appDatabase.habitDao().getAllHabitRepeat()
+        Log.d("CreateNotification","initValidation ${habits}")
         habits.forEach { habit ->
             val now = LocalDate.now()
+            Log.d("CreateNotification","getHabits ${habit}")
 
             when (getRepeatType(habit.repetition ?: 0)) {
                 RepeatType.ONLY_ONE -> {
@@ -58,6 +60,7 @@ class NotificationHabitReminder(
                 }
 
                 RepeatType.DAILY -> {
+                    Log.d("CreateNotification","Daily")
                     saveInfNotification(habit.id)
                     NotificationHabit.showNotification(
                         applicationContext,

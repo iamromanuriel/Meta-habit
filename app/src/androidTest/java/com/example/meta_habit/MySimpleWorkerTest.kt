@@ -9,7 +9,7 @@ import androidx.work.ListenableWorker
 import androidx.work.impl.utils.SynchronousExecutor
 import androidx.work.testing.TestListenableWorkerBuilder
 import androidx.work.testing.WorkManagerTestInitHelper
-import com.example.meta_habit.data.task.MySimpleWorker
+import com.example.meta_habit.data.task.workManager.MySimpleWorker
 import org.junit.Test
 import org.junit.Assert.assertThat
 import org.hamcrest.CoreMatchers.`is`

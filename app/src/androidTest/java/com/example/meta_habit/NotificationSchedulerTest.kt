@@ -11,10 +11,9 @@ import androidx.work.testing.WorkManagerTestInitHelper
 import org.junit.Before
 import org.junit.Test
 import org.junit.Assert.assertTrue
-import com.example.meta_habit.data.task.WorkScheduler.createNotification
+import com.example.meta_habit.data.task.workManager.WorkScheduler.createNotification
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.Assert.assertThat
-import java.util.Calendar
 
 class NotificationSchedulerTest() {
     private lateinit var context: Context

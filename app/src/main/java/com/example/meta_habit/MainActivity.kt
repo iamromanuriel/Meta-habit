@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,6 +19,7 @@ import androidx.core.content.ContextCompat
 import com.example.meta_habit.ui.nav.Navigation
 import com.example.meta_habit.ui.theme.MetaHabitTheme
 import com.example.meta_habit.ui.utils.NotificationHabit
+import java.util.Calendar
 
 class MainActivity : ComponentActivity() {
 
@@ -34,6 +36,9 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val now = Calendar.getInstance()
+        Log.d("dateTimeNow ::",now.toString())
 
         enableEdgeToEdge()
         NotificationHabit.createNotificationChannel(this, "main", "Notification for habit remember")

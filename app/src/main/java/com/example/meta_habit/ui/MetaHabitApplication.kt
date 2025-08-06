@@ -1,20 +1,13 @@
 package com.example.meta_habit.ui
 
 import android.app.Application
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.work.Configuration
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import com.example.meta_habit.data.task.DailyValidationTaskWorker
-import com.example.meta_habit.data.task.WorkScheduler
+import com.example.meta_habit.data.task.workManager.WorkScheduler
 import com.example.meta_habit.di.initKoin
 import org.koin.java.KoinJavaComponent.get
 import org.koin.androidx.workmanager.factory.KoinWorkerFactory
-import java.util.Calendar
-import java.util.concurrent.TimeUnit
 
 class MetaHabitApplication: Application(), Configuration.Provider {
 

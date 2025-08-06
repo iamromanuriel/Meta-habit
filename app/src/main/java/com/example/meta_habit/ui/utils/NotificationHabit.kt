@@ -41,11 +41,9 @@ object NotificationHabit{
         channel: ChannelHabit,
         title: String,
         content: String,
-        @DrawableRes draw: Int = R.drawable.ic_launcher_foreground,
+        @DrawableRes draw: Int = R.drawable.group_24,
         priority: Int = NotificationManagerCompat.IMPORTANCE_DEFAULT
     ) {
-
-
 
         val builder = NotificationCompat.Builder(context, channel.value)
             .setSmallIcon(draw)

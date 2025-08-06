@@ -1,13 +1,11 @@
-package com.example.meta_habit.data.task
+package com.example.meta_habit.data.task.workManager
 
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.meta_habit.data.db.AppDatabase
-import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitLogEntity
 import com.example.meta_habit.data.db.entity.HabitWithTasks
 import com.example.meta_habit.ui.utils.RepeatType
@@ -16,7 +14,6 @@ import com.example.meta_habit.ui.utils.getNextThreeDayReminderDate
 import com.example.meta_habit.ui.utils.getRepeatType
 import com.example.meta_habit.ui.utils.nextDayMonth
 import com.example.meta_habit.ui.utils.toLocalDate
-import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 
 

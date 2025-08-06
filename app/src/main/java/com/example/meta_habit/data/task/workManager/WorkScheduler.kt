@@ -1,30 +1,33 @@
-package com.example.meta_habit.data.task
+package com.example.meta_habit.data.task.workManager
 
 import android.content.Context
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import java.util.Calendar
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
 object WorkScheduler {
 
-    fun saveTaskLogger(context: Context){
-        val now = Calendar.getInstance()
-        val scheduledTime = Calendar.getInstance().apply {
+    fun saveTaskLogger(context: Context) {
+
+        val timeZone = TimeZone.getDefault()
+        val now = Calendar.getInstance(timeZone)
+
+        val scheduledTime = Calendar.getInstance(timeZone).apply {
             set(Calendar.HOUR_OF_DAY, 23)
             set(Calendar.MINUTE, 59)
             set(Calendar.SECOND, 0)
-            if(before(now)){
+            if (before(now)) {
                 add(Calendar.DAY_OF_MONTH, 1)
             }
         }
 
-        val delay = scheduledTime.timeInMillis - now.timeInMillis
-        val delayInMinutes = TimeUnit.MILLISECONDS.toMinutes(delay)
+        val delay = scheduledTime.timeInMillis - System.currentTimeMillis()
 
         val workRequest = PeriodicWorkRequestBuilder<DailyValidationTaskWorker>(24, TimeUnit.HOURS)
-            .setInitialDelay(delayInMinutes, TimeUnit.MINUTES)
+            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
             .build()
 
 
@@ -36,20 +39,23 @@ object WorkScheduler {
 
     }
 
-    fun createNotification(context: Context){
-        val now = Calendar.getInstance()
-        val targetTime = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 16)
-            set(Calendar.MINUTE, 19)
+    fun createNotification(context: Context) {
+
+        val timeZone = TimeZone.getDefault()
+        val now = Calendar.getInstance(timeZone)
+
+        val targetTime = Calendar.getInstance(timeZone).apply {
+            set(Calendar.HOUR_OF_DAY, 9)
+            set(Calendar.MINUTE, 52)
             set(Calendar.SECOND, 10)
             set(Calendar.MILLISECOND, 0)
 
             if (before(now)) {
-                add(Calendar.DAY_OF_MONTH, 1)
+                add(Calendar.DAY_OF_YEAR, 1)
             }
         }
 
-        val delayMillis = targetTime.timeInMillis - now.timeInMillis
+        val delayMillis = targetTime.timeInMillis - System.currentTimeMillis()
 
         val workRequest = PeriodicWorkRequestBuilder<NotificationHabitReminder>(1, TimeUnit.DAYS)
             .setInitialDelay(delayMillis, TimeUnit.MILLISECONDS)

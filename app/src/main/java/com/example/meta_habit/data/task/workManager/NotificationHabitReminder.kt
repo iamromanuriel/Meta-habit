@@ -1,10 +1,11 @@
-package com.example.meta_habit.data.task
+package com.example.meta_habit.data.task.workManager
 
 import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.work.CoroutineWorker
+import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import com.example.meta_habit.data.db.AppDatabase
 import com.example.meta_habit.data.db.entity.NotificationEntity
@@ -26,12 +27,17 @@ class NotificationHabitReminder(
     private val appDatabase: AppDatabase
 ) :
     CoroutineWorker(appContext, params) {
+
+    override suspend fun getForegroundInfo(): ForegroundInfo {
+        return super.getForegroundInfo(
+
+        )
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun doWork(): Result {
         return try {
             validaReminderHabitToday()
-            Log.d("CreateNotification", "ACTION")
-
             Result.success()
         } catch (e: Exception) {
             Result.failure()

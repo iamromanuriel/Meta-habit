@@ -72,13 +72,13 @@ import com.example.meta_habit.ui.components.TopBarDialogBasic
 import com.example.meta_habit.ui.screen.create.LayoutCreateDetailNote
 import com.example.meta_habit.ui.theme.bluePrimary
 import com.example.meta_habit.ui.theme.danger
-import com.example.meta_habit.ui.utils.ColorType
-import com.example.meta_habit.ui.utils.LabelTypes
-import com.example.meta_habit.ui.utils.RepeatType
-import com.example.meta_habit.ui.utils.getLabelType
-import com.example.meta_habit.ui.utils.getReminderDay
-import com.example.meta_habit.ui.utils.getRepeatType
-import com.example.meta_habit.ui.utils.rememberRestrictedDatePickerState
+import com.example.meta_habit.utils.ColorType
+import com.example.meta_habit.utils.LabelTypes
+import com.example.meta_habit.utils.RepeatType
+import com.example.meta_habit.utils.getLabelType
+import com.example.meta_habit.utils.getReminderDay
+import com.example.meta_habit.utils.getRepeatType
+import com.example.meta_habit.utils.rememberRestrictedDatePickerState
 import org.koin.compose.viewmodel.koinViewModel
 
 @SuppressLint("UnrememberedMutableState")
@@ -404,7 +404,7 @@ fun DetailScreen(
                 }
 
                 SelectionColor(
-                    stateColorSelected = selectColor?:ColorType.PURPLE,
+                    stateColorSelected = selectColor?: ColorType.PURPLE,
                     onSelected = viewModel::onSelectedColor
                 )
 

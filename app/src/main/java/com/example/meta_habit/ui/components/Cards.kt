@@ -44,14 +44,14 @@ import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitWithTasks
 import com.example.meta_habit.ui.theme.GrayLight20
 import com.example.meta_habit.ui.theme.bluePrimary
-import com.example.meta_habit.ui.utils.RepeatType
-import com.example.meta_habit.ui.utils.getColorToOrdinalEnum
-import com.example.meta_habit.ui.utils.getDateDDMMYYYY
-import com.example.meta_habit.ui.utils.getDateReminderThreeDaysString
-import com.example.meta_habit.ui.utils.getNextReminderThreeDays
-import com.example.meta_habit.ui.utils.getNextReminderWeek
-import com.example.meta_habit.ui.utils.getRepeatType
-import com.example.meta_habit.ui.utils.toLocalDate
+import com.example.meta_habit.utils.RepeatType
+import com.example.meta_habit.utils.getColorToOrdinalEnum
+import com.example.meta_habit.utils.getDateDDMMYYYY
+import com.example.meta_habit.utils.getDateReminderThreeDaysString
+import com.example.meta_habit.utils.getNextReminderThreeDays
+import com.example.meta_habit.utils.getNextReminderWeek
+import com.example.meta_habit.utils.getRepeatType
+import com.example.meta_habit.utils.toLocalDate
 
 
 @Composable

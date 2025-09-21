@@ -5,9 +5,9 @@ import com.example.meta_habit.data.db.entity.HabitEntity
 import com.example.meta_habit.data.db.entity.HabitTaskEntity
 import com.example.meta_habit.data.db.entity.HabitWithTaskAndLog
 import com.example.meta_habit.data.db.entity.HabitWithTasks
-import com.example.meta_habit.ui.utils.ColorType
-import com.example.meta_habit.ui.utils.LabelTypes
-import com.example.meta_habit.ui.utils.RepeatType
+import com.example.meta_habit.utils.ColorType
+import com.example.meta_habit.utils.LabelTypes
+import com.example.meta_habit.utils.RepeatType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

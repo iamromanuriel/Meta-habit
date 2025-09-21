@@ -60,9 +60,9 @@ import com.example.meta_habit.ui.theme.MetaHabitTheme
 import com.example.meta_habit.ui.theme.RedLight
 import com.example.meta_habit.ui.theme.bluePrimary
 import com.example.meta_habit.ui.theme.getColorsTextField
-import com.example.meta_habit.ui.utils.getAgoTime
-import com.example.meta_habit.ui.utils.getReminderTimeDay
-import com.example.meta_habit.ui.utils.toLocalDate
+import com.example.meta_habit.utils.getAgoTime
+import com.example.meta_habit.utils.getReminderTimeDay
+import com.example.meta_habit.utils.toLocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -31,9 +31,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.ui.state.DayIsChecked
 import com.example.meta_habit.ui.theme.danger
-import com.example.meta_habit.ui.utils.getCurrentWeekDays
-import com.example.meta_habit.ui.utils.getDayNameFromDate
-import com.example.meta_habit.ui.utils.getDayNumMonthFromDate
+import com.example.meta_habit.utils.getCurrentWeekDays
+import com.example.meta_habit.utils.getDayNameFromDate
+import com.example.meta_habit.utils.getDayNumMonthFromDate
 import java.util.Date
 
 @Composable

@@ -1,10 +1,9 @@
-package com.example.meta_habit.ui
+package com.example.meta_habit
 
 import android.app.Application
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.work.Configuration
-import com.example.meta_habit.data.task.workManager.WorkScheduler
 import com.example.meta_habit.di.initKoin
 import org.koin.java.KoinJavaComponent.get
 import org.koin.androidx.workmanager.factory.KoinWorkerFactory
@@ -21,8 +20,7 @@ class MetaHabitApplication: Application(), Configuration.Provider {
         super.onCreate()
 
         initKoin(context = this)
-        WorkScheduler.createNotification(this)
-        WorkScheduler.saveTaskLogger(this)
+        //WorkScheduler.saveTaskLogger(this)
 
     }
 

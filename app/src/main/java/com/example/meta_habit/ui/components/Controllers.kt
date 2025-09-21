@@ -40,8 +40,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meta_habit.ui.screen.home.FilterTypeAndLabel
 import com.example.meta_habit.ui.theme.containerTextField
-import com.example.meta_habit.ui.utils.ColorType
-import com.example.meta_habit.ui.utils.FilterType
+import com.example.meta_habit.utils.ColorType
+import com.example.meta_habit.utils.FilterType
 
 
 @Composable

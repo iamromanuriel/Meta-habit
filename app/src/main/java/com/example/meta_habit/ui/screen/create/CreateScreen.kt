@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -51,10 +53,10 @@ import com.example.meta_habit.ui.components.LayoutOptionRepeat
 import com.example.meta_habit.ui.components.SelectionColor
 import com.example.meta_habit.ui.components.TextFieldBorderRounded
 import com.example.meta_habit.ui.theme.bluePrimary
-import com.example.meta_habit.ui.utils.ColorType
-import com.example.meta_habit.ui.utils.LabelTypes
-import com.example.meta_habit.ui.utils.RepeatType
-import com.example.meta_habit.ui.utils.rememberRestrictedDatePickerState
+import com.example.meta_habit.utils.ColorType
+import com.example.meta_habit.utils.LabelTypes
+import com.example.meta_habit.utils.RepeatType
+import com.example.meta_habit.utils.rememberRestrictedDatePickerState
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -74,6 +76,8 @@ fun CreateScreen(
     var stateDescription by remember { mutableStateOf("") }
     val enableRemember by remember { mutableStateOf(false) }
     val datePickerState = rememberRestrictedDatePickerState()
+    val stateScroll = rememberScrollState()
+
     val selectedRepeat by viewModel.selectedStateRepeat.collectAsStateWithLifecycle()
     val selectedLabel by viewModel.selectedLabel.collectAsStateWithLifecycle()
     val selectedColor by viewModel.selectedColor.collectAsStateWithLifecycle()
@@ -122,37 +126,40 @@ fun CreateScreen(
             )
         }
     ) {
-        LayoutCreateDetailNote(
-            stateIsRepeat = enableRemember,
-            colorSelected = selectedColor,
-            listTask = stateListTask,
-            stateTitle = stateTitle,
-            stateDescription = stateDescription,
-            dateReminder = datePickerState,
-            stateLabel = selectedLabel,
-            stateRepeat = selectedRepeat,
-            onChangeTitle = { title -> stateTitle = title },
-            onShowDialogPicker = {
-                showDialogPicker.value = true
-            },
-            onSelectedColor = { color ->
-                viewModel.onSelectedColor(color)
-            },
-            onCreatedNewTask = { task ->
-                viewModel.onAddNewTaskToList(task)
-            },
-            onChangeDescription = { text -> stateDescription = text },
-            onEditTask = { item, index ->
-                viewModel.onEditTask(item, index)
-            },
-            onRemoveTask = { index ->
-                viewModel.onRemoveItemTask(index)
-            },
-            onChangeRepeat = {},
-            onSelectedLabel = { viewModel.onSelectedLabel(it) },
-            onSelectedRepeat = { viewModel.onSelectedRepeat(it) },
-            modifier = Modifier.padding(it),
-        )
+        Column(
+            modifier = Modifier.padding(it)
+        ) {
+            LayoutCreateDetailNote(
+                stateIsRepeat = enableRemember,
+                colorSelected = selectedColor,
+                listTask = stateListTask,
+                stateTitle = stateTitle,
+                stateDescription = stateDescription,
+                dateReminder = datePickerState,
+                stateLabel = selectedLabel,
+                stateRepeat = selectedRepeat,
+                onChangeTitle = { title -> stateTitle = title },
+                onShowDialogPicker = {
+                    showDialogPicker.value = true
+                },
+                onSelectedColor = { color ->
+                    viewModel.onSelectedColor(color)
+                },
+                onCreatedNewTask = { task ->
+                    viewModel.onAddNewTaskToList(task)
+                },
+                onChangeDescription = { text -> stateDescription = text },
+                onEditTask = { item, index ->
+                    viewModel.onEditTask(item, index)
+                },
+                onRemoveTask = { index ->
+                    viewModel.onRemoveItemTask(index)
+                },
+                onChangeRepeat = {},
+                onSelectedLabel = { viewModel.onSelectedLabel(it) },
+                onSelectedRepeat = { viewModel.onSelectedRepeat(it) },
+            )
+        }
     }
 
     if (showDialogPicker.value) {

@@ -1,4 +1,4 @@
-package com.example.meta_habit.ui.utils
+package com.example.meta_habit.utils
 
 
 import android.annotation.SuppressLint
@@ -106,7 +106,7 @@ fun Long.getNextReminderThreeDays(): String{
     val ONE_DAY_IN_MILLIS = TimeUnit.DAYS.toMillis(1)
     val daysBetween = diffMillis / ONE_DAY_IN_MILLIS
 
-    val format = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+    val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
     if(daysBetween <= 0){
         calendar.time = this.toDate()
@@ -154,7 +154,7 @@ fun Long.getAgoTime(): String {
 
 fun Long.getDateDDMMYYYY(): String{
     val date = this.toDate()
-    val format = SimpleDateFormat("yyyy/dd/MM/", Locale.getDefault())
+    val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     return format.format(date)
 }
 
@@ -177,9 +177,8 @@ fun getCurrentWeekDays(): List<Date> {
 
 @SuppressLint("NewApi")
 fun Date.getDayNameFromDate(): String {
-    val localDate = this.getLocalDate()
-
-    return localDate.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
+    val dateFormat = SimpleDateFormat("EEEE", Locale.getDefault())
+    return dateFormat.format(this)
 }
 
 @SuppressLint("NewApi")
@@ -237,14 +236,9 @@ fun Calendar.clearTime() {
 /**
  * to get string format Jue 5 de jun
  */
-@RequiresApi(Build.VERSION_CODES.O)
 fun Date.getDayOfWeekDayMonthMontNameSimple(): String {
-
-    val localDate = this.toInstant()
-        .atZone(ZoneId.systemDefault())
-        .toLocalDate()
-
-    return "${localDate.dayOfWeek.dayOfWeekSimple()} ${localDate.dayOfMonth} de ${localDate.month.monthNameSimple()}"
+    val dateFormat = SimpleDateFormat("EEEE d MMMM", Locale.getDefault())
+    return dateFormat.format(this)
 }
 
 
@@ -415,7 +409,7 @@ fun LocalDate.getDateReminderThreeDaysString(): String{
 @RequiresApi(Build.VERSION_CODES.O)
 fun main() {
 
-    val date = Date(1754234206845)
+    val date = Date(1755200315091)
     val agoTime = date.time.getAgoTime()
     println(date)
     println(agoTime)

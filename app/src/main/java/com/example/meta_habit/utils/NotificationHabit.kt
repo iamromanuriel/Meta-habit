@@ -1,4 +1,4 @@
-package com.example.meta_habit.ui.utils
+package com.example.meta_habit.utils
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -12,9 +12,9 @@ import androidx.annotation.DrawableRes
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.example.meta_habit.MainActivity
+import com.example.meta_habit.ui.MainActivity
 import com.example.meta_habit.R
-import com.example.meta_habit.ui.utils.NotificationChannel as ChannelHabit
+import com.example.meta_habit.utils.NotificationChannel as ChannelHabit
 
 
 object NotificationHabit{
@@ -27,7 +27,7 @@ object NotificationHabit{
         importance: Int = NotificationManagerCompat.IMPORTANCE_DEFAULT
     ){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            val channel = NotificationChannel(com.example.meta_habit.ui.utils.NotificationChannel.MAIN.value, name, importance).apply{
+            val channel = NotificationChannel(com.example.meta_habit.utils.NotificationChannel.MAIN.value, name, importance).apply{
                 description = descriptionText
             }
             val notificationManager: NotificationManagerCompat = NotificationManagerCompat.from(context)

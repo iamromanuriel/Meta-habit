@@ -1,4 +1,4 @@
-package com.example.meta_habit.ui.utils
+package com.example.meta_habit.utils
 
 import androidx.compose.material3.CardColors
 import androidx.compose.ui.graphics.Color

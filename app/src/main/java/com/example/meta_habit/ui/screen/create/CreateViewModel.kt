@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.meta_habit.data.repository.HabitRepository
-import com.example.meta_habit.ui.utils.ColorType
-import com.example.meta_habit.ui.utils.LabelTypes
-import com.example.meta_habit.ui.utils.RepeatType
+import com.example.meta_habit.utils.ColorType
+import com.example.meta_habit.utils.LabelTypes
+import com.example.meta_habit.utils.RepeatType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow

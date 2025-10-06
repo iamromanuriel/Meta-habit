@@ -36,6 +36,7 @@ object NotificationHabit{
     }
 
 
+
     fun showNotification(
         context: Context,
         channel: ChannelHabit,
@@ -52,17 +53,17 @@ object NotificationHabit{
             .setPriority(priority)
             .setContentIntent(intentApp(context))
             .setAutoCancel(true)
+            .build()
 
-        with(NotificationManagerCompat.from(context)) {
-            if (ActivityCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                return
-            }
-            notify(1, builder.build())
+        val manager = NotificationManagerCompat.from(context)
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
         }
+        manager.notify(1, builder)
     }
 
 
